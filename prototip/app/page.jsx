@@ -42,8 +42,20 @@ import { validationAudit, auditText } from '../lib/validation-audit.mjs';
 import { officialResources, qualityChecklist } from '../lib/official-resources.mjs';
 import AccountReview from '../components/account-review';
 import ResultTracker from '../components/result-tracker';
+import VisitWorkspace from '../components/visit-workspace';
+import { restoreTasks } from '../lib/tasks.mjs';
+import EventWorkspace from '../components/event-workspace';
+import { restoreEvents } from '../lib/events.mjs';
+import CoordinatorDashboard from '../components/coordinator-dashboard';
+import MentorshipWorkspace from '../components/mentorship-workspace';
+import ProjectWorkspace from '../components/project-workspace';
+import ActivityOutputs from '../components/activity-outputs';
+import ActivityPlan, { PlanReportQueue } from '../components/activity-plan';
+import QualityLabelWorkspace from '../components/quality-label-workspace';
 import { loadDemo, saveDemo } from '../lib/storage.mjs';
 import { initialAccountReview } from '../lib/account-review.mjs';
+import { initialMentorGroup, restoreMentorGroup, restoreMentors, restoreSupports } from '../lib/mentorship.mjs';
+import { restoreProjects, restoreProjectServices } from '../lib/projects.mjs';
 function SourceCards({ items }) {
   return <div className="source-grid">{items.map(source => <article className="source-card" key={source.path}>
     <a href={`https://etwinning.meb.gov.tr/${source.path}`} target="_blank" rel="noreferrer">{source.title} <ExternalLink size={16} /></a>
@@ -70,6 +82,7 @@ function RequestFields({ record, onChange, locked = false, includeSchool = true 
   </>;
 }
 const areas = [
+  ['Faaliyet Planı', CalendarDays, '2026–2027 aylık plan', 'Faaliyet kaydı, haber ve rapor'],
   [
     'Kayıt ve Validasyon',
     ClipboardCheck,
@@ -183,6 +196,13 @@ export default function Page() {
   const [repeatReason, setRepeatReason] = useState('');
   const [accountReview, setAccountReview] = useState(initialAccountReview);
   const [loaded, setLoaded] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [supports, setSupports] = useState([]);
+  const [mentorGroup, setMentorGroup] = useState(initialMentorGroup);
+  const [mentors, setMentors] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [projectServices, setProjectServices] = useState([]);
   const [storageError, setStorageError] = useState('');
   // Browser storage is an external system: restore after hydration, then persist edits.
   useEffect(() => {
@@ -191,7 +211,7 @@ export default function Page() {
     if (!active) return;
     try {
       const saved = loadDemo(localStorage);
-      if (saved) { setState(saved.state); setAccountReview(saved.accountReview || initialAccountReview()); setSubject(saved.subject || ''); setBody(saved.body || ''); }
+      if (saved) { const restoredProjects=restoreProjects(saved.projects || []); setTasks(restoreTasks(saved.tasks)); setEvents(restoreEvents(saved.events)); setSupports(restoreSupports(saved.supports || [])); setMentorGroup(restoreMentorGroup(saved.mentorGroup)); setMentors(restoreMentors(saved.mentors || [])); setProjects(restoredProjects); setProjectServices(restoreProjectServices(saved.projectServices || [],restoredProjects)); setState(saved.state); setAccountReview(saved.accountReview || initialAccountReview()); setSubject(saved.subject || ''); setBody(saved.body || ''); }
       setLoaded(true);
     } catch { setStorageError('Önceki demo kaydı okunamadı. Kayıt korunuyor; devam etmek için Örnek akışı sıfırla seçeneğini kullanın.'); }
     });
@@ -199,9 +219,9 @@ export default function Page() {
   }, []);
   useEffect(() => {
     if (!loaded) return;
-    try { saveDemo(localStorage, { state, accountReview, subject, body }); queueMicrotask(() => setStorageError('')); }
+    try { saveDemo(localStorage, { state, accountReview, subject, body, tasks, events, supports, mentorGroup, mentors, projects, projectServices }); queueMicrotask(() => setStorageError('')); }
     catch { queueMicrotask(() => setStorageError('Tarayıcıya kayıt yapılamadı. Bu oturumdaki değişiklikler yenilemede kaybolabilir.')); }
-  }, [loaded, state, accountReview, subject, body]);
+  }, [loaded, state, accountReview, subject, body, tasks, events, supports, mentorGroup, mentors, projects, projectServices]);
   const live = useRef({ signed, state });
   useEffect(() => {
     live.current = { signed, state };
@@ -313,11 +333,12 @@ export default function Page() {
       notify('Örnek validasyon kayıtları açıldı.');
     } else if (/rapor/i.test(command)) go('Raporlar ve Yazışmalar');
     else if (/ziyaret/i.test(command)) go('Okul Ziyaretleri');
+    else if (/eğitim|etkinlik|webinar|çalıştay/i.test(command)) go('Eğitim ve Etkinlikler');
     else
       setModal({
         type: 'info',
         title: 'REFİKA örnek görevleri',
-        text: 'Bu prototipte “validasyonları hazırla”, “ziyaretleri planla” ve “aylık raporu oluştur” komutları ilgili çalışma alanını açar. Serbest metin yapay zekâ bağlantısı henüz etkin değildir.',
+        text: 'Bu prototipte “validasyonları hazırla”, “ziyaretleri planla”, “çalıştay planla” ve “aylık raporu oluştur” komutları ilgili çalışma alanını açar. Serbest metin yapay zekâ bağlantısı henüz etkin değildir.',
       });
     setCommand('');
   }
@@ -399,7 +420,7 @@ export default function Page() {
               onClick={() => {
                 if (dispatch({ type: 'submit', subject, body })) {
                   go('Onay Merkezi');
-                  notify('Paket incelemeniz için onay merkezine taşındı.');
+                  notify('Validasyon listesi ve e-posta taslağı gönderim öncesi kontrole taşındı.');
                 }
               }}
             >
@@ -483,7 +504,7 @@ export default function Page() {
     <div className="workflow">
       {[
         [Search, 'Görevi algıla'],
-        [BookOpen, 'Kaydı ve kuralı bul'],
+        [BookOpen, 'ESEP kaydını ve kuralı kontrol et'],
         [ListChecks, 'Adımları sırala'],
         [Pencil, 'Taslağı hazırla'],
         [LockKeyhole, 'Onayla ve uygula'],
@@ -500,6 +521,47 @@ export default function Page() {
       ))}
     </div>
   );
+  const validationWorkspaceAction =
+    state.stage === 'review'
+      ? { label: 'Kayıtları incele', target: 'Kayıt ve Validasyon' }
+      : state.stage === 'draft'
+        ? { label: 'Taslakları incele', target: 'Taslaklar' }
+        : { label: 'Listeyi ve e-postayı incele', target: 'Onay Merkezi' };
+  const packagePanel =
+    state.stage === 'review'
+      ? {
+          title: 'Sıradaki adım',
+          badge: 'Kayıtlar inceleniyor',
+          heading: 'Validasyon listesi ve e-posta taslağını hazırlayın',
+          description: 'Kayıt incelemesi tamamlandığında merkez listesi ve e-posta taslağı oluşur.',
+          note: 'Önce soldaki kayıtları inceleyin; ardından listeyi ve e-posta taslağını gönderim öncesi kontrole alın.',
+          action: 'Kayıtları incele',
+          target: 'Kayıt ve Validasyon',
+        }
+      : state.stage === 'draft'
+        ? {
+            title: 'Gönderim öncesi kontrol',
+            badge: 'Taslak hazır',
+            heading: 'Validasyon listesi ve e-posta taslağı',
+            description: 'Merkez listesi ve e-posta taslağı hazırlandı.',
+            note: 'Alıcıyı, ekleri ve paylaşılacak bilgileri kontrol edin.',
+            action: 'Taslakları incele',
+            target: 'Taslaklar',
+          }
+        : {
+            title: 'Gönderim öncesi kontrol',
+            badge:
+              state.stage === 'approval'
+                ? 'Onay bekliyor'
+                : state.stage === 'sent' || state.stage === 'complete'
+                  ? 'Deneme tamamlandı'
+                  : 'Hazırlanıyor',
+            heading: 'Validasyon listesi ve e-posta taslağı',
+            description: 'Merkez listesi ve e-posta taslağı',
+            note: 'Alıcıyı, ekleri ve paylaşılacak bilgileri kontrol edin.',
+            action: 'Listeyi ve e-postayı incele',
+            target: 'Onay Merkezi',
+          };
   const resources = (
     <>
       <div className="chips">
@@ -528,14 +590,15 @@ export default function Page() {
       <p className="muted">Kaynak ve güncellik kontrolü</p>
       <div className="external-links">
         {[
-          ['MEB', 'https://www.meb.gov.tr/'],
-          ['YEĞİTEK', 'https://yegitek.meb.gov.tr/'],
-          ['EBA', 'https://www.eba.gov.tr/'],
-          ['ESEP', 'https://school-education.ec.europa.eu/en/etwinning'],
-          ['eTwinning Türkiye', 'https://etwinning.meb.gov.tr/'],
-        ].map(([name, url]) => (
-          <a key={name} href={url} target="_blank" rel="noreferrer">
-            {name}
+          ['MEB', 'https://www.meb.gov.tr/', '/official-logos/meb.png'],
+          ['YEĞİTEK', 'https://yegitek.meb.gov.tr/', '/official-logos/yegitek.png'],
+          ['EBA', 'https://www.eba.gov.tr/', '/official-logos/eba.png'],
+          ['ESEP', 'https://school-education.ec.europa.eu/en/etwinning', '/official-logos/esep-ec.svg'],
+          ['eTwinning Türkiye', 'https://etwinning.meb.gov.tr/', '/official-logos/etwinning-turkiye.png'],
+        ].map(([name, url, logo]) => (
+          <a className="official-source-link" key={name} href={url} target="_blank" rel="noreferrer">
+            <span className="official-source-logo"><Image unoptimized width={72} height={40} src={logo} alt="" /></span>
+            <span>{name}</span>
             <ExternalLink size={12} />
           </a>
         ))}
@@ -826,6 +889,7 @@ export default function Page() {
               )}
               {view === 'Çalışma Masam' && (
                 <>
+                  <CoordinatorDashboard state={state} tasks={tasks} events={events} onOpen={go} />
                   <form className="assistant-bar" onSubmit={assistant}>
                     <Sparkles size={22} />
                     <input
@@ -848,6 +912,10 @@ export default function Page() {
                       <CalendarDays />
                       Ziyaretleri planla
                     </button>
+                    <button onClick={() => go('Eğitim ve Etkinlikler')}>
+                      <GraduationCap />
+                      Eğitim ve etkinlik planla
+                    </button>
                     <button onClick={() => go('Raporlar ve Yazışmalar')}>
                       <FileText />
                       Aylık raporu oluştur
@@ -859,7 +927,7 @@ export default function Page() {
                       <div className="card-heading">
                         <h2>
                           <Users />
-                          Validasyon çalışma alanı
+                          Kayıt ve validasyon
                         </h2>
                         <span className="badge">Örnek kayıtlar</span>
                       </div>
@@ -902,17 +970,9 @@ export default function Page() {
                         </button>
                         <button
                           className="primary"
-                          onClick={() =>
-                            go(
-                              state.stage === 'review'
-                                ? 'Kayıt ve Validasyon'
-                                : state.stage === 'draft'
-                                  ? 'Taslaklar'
-                                  : 'Onay Merkezi',
-                            )
-                          }
+                          onClick={() => go(validationWorkspaceAction.target)}
                         >
-                          Onaya sun <ArrowRight size={16} />
+                          {validationWorkspaceAction.label} <ArrowRight size={16} />
                         </button>
                       </div>
                       <p className="card-note">
@@ -925,15 +985,10 @@ export default function Page() {
                       <div className="card-heading">
                         <h2>
                           <LockKeyhole />
-                          Onayınızı bekleyenler
+                          {packagePanel.title}
                         </h2>
                         <span className="badge amber">
-                          {state.stage === 'approval'
-                            ? 'Onay bekliyor'
-                            : state.stage === 'sent' ||
-                                state.stage === 'complete'
-                              ? 'Deneme tamamlandı'
-                              : 'Gönderilmedi'}
+                          {packagePanel.badge}
                         </span>
                       </div>
                       <div className="approval-inner">
@@ -941,31 +996,31 @@ export default function Page() {
                           <Mail />
                         </span>
                         <div>
-                          <h3>Validasyon gönderim paketi</h3>
-                          <p>Merkez listesi ve e-posta taslağı</p>
-                          <small>
-                            Alıcı, ekler ve paylaşılacak verileri inceleyin.
-                          </small>
+                          <h3>{packagePanel.heading}</h3>
+                          <p>{packagePanel.description}</p>
+                          <small>{packagePanel.note}</small>
                           <div className="actions">
                             <button
                               className="primary"
-                              onClick={() => go('Onay Merkezi')}
+                              onClick={() => go(packagePanel.target)}
                             >
-                              Paketi incele <ArrowRight size={18} />
+                              {packagePanel.action} <ArrowRight size={18} />
                             </button>
-                            <button
-                              className="text-link"
-                              onClick={() => {
-                                if (
-                                  ['draft', 'approval'].includes(state.stage)
-                                ) {
-                                  dispatch({ type: 'return' });
-                                  go('Kayıt ve Validasyon');
-                                } else go('Kayıt ve Validasyon');
-                              }}
-                            >
-                              Düzeltme iste
-                            </button>
+                            {state.stage !== 'review' && (
+                              <button
+                                className="text-link"
+                                onClick={() => {
+                                  if (
+                                    ['draft', 'approval'].includes(state.stage)
+                                  ) {
+                                    dispatch({ type: 'return' });
+                                    go('Kayıt ve Validasyon');
+                                  } else go('Kayıt ve Validasyon');
+                                }}
+                              >
+                                Düzeltme iste
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -1036,19 +1091,33 @@ export default function Page() {
               )}
               {view === 'Kayıt ve Validasyon' && (
                 <>
-                  <section className="card account-review-entry">
-                    <div><span className="eyebrow">HESAP İNCELEME</span><h2>Örnek Öğretmen · İki profil, aynı okul</h2><p>Temsili iki hesap senaryosu. Kimlik, erişim ve proje geçmişini karşılaştırın.</p></div>
-                    <button className="primary" onClick={() => go('Hesap İnceleme')}>Hesapları karşılaştır <ArrowRight size={18} /></button>
-                  </section>
+                  <ol className="validation-path" aria-label="Kayıt ve validasyon adımları">
+                    {[
+                      [Search, '1', 'Bekleyen kaydı aç', () => document.getElementById('validation-requests')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), false],
+                      [ExternalLink, '2', "ESEP'te kontrol et", () => window.open('https://school-education.ec.europa.eu/en/nso-desktop/registrations/etwinners', '_blank', 'noopener,noreferrer'), false],
+                      [ShieldCheck, '3', 'Kişi ve kurum teyidini kaydet', () => openRecord(state.records.find((record) => record.queued && !record.reviewed) || state.records[0]), !state.records.length],
+                      [ListChecks, '4', 'İşlem türünü seç', () => openRecord(state.records.find((record) => record.queued && !record.reviewed) || state.records[0]), !state.records.length],
+                      [Mail, '5', 'Liste ve e-postayı hazırla', prepare, !!pending || !queuedRecords(state).length || state.stage !== 'review'],
+                    ].map(([Icon, number, label, action, disabled]) => (
+                      <li key={number}>
+                        <button type="button" onClick={action} disabled={disabled} aria-label={`${number}. adım: ${label}`}>
+                          <span className="validation-step-number">{number}</span>
+                          <Icon size={19} aria-hidden="true" />
+                          <b>{label}</b>
+                        </button>
+                      </li>
+                    ))}
+                  </ol>
                   <div className="notice">
                     <BookOpen />
                     <span>
-                      <b>Örnek kontrol rehberi:</b> Okul bilgisi ve kurum kaydı
-                      kontrol edilir. Canlı yönerge doğrulaması yapılmamıştır;
-                      bu inceleme resmî validasyon kararı değildir.
+                      <b>ESEP kontrol köprüsü:</b> REFİKA, ESEP'ten canlı kayıt
+                      çekmez ve karar vermez. Koordinatör ESEP'te okul/hesap
+                      kaydını kontrol eder, dayanağını ve sonucunu burada
+                      kaydeder; REFİKA uygun talep taslağını hazırlar.
                     </span>
                   </div>
-                  <section className="card">
+                  <section className="card" id="validation-requests">
                     <div className="card-heading">
                       <h2>Validasyon talepleri</h2>
                       <span className="badge amber">
@@ -1095,15 +1164,19 @@ export default function Page() {
                           className="secondary"
                           onClick={() => go('Taslaklar')}
                         >
-                          Hazırlanan paketi aç
+                          Listeyi ve e-posta taslağını aç
                         </button>
                       )}
                       <small className="muted">
                         {pending
-                          ? 'Hazırlamadan önce eksik kayıtları inceleyin.'
-                          : 'Tüm örnek kayıtlar kontrol edildi.'}
+                          ? "Her kaydı ESEP'te kontrol edin; sonucu ve dayanağı kaydedin."
+                          : 'Tüm örnek kayıtlar kontrol edildi; talep taslağını hazırlayabilirsiniz.'}
                       </small>
                     </div>
+                  </section>
+                  <section className="card account-review-entry">
+                    <div><span className="eyebrow">AYRINTILI HESAP İNCELEMESİ</span><h2>İki profil görünen kayıtları karşılaştırın</h2><p>Aynı kişiye ait olabilecek hesaplarda kimlik, okul ve proje geçmişini yan yana inceleyip sonucu kaydedin.</p></div>
+                    <button className="primary" onClick={() => go('Hesap İnceleme')}>Ayrıntılı incelemeyi aç <ArrowRight size={18} /></button>
                   </section>
                   <p className="muted">{state.records.length} ayrı talep · {state.records.reduce((sum, r) => sum + r.deliveries.length, 0)} deneme gönderimi · {state.records.reduce((sum, r) => sum + Math.max(0, r.deliveries.length - 1), 0)} tekrar. Tekrar hazırlamak yeni talep oluşturmaz; gönderim ancak onaydan sonra sayılır.</p>
                 </>
@@ -1123,7 +1196,7 @@ export default function Page() {
                   <div className="card-heading">
                     <h2>
                       <ShieldCheck />
-                      Gönderim paketi incelemesi
+                      Gönderim öncesi kontrol
                     </h2>
                     <span className="badge amber">{stages[state.stage]}</span>
                   </div>
@@ -1190,6 +1263,11 @@ export default function Page() {
                   <p className="audit-footnote">Tarihli inceleme kaydıdır; kaynaklarla canlı bağlantı ve resmî gönderim yapılmaz.</p>
                 </section>
               )}
+              {view === 'Raporlar ve Yazışmalar' && <VisitWorkspace tasks={tasks} onChange={setTasks} mode="report" onOpen={() => go('Okul Ziyaretleri')} ready={loaded} />}
+              {view === 'Raporlar ve Yazışmalar' && <EventWorkspace events={events} onChange={setEvents} mode="report" onOpen={() => go('Eğitim ve Etkinlikler')} ready={loaded} />}
+              {view === 'Raporlar ve Yazışmalar' && <PlanReportQueue onOpen={go} />}
+              {view === 'Raporlar ve Yazışmalar' && <ActivityOutputs tasks={tasks} events={events} />}
+              {view === 'Faaliyet Planı' && <ActivityPlan onOpen={go} />}
               {view === 'Raporlar ve Yazışmalar' && (
                 <section className="card detail-card">
                   <h2>
@@ -1228,7 +1306,7 @@ export default function Page() {
                       onClick={() =>
                         download(
                           'REFIKA-ornek-faaliyet-ozeti.txt',
-                          `REFİKA — ÖRNEK FAALİYET ÖZETİ\nFaaliyet: ESEP/eTwinning kayıt incelemesi\nBenzersiz talep sayısı: ${state.records.length}\nGönderim paketi sayısı: ${state.packets.length}\nGönderimlerdeki toplam talep: ${state.packets.reduce((n,p) => n+p.count,0)}\nSonucu kaydedilen gönderim talepleri: ${state.packets.reduce((n,p) => n+Object.keys(p.results).length,0)}\nDurum: ${stages[state.stage]}\nSonuç: ${state.result || 'Bekleniyor'}\n\nİŞLEM GEÇMİŞİ\n${state.history.map((h) => new Date(h.at).toLocaleString('tr-TR') + ' — ' + h.message).join('\n')}\n\nBu belge prototip çıktısıdır; resmî gönderim yapılmamıştır.`,
+                          `REFİKA — ÖRNEK FAALİYET ÖZETİ\nFaaliyet: ESEP/eTwinning kayıt incelemesi\nBenzersiz talep sayısı: ${state.records.length}\nHazırlanan gönderim sayısı: ${state.packets.length}\nGönderimlerdeki toplam talep: ${state.packets.reduce((n,p) => n+p.count,0)}\nSonucu kaydedilen gönderim talepleri: ${state.packets.reduce((n,p) => n+Object.keys(p.results).length,0)}\nDurum: ${stages[state.stage]}\nSonuç: ${state.result || 'Bekleniyor'}\n\nİŞLEM GEÇMİŞİ\n${state.history.map((h) => new Date(h.at).toLocaleString('tr-TR') + ' — ' + h.message).join('\n')}\n\nBu belge prototip çıktısıdır; resmî gönderim yapılmamıştır.`,
                         )
                       }
                     >
@@ -1299,8 +1377,12 @@ export default function Page() {
                   </div>
                 </section>
               )}
-              {(view === 'Takvimim' ||
-                areas.slice(1, 7).some((a) => a[0] === view)) && (
+              {(view === 'Okul Ziyaretleri' || view === 'Takvimim') && <VisitWorkspace tasks={tasks} onChange={setTasks} mode={view === 'Takvimim' ? 'calendar' : 'visits'} onOpen={() => go('Okul Ziyaretleri')} onReport={() => go('Raporlar ve Yazışmalar')} ready={loaded} />}
+              {(view === 'Eğitim ve Etkinlikler' || view === 'Takvimim') && <EventWorkspace events={events} onChange={setEvents} mode={view === 'Takvimim' ? 'calendar' : 'events'} onOpen={() => go('Eğitim ve Etkinlikler')} ready={loaded} />}
+              {view === 'Rehberlik ve Mentörlük' && <MentorshipWorkspace items={supports} onChange={setSupports} mentors={mentors} onMentorsChange={setMentors} group={mentorGroup} onGroupChange={setMentorGroup} ready={loaded} />}
+              {view === 'Projeler ve TwinSpace' && <ProjectWorkspace projects={projects} onChange={setProjects} services={projectServices} onServicesChange={setProjectServices} ready={loaded} />}
+              {view === 'Kalite Etiketleri' && <QualityLabelWorkspace />}
+              {areas.slice(2, 7).filter((a) => !['Eğitim ve Etkinlikler','Rehberlik ve Mentörlük','Projeler ve TwinSpace','Kalite Etiketleri'].includes(a[0])).some((a) => a[0] === view) && (
                 <section className="card detail-card">
                   <h2>{view}</h2>
                   <div className="empty">
@@ -1333,7 +1415,7 @@ export default function Page() {
                   </div>
                 </section>
               )}
-              {officialResources.some(source => source.areas.includes(view)) && (
+              {officialResources.some(source => source.areas.includes(view)) && view !== 'Kalite Etiketleri' && (
                 <section className="card detail-card task-sources">
                   <h2><BookOpen /> Bu görev için resmî kaynaklar</h2>
                   <SourceCards items={officialResources.filter(source => source.areas.includes(view))} />
@@ -1481,7 +1563,7 @@ export default function Page() {
           {modal.type === 'approve' && (
             <>
               <div className="notice">
-                Bu onay yalnızca ekranda incelediğiniz örnek paket içindir.
+                Bu onay yalnızca ekranda incelediğiniz validasyon listesi ve e-posta taslağı içindir.
                 Gerçek mesaj veya veri gönderilmez.
               </div>
               <dl className="report">
@@ -1534,6 +1616,8 @@ export default function Page() {
                   className="primary"
                   onClick={() => {
                     setState(initialState());
+                    setTasks([]);
+                    setEvents([]);
                     setSubject('');
                     setBody('');
                     setAccountReview(initialAccountReview());

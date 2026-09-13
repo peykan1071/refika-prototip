@@ -111,7 +111,7 @@ export function transition(state, action) {
         subject: action.subject.trim(),
         body: action.body.trim(),
       },
-      history: log('Paket koordinatör onayına sunuldu.'),
+      history: log('Validasyon listesi ve e-posta taslağı gönderim öncesi kontrole sunuldu.'),
     };
   }
   if (action.type === 'return') {
@@ -126,7 +126,7 @@ export function transition(state, action) {
   }
   if (action.type === 'approve') {
     if (state.stage !== 'approval' || !action.confirmed)
-      throw new Error('Paket incelenmeli ve koordinatör onayı verilmelidir.');
+      throw new Error('Validasyon listesi ve e-posta taslağı incelenmeli, ardından koordinatör onayı verilmelidir.');
     const sentAt = new Date().toISOString();
     const packet = { ...state.packet, sentAt, results: {} };
     return {

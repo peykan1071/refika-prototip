@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { ArrowLeft, ArrowRight, FileText, ShieldCheck, Search, Download, Check, CircleHelp } from 'lucide-react';
+import { ArrowLeft, ArrowRight, FileText, ShieldCheck, Search, Download, Check, CircleHelp, ExternalLink } from 'lucide-react';
 import { accountCase, identityLabels, accessLabels, applyAccountReview, reviewRecommendation, accountReviewDraft, accountReviewText } from '../lib/account-review.mjs';
 
 export default function AccountReview({ review, setReview, onBack, download }) {
@@ -20,7 +20,8 @@ export default function AccountReview({ review, setReview, onBack, download }) {
       <div className="case-meta"><span className="badge amber">{identityLabels[applied.identity]}</span><small>Kaynak kontrolü: {accountCase.checkedAt}</small></div>
     </section>
     <div className="case-stepper" aria-label="İnceleme adımları"><span className="done"><Check size={17} /> 1. Kanıtları karşılaştır</span><span className="current"><Search size={17} /> 2. Kimlik ve erişimi teyit et</span><span><FileText size={17} /> 3. İşlem önerisini hazırla</span></div>
-    <p className="case-context">Bu senaryodaki kişi, kurum ve hesap bilgileri temsilidir. Bu ekrandaki seçimler deneme amaçlıdır; gerçek hesap durumunu değiştirmez.</p>
+    <p className="case-context">Bu senaryodaki kişi, kurum ve hesap bilgileri temsilidir. REFİKA canlı ESEP verisi çekmez: ESEP'te kendi yetkili oturumunuzla kontrol edin, yalnızca gerekli inceleme sonucunu buraya kaydedin. Bu ekrandaki seçimler deneme amaçlıdır; gerçek hesap durumunu değiştirmez.</p>
+    <div className="actions case-esept-actions"><a className="secondary" href="https://school-education.ec.europa.eu/en/connect" target="_blank" rel="noreferrer">ESEP'i aç <ExternalLink size={17} /></a><small>Koordinatör oturumunuzda ilgili okul veya kişi kaydını arayın. Şifre, doğrulama kodu ya da tam kişisel veri REFİKA'ya girilmez.</small></div>
     <section className="card case-comparison" aria-labelledby="comparison-title">
       <div className="card-heading"><h2 id="comparison-title">Hesapları yan yana karşılaştır</h2><span className="badge">Ortak okul ID: {accountCase.schoolId}</span></div>
       {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard focus enables horizontal scrolling of the comparison table. */}
@@ -41,7 +42,7 @@ export default function AccountReview({ review, setReview, onBack, download }) {
       <form onSubmit={e => { e.preventDefault(); try { const next = applyAccountReview(review); setReview({ ...review, applied: next, draft: '' }); setSaved(true); setError(''); } catch (err) { setError(err.message); } }}>
         <div className="case-form-grid"><label className="field">Kişi–hesap ilişkisi<select value={review.identity} onChange={e => change('identity', e.target.value)}>{Object.entries(identityLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
           <label className="field">Öğretmenin erişim durumu<select disabled={review.identity !== 'same'} value={review.access} onChange={e => change('access', e.target.value)}>{Object.entries(accessLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label></div>
-        <label className="field">Teyit veya düzeltme dayanağı ve tarihi<textarea rows={3} value={review.evidence} required={review.identity !== 'pending'} onChange={e => change('evidence', e.target.value)} placeholder="Örneğin: öğretmen teyidi / kaynak belge ve tarih. Denemede gerçek iletişim bilgisi yazmayın." /></label>
+        <label className="field">ESEP kontrol sonucu, dayanağı ve tarih<textarea rows={3} value={review.evidence} required={review.identity !== 'pending'} onChange={e => change('evidence', e.target.value)} placeholder="Örneğin: okul kadrosu sayfası ve kontrol tarihi / öğretmen teyidi. Denemede gerçek iletişim bilgisi yazmayın." /></label>
         {error && <p className="error" role="alert">{error}</p>}<div className="actions"><button className="primary">Değerlendirmeyi uygula <Check size={17} /></button>{saved && <output>Deneme değerlendirmesi uygulandı.</output>}</div>
       </form>
     </section>
