@@ -51,7 +51,10 @@ import MentorshipWorkspace from '../components/mentorship-workspace';
 import ProjectWorkspace from '../components/project-workspace';
 import ActivityOutputs from '../components/activity-outputs';
 import ActivityPlan, { PlanReportQueue } from '../components/activity-plan';
+import ReportCorrespondenceWorkspace from '../components/report-correspondence-workspace';
 import QualityLabelWorkspace from '../components/quality-label-workspace';
+import SupportBridgeWorkspace from '../components/support-bridge-workspace';
+import OfficialResourcesWorkspace from '../components/official-resources-workspace';
 import { loadDemo, saveDemo } from '../lib/storage.mjs';
 import { initialAccountReview } from '../lib/account-review.mjs';
 import { initialMentorGroup, restoreMentorGroup, restoreMentors, restoreSupports } from '../lib/mentorship.mjs';
@@ -811,7 +814,6 @@ export default function Page() {
               </button>
             </nav>
             <div className="sidebar-art" aria-hidden="true" />
-            <strong className="tagline">Yol arkadaşınız.</strong>
           </aside>
           {mobile && (
             <button
@@ -828,7 +830,7 @@ export default function Page() {
                 </IconButton>
                 <b>REFİKA</b>
                 <span>/</span>
-                <span>{view}</span>
+                <span>{view === 'Güncel Kaynaklar' ? 'Resmî Kaynaklar' : view}</span>
               </div>
               <div className="top-actions">
                 <span className="scope">
@@ -1233,7 +1235,8 @@ export default function Page() {
                 </section>
               )}
               {view === 'Sonuç Takibi' && <ResultTracker state={state} dispatch={dispatch} />}
-              {view === 'Raporlar ve Yazışmalar' && (
+              {view === 'Raporlar ve Yazışmalar' && <ReportCorrespondenceWorkspace tasks={tasks} events={events} />}
+              {view === '__legacy_reports__' && (
                 <section className="card detail-card validation-audit" aria-labelledby="validation-audit-title">
                   <h2 id="validation-audit-title"><History /> 2024–2026 validasyon incelemesi</h2>
                   <p><strong>{validationAudit.province} arşivi</strong> · {validationAudit.updatedAt} · {validationAudit.status}</p>
@@ -1263,12 +1266,12 @@ export default function Page() {
                   <p className="audit-footnote">Tarihli inceleme kaydıdır; kaynaklarla canlı bağlantı ve resmî gönderim yapılmaz.</p>
                 </section>
               )}
-              {view === 'Raporlar ve Yazışmalar' && <VisitWorkspace tasks={tasks} onChange={setTasks} mode="report" onOpen={() => go('Okul Ziyaretleri')} ready={loaded} />}
-              {view === 'Raporlar ve Yazışmalar' && <EventWorkspace events={events} onChange={setEvents} mode="report" onOpen={() => go('Eğitim ve Etkinlikler')} ready={loaded} />}
-              {view === 'Raporlar ve Yazışmalar' && <PlanReportQueue onOpen={go} />}
-              {view === 'Raporlar ve Yazışmalar' && <ActivityOutputs tasks={tasks} events={events} />}
+              {view === '__legacy_reports__' && <VisitWorkspace tasks={tasks} onChange={setTasks} mode="report" onOpen={() => go('Okul Ziyaretleri')} ready={loaded} />}
+              {view === '__legacy_reports__' && <EventWorkspace events={events} onChange={setEvents} mode="report" onOpen={() => go('Eğitim ve Etkinlikler')} ready={loaded} />}
+              {view === '__legacy_reports__' && <PlanReportQueue onOpen={go} />}
+              {view === '__legacy_reports__' && <ActivityOutputs tasks={tasks} events={events} />}
               {view === 'Faaliyet Planı' && <ActivityPlan onOpen={go} />}
-              {view === 'Raporlar ve Yazışmalar' && (
+              {view === '__legacy_reports__' && (
                 <section className="card detail-card">
                   <h2>
                     <ChartColumn />
@@ -1362,27 +1365,15 @@ export default function Page() {
                 </section>
               )}
               {view === 'Güncel Kaynaklar' && (
-                <section className="card detail-card">
-                  <h2>
-                    <BookOpen />
-                    Resmî kaynaklara erişim
-                  </h2>
-                  {resources}
-                  <h3>eTwinning Türkiye · Göreve göre kaynaklar</h3>
-                  <SourceCards items={officialResources} />
-                  <div className="notice">
-                    Dış bağlantılar resmî sayfaları açar. REFİKA bu sürümde
-                    kaynakları otomatik taramaz veya güncel kural doğrulaması
-                    yapmaz.
-                  </div>
-                </section>
+                <OfficialResourcesWorkspace />
               )}
               {(view === 'Okul Ziyaretleri' || view === 'Takvimim') && <VisitWorkspace tasks={tasks} onChange={setTasks} mode={view === 'Takvimim' ? 'calendar' : 'visits'} onOpen={() => go('Okul Ziyaretleri')} onReport={() => go('Raporlar ve Yazışmalar')} ready={loaded} />}
               {(view === 'Eğitim ve Etkinlikler' || view === 'Takvimim') && <EventWorkspace events={events} onChange={setEvents} mode={view === 'Takvimim' ? 'calendar' : 'events'} onOpen={() => go('Eğitim ve Etkinlikler')} ready={loaded} />}
               {view === 'Rehberlik ve Mentörlük' && <MentorshipWorkspace items={supports} onChange={setSupports} mentors={mentors} onMentorsChange={setMentors} group={mentorGroup} onGroupChange={setMentorGroup} ready={loaded} />}
               {view === 'Projeler ve TwinSpace' && <ProjectWorkspace projects={projects} onChange={setProjects} services={projectServices} onServicesChange={setProjectServices} ready={loaded} />}
               {view === 'Kalite Etiketleri' && <QualityLabelWorkspace />}
-              {areas.slice(2, 7).filter((a) => !['Eğitim ve Etkinlikler','Rehberlik ve Mentörlük','Projeler ve TwinSpace','Kalite Etiketleri'].includes(a[0])).some((a) => a[0] === view) && (
+              {view === 'Destek Köprüsü' && <SupportBridgeWorkspace />}
+              {areas.slice(2, 7).filter((a) => !['Eğitim ve Etkinlikler','Rehberlik ve Mentörlük','Projeler ve TwinSpace','Kalite Etiketleri','Destek Köprüsü'].includes(a[0])).some((a) => a[0] === view) && (
                 <section className="card detail-card">
                   <h2>{view}</h2>
                   <div className="empty">

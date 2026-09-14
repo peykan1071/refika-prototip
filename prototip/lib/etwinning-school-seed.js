@@ -1,0 +1,33 @@
+const note = 'Resmî ESEP eTwinning Okulu kazananlar listesiyle karşılaştırıldı.';
+const row = (id, year, name, schoolId = '') => ({ id, year, name, schoolId, label: `${year}–${year + 1} eTwinning Okulu`, note });
+
+export const etwinningSchoolSeed = [
+  row('school-2023-1071-malazgirt',2023,'1071 Malazgirt İlkokulu'),
+  row('school-2024-303052',2024,'Oltu Nenehatun Mesleki ve Teknik Anadolu Lisesi','303052'),
+  row('school-2024-416131',2024,'Kayakyolu Anaokulu','416131'),
+  row('school-2024-545055',2024,'Şükrüpaşa İlkokulu','545055'),
+  row('school-2024-210942',2024,'Oltu Fen Lisesi','210942'),
+  row('school-2024-104880',2024,'Nevzat Karabağ Anadolu Lisesi','104880'),
+  row('school-2025-01',2025,'Erzurum Özel Eğitim Meslek Lisesi'),
+  row('school-2025-02',2025,'Özel Güneş Ortaokulu'),
+  row('school-2025-03',2025,'Yahya Kemal Anaokulu'),
+  row('school-2025-04',2025,'Yakutiye Bilim ve Sanat Merkezi'),
+  row('school-2025-05',2025,'Erzurum Hınıs Bellitaş İlkokulu'),
+  row('school-2025-06',2025,'Erzurum Şenkaya Yedinisan İlkokulu'),
+  row('school-2025-07',2025,'Erzurum Anadolu Lisesi'),
+  row('school-2025-08',2025,'Vali Vefik Kitapçıgil İlkokulu'),
+  row('school-2025-09',2025,'Bilkent Erzurum Laboratuvar Okulu'),
+  row('school-2025-10',2025,'Şehitler İlkokulu'),
+  row('school-2026-01',2026,'Dumlupınar İlkokulu'),
+  row('school-2026-02',2026,'Erzurum Şenkaya Yedinisan İlkokulu'),
+  row('school-2026-03',2026,'Fuat Sezgin Anadolu Lisesi'),
+  row('school-2026-04',2026,'Mehmet Akif Ersoy İlkokulu'),
+  row('school-2026-05',2026,'Nene Hatun Anaokulu'),
+  row('school-2026-06',2026,'Oltu Nenehatun Mesleki ve Teknik Anadolu Lisesi'),
+  row('school-2026-07',2026,'Vali Vefik Kitapçıgil İlkokulu'),
+  row('school-2026-08',2026,'Yıldızkent Borsa İstanbul Ortaokulu'),
+  row('school-2026-09',2026,'Zübeyde Hanım Ortaokulu'),
+  row('school-2026-10',2026,'Şehitler İlkokulu'),
+  row('school-2026-11',2026,'Pasinler Atatürk Yatılı Bölge Ortaokulu'),
+  row('school-2026-12',2026,'Erzurum Anadolu Lisesi'),
+];

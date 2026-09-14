@@ -1,0 +1,2523 @@
+[
+  {
+    "yegitek_school": "Akdamar İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.867,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Aziziye Atatürk Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "ÇAT YAVİ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cat-yavi-ortaokulu",
+    "score": 0.743,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Aziziye Ilıca Anadolu İmam Hatip Lisesi",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.857,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Başçakmak Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Mareşal Fevzi Çakmak Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/maresal-fevzi-cakmak-ortaokulu-12",
+    "score": 0.735,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Budaklı İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.733,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Dumlu Şehit Muhammed Ferdi Güntekin Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "DUMLU ŞEHİT MUHAMMET FERDİ GÜNTEKİN ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumlu-sehit-muhammet-ferdi-guntekin-ortaokulu-0",
+    "score": 0.978,
+    "core_overlap": 0.6
+  },
+  {
+    "yegitek_school": "Erzurum Oltu Hattat Hasan Çelebi İmam Hatip Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Haşim İşcan İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasim-iscan-imam-hatip-ortaokulu",
+    "score": 0.675,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Erzurum Pasinler Serçeboğazı İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Erzurum Pasinler Milli Egemenlik İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-pasinler-milli-egemenlik-ilkokulu",
+    "score": 0.677,
+    "core_overlap": 0.25
+  },
+  {
+    "yegitek_school": "Erzurum İbrahim Hakkı Fen Lisesi",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Erzurum Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-lisesi",
+    "score": 0.588,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Göreşken Ergün Sevinç Şahin İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Erzurum Şenkaya Yedinisan İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-senkaya-yedinisan-ilkokulu-0",
+    "score": 0.613,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Hasan Basri Demirbağ Çok Programlı Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.607,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Toplu Konut İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulunamadı",
+    "esep_school": "OTLUKKAPI İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/otlukkapi-ilkokulu",
+    "score": 0.684,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "13 Mart İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "13 Mart İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/13-mart-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "15 Temmuz Şehitleri İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "15 Temmuz Şehitleri İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/15-temmuz-sehitleri-ilkokulu-4",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "15 Temmuz Şehitleri İmam Hatip Ortaokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "15 Temmuz Şehitleri İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/15-temmuz-sehitleri-imam-hatip-ortaokulu-14",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "18 Mart Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "18 Mart Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/18-mart-ortaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "18 Mart İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "18 Mart İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/18-mart-ilkokulu-1",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "19 Mayıs Ortaokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "19 Mayıs Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/19-mayis-ortaokulu-6",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "23 Nisan İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "23 Nisan İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/23-nisan-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "3 Mart İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "3 Mart İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/3-mart-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "50. Yıl Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "50 Yıl Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/50-yil-ortaokulu-8",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Abdurrahman Gazi İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ABDURRAHMAN GAZİ İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/abdurrahman-gazi-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Abdurrahmangazi İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Abdurrahmangazi ilkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/abdurrahmangazi-ilkokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Adnan Menderes Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Adnan Menderes Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/adnan-menderes-anadolu-lisesi-2",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Ahmet Yesevi Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Ahmet Yesevi Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ahmet-yesevi-ortaokulu-1",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Akşar İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "AKŞAR İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu-1",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Alparslan İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Alparslan İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/alparslan-ilkokulu-4",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Atatürk Mesleki ve Teknik Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Atatürk Mesleki Ve Teknik Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ataturk-mesleki-ve-teknik-anadolu-lisesi-23",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Atatürk Üniversitesi Aydın Doğan Özel İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Atatürk Üniversitesi Aydın Doğan Özel İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ataturk-universitesi-aydin-dogan-ozel-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Atatürk İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Atatürk İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ataturk-ilkokulu-385",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Aziziye Anaokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "AZİZİYE ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-anaokulu",
+    "score": 1.0,
+    "core_overlap": 0
+  },
+  {
+    "yegitek_school": "Aziziye Fatih ortaokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Fatih Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/fatih-ortaokulu-34",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Aziziye Söğütlü Ortaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Aziziye Söğütlü Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-sogutlu-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Aziziye Yavuz Selim Mesleki Ve Teknik Anadolu Lisesi",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Aziziye Yavuz Selim Mesleki Ve Teknik Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-yavuz-selim-mesleki-ve-teknik-anadolu-lisesi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Aziziye Şeker İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Aziziye Şeker İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-seker-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Aşkale Borsa İstanbul Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Aşkale Borsa İstanbul Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/askale-borsa-istanbul-anadolu-lisesi-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Aşkale İnkılap Ortaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Aşkale inkılap ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/askale-inkilap-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Barbaros Hayrettin Paşa Anaokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Barbaros Hayrettin Paşa Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/barbaros-hayrettin-pasa-anaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Barbaros Hayrettin Paşa Ortaokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Barbaros Hayrettin Paşa Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/barbaros-hayrettin-pasa-ortaokulu-2",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Barbaros Hayrettin Paşa İlkokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Barbaros Hayrettin Paşa İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/barbaros-hayrettin-pasa-ilkokulu-1",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Bağlar ilkokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Bağlar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/baglar-ilkokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Başköy Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Başköy Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/baskoy-ortaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Başköy İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Başköy İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/baskoy-ilkokulu-2",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Bilkent Erzurum Laboratuvar Okulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Bilkent Erzurum Laboratuvar Okulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/bilkent-erzurum-laboratuvar-okulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Bulgurlu Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Bulgurlu Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/bulgurlu-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Celal Akın İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Celal Akın İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/celal-akin-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Cumhuriyet Anadolu Lisesi",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Cumhuriyet Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cumhuriyet-anadolu-lisesi-23",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Cumhuriyet Mesleki ve Teknik Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Cumhuriyet Mesleki ve Teknik Anadolu lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cumhuriyet-mesleki-ve-teknik-anadolu-lisesi-8",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Dumankaya İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Dumankaya İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumankaya-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Dumlu İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "DUMLU İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumlu-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Dumlu Şehit Muhammet Ferdi Güntekin Ortaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "DUMLU ŞEHİT MUHAMMET FERDİ GÜNTEKİN ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumlu-sehit-muhammet-ferdi-guntekin-ortaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Dumlupınar İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "DUMLUPINAR İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumlupinar-ilkokulu-5",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Edip Somunoglu İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Edip Somunoglu İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/edip-somunoglu-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Ertuğrulgazi İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Ertuğrulgazi İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ertugrulgazi-ilkokulu-2",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Anadolu Lisesi",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 1.0,
+    "core_overlap": 0
+  },
+  {
+    "yegitek_school": "Erzurum Aşkale Kandilli Güvenç İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Erzurum Aşkale Kandilli Güvenç İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-askale-kandilli-guvenc-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Horasan Harçlı İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ERZURUM HORASAN HARÇLI İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-horasan-harcli-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Hınıs Bellitaş İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ERZURUM HINIS BELLİTAŞ İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-hinis-bellitas-ilkokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Lisesi",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Erzurum Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-lisesi",
+    "score": 1.0,
+    "core_overlap": 0
+  },
+  {
+    "yegitek_school": "Erzurum Pasinler Milli Egemenlik İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Erzurum Pasinler Milli Egemenlik İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-pasinler-milli-egemenlik-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Yakutiye Elektrik Elektronik Teknolojisi Mesleki ve Teknik Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Erzurum Yakutiye Elektrik - Elektronik Teknolojisi Mesleki ve Teknik Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-yakutiye-elektrik-elektronik-teknolojisi-mesleki-ve-teknik-anadolu-lisesi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Yakutiye Kocatepe Anaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ERZURUM Yakutiye Kocatepe Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-yakutiye-kocatepe-anaokulu-1",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Özel Eğitim Meslek Lisesi",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Erzurum Özel Eğitim Meslek Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-ozel-egitim-meslek-lisesi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Erzurum Şenkaya Yedinisan İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Erzurum Şenkaya Yedinisan İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-senkaya-yedinisan-ilkokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Esentepe Anaokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Esentepe Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/esentepe-anaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Eskipolat Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Eskipolat Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/eskipolat-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Fehmi Bilge Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Fehmi Bilge Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/fehmi-bilge-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Fuat Sezgin Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Fuat Sezgin Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/fuat-sezgin-anadolu-lisesi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Gazi Ahmet Muhtar Paşa Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Gazi Ahmet Muhtar Paşa Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/gazi-ahmet-muhtar-pasa-ortaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Güzelova Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Güzelova Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/guzelova-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Hakkı Pınar İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Hakkı Pınar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hakki-pinar-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Hasan Basri Anadolu İmam Hatip Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Hasan Basri Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasan-basri-anadolu-imam-hatip-lisesi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Hasankale Mesleki Ve Teknik Anadolu Lisesi",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "HASANKALE MESLEKİ VE TEKNİK ANADOLU LİSESİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasankale-mesleki-ve-teknik-anadolu-lisesi-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Hilalkent 125.Yıl İlkokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Hilalkent 125.Yıl İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hilalkent-125yil-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Horasan Fatih İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "HORASAN FATİH İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/horasan-fatih-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Horasan Kurtuluş Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "HORASAN KURTULUŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/horasan-kurtulus-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Ilıca Anaokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Ilıca Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ilica-anaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Kocatepe İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Yakutiye Kocatepe İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yakutiye-kocatepe-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Kurtuluş İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "KURTULUŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/kurtulus-ortaokulu-20",
+    "score": 0.8,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Mareşal Fevzi Çakmak İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Mareşal Fevzi Çakmak Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/maresal-fevzi-cakmak-ortaokulu-12",
+    "score": 0.881,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Mehmet Akif Ersoy Anadolu Lisesi",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "MEHMET AKİF ERSOY İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/mehmet-akif-ersoy-ilkokulu-169",
+    "score": 0.724,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Mehmet Akif Ersoy İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "MEHMET AKİF ERSOY İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/mehmet-akif-ersoy-ilkokulu-169",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Musa Gündeş İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "MUSA GÜNDEŞ İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/musa-gundes-ilkokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Narman Anadolu İmam Hatip Lisesi",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Nihat Kitapçı İlkokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Nihat Kitapçı İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/nihat-kitapci-ilkokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Oltu Mehmet Akif Ersoy İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "OLTU MEHMET AKİF ERSOY İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/oltu-mehmet-akif-ersoy-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Otlukkapı İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "OTLUKKAPI İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/otlukkapi-ilkokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Pasinler Halk Eğitimi Merkezi",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "PASİNLER HALK EĞİTİMİ MERKEZİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/pasinler-halk-egitimi-merkezi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Sabahattin Eryurt Anaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "SABAHATTİN ERYURT ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sabahattin-eryurt-anaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Ted Erzurum Koleji Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "TED ERZURUM KOLEJİ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ted-erzurum-koleji-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Tekman İmam Hatip Ortaokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Tekman İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/tekman-imam-hatip-ortaokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Yahya Kemal Anaokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "YAHYA KEMAL ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yahya-kemal-anaokulu-1",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Yakutiye Bilim Ve Sanat Merkezi",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "YAKUTİYE BİLİM VE SANAT MERKEZİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yakutiye-bilim-ve-sanat-merkezi",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Yağanbaba İmam Hatip Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Yağanbaba İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yaganbaba-imam-hatip-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Özel Erzurum Bahçeşehir Koleji",
+    "years": [
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Özel Erzurum Bahçeşehir Koleji",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-erzurum-bahcesehir-koleji",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Özel Güneş Ortaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ÖZEL GÜNEŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-gunes-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Özel Güneş İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ÖZEL GÜNEŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-gunes-ortaokulu",
+    "score": 0.821,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Şehit Astsubay Çavuş Soner Özübek Yatılı Bölge Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "Şehit Astsubay Çavuş Soner Özübek Yatılı Bölge Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sehit-astsubay-cavus-soner-ozubek-yatili-bolge-ortaokulu",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Şehit Binbaşı Lütfü Ceylan Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ŞEHİT BİNBAŞI LÜTFÜ CEYLAN İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sehit-binbasi-lutfu-ceylan-ilkokulu-0",
+    "score": 0.901,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "Şehit Binbaşı Lütfü Ceylan İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "ESEP'te bulundu",
+    "esep_school": "ŞEHİT BİNBAŞI LÜTFÜ CEYLAN İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sehit-binbasi-lutfu-ceylan-ilkokulu-0",
+    "score": 1.0,
+    "core_overlap": 1.0
+  },
+  {
+    "yegitek_school": "1071 Malazgirt İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "1071 İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/1071-ilkokulu",
+    "score": 0.817,
+    "core_overlap": 0.5
+  },
+  {
+    "yegitek_school": "12 Mart İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "11 Mart İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/11-mart-ilkokulu-0",
+    "score": 0.938,
+    "core_overlap": 0.333
+  },
+  {
+    "yegitek_school": "22 Nisan İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "23 Nisan İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/23-nisan-ilkokulu-9",
+    "score": 0.941,
+    "core_overlap": 0.333
+  },
+  {
+    "yegitek_school": "23 Temmuz Ortaokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "15 Temmuz Şehitler Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/15-temmuz-sehitler-ortaokulu-1",
+    "score": 0.723,
+    "core_overlap": 0.25
+  },
+  {
+    "yegitek_school": "Alagöz İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Bahattin alagöz ilkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/bahattin-alagoz-ilkokulu",
+    "score": 0.817,
+    "core_overlap": 0.5
+  },
+  {
+    "yegitek_school": "Aşkale Anadolu İmam Hatip Lisesi",
+    "years": [
+      2025
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.875,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Aşık Sümmani İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Narman Aşık Sümmani İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-asik-summani-ilkokulu",
+    "score": 0.863,
+    "core_overlap": 0.667
+  },
+  {
+    "yegitek_school": "Bardakçı İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Cemal Bardakçı Ilkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cemal-bardakci-ilkokulu",
+    "score": 0.85,
+    "core_overlap": 0.5
+  },
+  {
+    "yegitek_school": "Cumhuriyet İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "60. Yıl Cumhuriyet İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/60-yil-cumhuriyet-ilkokulu",
+    "score": 0.844,
+    "core_overlap": 0.333
+  },
+  {
+    "yegitek_school": "Dumlu Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Dumlupınar Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumlupinar-ortaokulu",
+    "score": 0.857,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Fatih İlkokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Alaca Fatih İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/alaca-fatih-ilkokulu",
+    "score": 0.824,
+    "core_overlap": 0.5
+  },
+  {
+    "yegitek_school": "Gazi İmam Hatip Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Gaziler İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/gaziler-imam-hatip-ortaokulu",
+    "score": 0.943,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Horasan Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.817,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Yakutiye Anadolu İmam Hatip Lisesi",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Elle kontrol",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.89,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Hüsamettin Yavuz İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Halil Çavuş İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/halil-cavus-ilkokulu",
+    "score": 0.711,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Hınıs Anadolu Lisesi",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.824,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kadıcelal İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.688,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kandilli Güvenç Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Aşkale Kandilli Güvenç İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-askale-kandilli-guvenc-ilkokulu",
+    "score": 0.75,
+    "core_overlap": 0.667
+  },
+  {
+    "yegitek_school": "Karafatma İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.75,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Karayazı Anadolu İmam Hatip Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.879,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Karayazı Çok Programlı Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.67,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Karaçoban Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.817,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Karaçoban İmkb Yatılı Bölge Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Yağanbaba İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yaganbaba-imam-hatip-ortaokulu",
+    "score": 0.627,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kayak Yolu Çimento Müstahsilleri İşveren Sendikası Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "DUMLU ŞEHİT MUHAMMET FERDİ GÜNTEKİN ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumlu-sehit-muhammet-ferdi-guntekin-ortaokulu-0",
+    "score": 0.476,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kayakyolu Anaokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "YAHYA KEMAL ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yahya-kemal-anaokulu-1",
+    "score": 0.684,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kayakyolu İlkokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Dumankaya İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumankaya-ilkokulu",
+    "score": 0.722,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kazım Karabekir Mesleki ve Teknik Anadolu Lisesi",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "erzurum yakutiye şehit burak tatar mesleki ve teknik anadolu lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-yakutiye-sehit-burak-tatar-mesleki-ve-teknik-anadolu-lisesi",
+    "score": 0.796,
+    "core_overlap": 0.2
+  },
+  {
+    "yegitek_school": "Kazım Yurdalan TOKİ Anaokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Karaçoban Nene Hatun Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-karacoban-nene-hatun-anaokulu",
+    "score": 0.596,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kazım Yurdalan Toki İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "HORASAN FATİH İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/horasan-fatih-ilkokulu",
+    "score": 0.6,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kazım Yurdalan İlkokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Şenkaya Yedinisan İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-senkaya-yedinisan-ilkokulu-0",
+    "score": 0.653,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Koçkaya ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÇAT YAVİ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cat-yavi-ortaokulu",
+    "score": 0.8,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Koşapınar İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Yazıpınar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yazipinar-ilkokulu",
+    "score": 0.833,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Köprüköy",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Yakutiye Kocatepe İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yakutiye-kocatepe-ilkokulu",
+    "score": 0.4,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Köprüköy Gölçayır İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "OTLUKKAPI İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/otlukkapi-ilkokulu",
+    "score": 0.636,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kültür Kurumu Anaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "KURTULUŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/kurtulus-ortaokulu-20",
+    "score": 0.6,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kültür Kurumu İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.611,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kırklar İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.8,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kızılay Derviş Hopikoğlu Anaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Karaçoban Nene Hatun Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-karacoban-nene-hatun-anaokulu",
+    "score": 0.516,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Kışlaköy İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.71,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Maksut Efendi İmam Hatip Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Tekman İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/tekman-imam-hatip-ortaokulu-0",
+    "score": 0.787,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Mecidiye Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.817,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Mecidiye İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Aziziye Şeker İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-seker-ilkokulu",
+    "score": 0.71,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Miümtaz Turhan Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.725,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Molla Mehmet İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "OLTU MEHMET AKİF ERSOY İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/oltu-mehmet-akif-ersoy-ilkokulu",
+    "score": 0.692,
+    "core_overlap": 0.2
+  },
+  {
+    "yegitek_school": "Mustafa Kemal Ortaokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "YAHYA KEMAL ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yahya-kemal-anaokulu-1",
+    "score": 0.698,
+    "core_overlap": 0.333
+  },
+  {
+    "yegitek_school": "Mustafa Kemal İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "MUSA GÜNDEŞ İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/musa-gundes-ilkokulu-0",
+    "score": 0.714,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Mümtaz Turhan Anadolu Lisesi",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.725,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Mümtaz Turhan Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Tekman İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/tekman-imam-hatip-ortaokulu-0",
+    "score": 0.64,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Narman Aşık Sümmani İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Dumankaya İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumankaya-ilkokulu",
+    "score": 0.609,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Narman İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.759,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Narman İmam Hatip Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Tekman İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/tekman-imam-hatip-ortaokulu-0",
+    "score": 0.889,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Nene Hatun Anaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "AZİZİYE NENEHATUN ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-nenehatun-anaokulu",
+    "score": 0.973,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Nevzat Karabağ Anadolu Lisesi",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "HARPUT KAPI ANADOLU LİSESİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/harput-kapi-anadolu-lisesi",
+    "score": 0.727,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Oltu Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.848,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Oltu Anadolu İmam Hatip Lisesi",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.839,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Oltu Fen Lisesi",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.69,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Oltu Kız Anadolu İmam Hatip Lisesi",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.788,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Oltu Nenehatun Mesleki ve Teknik Anadolu Lisesi",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Dedeman Mesleki ve Teknik Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-dedeman-mesleki-ve-teknik-anadolu-lisesi",
+    "score": 0.851,
+    "core_overlap": 0.25
+  },
+  {
+    "yegitek_school": "Orgeneral Selahattin Demircioğlu Ortaokulu",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "SABAHATTİN ERYURT ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sabahattin-eryurt-anaokulu-0",
+    "score": 0.588,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Ortabahçe İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ERZURUM HORASAN HARÇLI İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-horasan-harcli-ilkokulu",
+    "score": 0.732,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Palandöken Kız Anadolu İmam Hatip Lisesi",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.852,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Pasinler Atatürk Yatılı Bölge Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Şehit Astsubay Çavuş Soner Özübek Yatılı Bölge Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sehit-astsubay-cavus-soner-ozubek-yatili-bolge-ortaokulu",
+    "score": 0.653,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Pasinler İbrahim Hakkı İmam Hatip Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Haşim İşcan İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasim-iscan-imam-hatip-ortaokulu",
+    "score": 0.72,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Paşalı İlkokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.828,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Pehlivanlı İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Binpınar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/binpinar-ilkokulu",
+    "score": 0.667,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Pirali Akkeran Mahallesi İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ERZURUM HORASAN HARÇLI İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-horasan-harcli-ilkokulu",
+    "score": 0.643,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Polis Amca İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Halil Çavuş İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/halil-cavus-ilkokulu",
+    "score": 0.718,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Prof. Dr. Necmettin Erbakan Fen Lisesi",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-lisesi",
+    "score": 0.542,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Rabia Hatun Kız Anadolu İmam Hatip Lisesi",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.795,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Raif Azak İmam Hatip Ortaokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Haşim İşcan İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasim-iscan-imam-hatip-ortaokulu",
+    "score": 0.806,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Remzi Sakaoğlu Bilim Ve Sanat Merkezi",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "YAKUTİYE BİLİM VE SANAT MERKEZİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yakutiye-bilim-ve-sanat-merkezi",
+    "score": 0.817,
+    "core_overlap": 0.333
+  },
+  {
+    "yegitek_school": "Rıfkı Salim Burçak Mesleki ve Teknik Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "erzurum yakutiye şehit burak tatar mesleki ve teknik anadolu lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-yakutiye-sehit-burak-tatar-mesleki-ve-teknik-anadolu-lisesi",
+    "score": 0.792,
+    "core_overlap": 0.167
+  },
+  {
+    "yegitek_school": "Sabancı İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.733,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Saltukbey Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÇAT YAVİ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cat-yavi-ortaokulu",
+    "score": 0.703,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Sebahattin Eryurt Anaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "SABAHATTİN ERYURT ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sabahattin-eryurt-anaokulu-0",
+    "score": 0.962,
+    "core_overlap": 0.333
+  },
+  {
+    "yegitek_school": "Seyhan İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.759,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Soğukpınar Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÖZEL GÜNEŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-gunes-ortaokulu",
+    "score": 0.7,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Sıddık Tivnikli Hafız İmam Hatip Ortaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Haşim İşcan İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasim-iscan-imam-hatip-ortaokulu",
+    "score": 0.676,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Tekman Anadolu İmam Hatip Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Narman Anadolu İmam Hatip Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/narman-anadolu-imam-hatip-lisesi",
+    "score": 0.906,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Tekman Çok Programlı Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.67,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Tevfik İleri Anadolu Lisesi",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.725,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Toplu Konut Ortaokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÖZEL GÜNEŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-gunes-ortaokulu",
+    "score": 0.683,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Tortum Şehit Murat Karataş Yatılı Bölge Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "DUMLU ŞEHİT MUHAMMET FERDİ GÜNTEKİN ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/dumlu-sehit-muhammet-ferdi-guntekin-ortaokulu-0",
+    "score": 0.617,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Uzundere Anadolu Lisesi",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.817,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Vali Vefik Kitapçıgil İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Nihat Kitapçı İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/nihat-kitapci-ilkokulu-0",
+    "score": 0.692,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Veysefendi İlkokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Aziziye Şeker İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-seker-ilkokulu",
+    "score": 0.727,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Yavi Anadolu Lisesi",
+    "years": [
+      2023,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.848,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Yedinisan İlkokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Şenkaya Yedinisan İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-senkaya-yedinisan-ilkokulu-0",
+    "score": 0.818,
+    "core_overlap": 0.5
+  },
+  {
+    "yegitek_school": "Yenikent Anaokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "AZİZİYE NENEHATUN ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-nenehatun-anaokulu",
+    "score": 0.743,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Yıldızkent Anaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Ilıca Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ilica-anaokulu-0",
+    "score": 0.727,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Yıldızkent Borsa İstanbul Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Kopal Borsa İstanbul Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/kopal-borsa-istanbul-ortaokulu",
+    "score": 0.8,
+    "core_overlap": 0.5
+  },
+  {
+    "yegitek_school": "Yıldızkent Nafizbey Mesleki ve Teknik Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Dedeman Mesleki ve Teknik Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-dedeman-mesleki-ve-teknik-anadolu-lisesi",
+    "score": 0.783,
+    "core_overlap": 0.25
+  },
+  {
+    "yegitek_school": "Yıldızkent İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Yazıpınar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yazipinar-ilkokulu",
+    "score": 0.703,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Ziya Gökalp Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "HARPUT KAPI ANADOLU LİSESİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/harput-kapi-anadolu-lisesi",
+    "score": 0.769,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Zübeyde Hanım Anaokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "AZİZİYE NENEHATUN ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-nenehatun-anaokulu",
+    "score": 0.7,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Zübeyde Hanım Ortaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "TED ERZURUM KOLEJİ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ted-erzurum-koleji-ortaokulu",
+    "score": 0.651,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Zübeyde Hanım İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Aziziye Şeker İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-seker-ilkokulu",
+    "score": 0.611,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Çat Karaşeyh İlk/Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÇAT YAVİ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cat-yavi-ortaokulu",
+    "score": 0.727,
+    "core_overlap": 0.25
+  },
+  {
+    "yegitek_school": "Çat İmam Hatip Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Tekman İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/tekman-imam-hatip-ortaokulu-0",
+    "score": 0.863,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Çocuklar Gülsün Diye Murat Osanmaz Anaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "SABAHATTİN ERYURT ANAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sabahattin-eryurt-anaokulu-0",
+    "score": 0.464,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Ömer Duygun İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "MUSA GÜNDEŞ İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/musa-gundes-ilkokulu-0",
+    "score": 0.7,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Özel Final Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÖZEL GÜNEŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-gunes-ortaokulu",
+    "score": 0.8,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Özel Güneş Koleji",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Özel Erzurum Bahçeşehir Koleji",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-erzurum-bahcesehir-koleji",
+    "score": 0.718,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Özel Hedef Koleji",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Özel Erzurum Bahçeşehir Koleji",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-erzurum-bahcesehir-koleji",
+    "score": 0.769,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "İbrahim Hakkı Kubilay İmam Hatip Ortaokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Haşim İşcan İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasim-iscan-imam-hatip-ortaokulu",
+    "score": 0.703,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "İbrahim Hakkı İlkokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ERZURUMLU İBRAHİM HAKKI ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurumlu-ibrahim-hakki-ortaokulu-1",
+    "score": 0.691,
+    "core_overlap": 0.667
+  },
+  {
+    "yegitek_school": "İnkılap Ortaokulu",
+    "years": [
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "50. Yıl Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/50-yil-ortaokulu-7",
+    "score": 0.727,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "İnkılap İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Binpınar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/binpinar-ilkokulu",
+    "score": 0.788,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "İspir İmam Hatip Ortaokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Haşim İşcan İmam Hatip Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/hasim-iscan-imam-hatip-ortaokulu",
+    "score": 0.793,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şair Nefi Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Açı Koleji Ortaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-aci-koleji-ortaokulu",
+    "score": 0.769,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şehit Birol İli Bilim Ve Sanat Merkezi",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "YAKUTİYE BİLİM VE SANAT MERKEZİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/yakutiye-bilim-ve-sanat-merkezi",
+    "score": 0.764,
+    "core_overlap": 0.333
+  },
+  {
+    "yegitek_school": "Şehit Mücahit Daştan Anadolu Lisesi",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.67,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şehit Osman Gülmez Ortaokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÖZEL GÜNEŞ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/ozel-gunes-ortaokulu",
+    "score": 0.625,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şehit Yakup Sürücü Anadolu Lisesi",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "HARPUT KAPI ANADOLU LİSESİ",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/harput-kapi-anadolu-lisesi",
+    "score": 0.678,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şehit Üsteğmen İsmail Aksu İlkokulu",
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Şehit Öğretmen İlyas Acar Anaokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sehit-ogretmen-ilyas-acar-anaokulu",
+    "score": 0.609,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şehit İlhami Koçak İlkokulu",
+    "years": [
+      2025
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ŞEHİT BİNBAŞI LÜTFÜ CEYLAN İLKOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/sehit-binbasi-lutfu-ceylan-ilkokulu-0",
+    "score": 0.677,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şehitler İlkokulu",
+    "years": [
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Aziziye Şeker İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aziziye-seker-ilkokulu",
+    "score": 0.839,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şenyurt Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.817,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şükrüpaşa Anadolu Lisesi",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Erzurum Anadolu Lisesi",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/erzurum-anadolu-lisesi",
+    "score": 0.817,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şükrüpaşa Ortaokulu",
+    "years": [
+      2023
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "ÇAT YAVİ ORTAOKULU",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/cat-yavi-ortaokulu",
+    "score": 0.649,
+    "core_overlap": 0.0
+  },
+  {
+    "yegitek_school": "Şükrüpaşa İlkokulu",
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "Sorgu tamamlanmadı",
+    "esep_school": "Akşar İlkokulu",
+    "esep_url": "https://school-education.ec.europa.eu/en/connect/schools-organisations/aksar-ilkokulu",
+    "score": 0.75,
+    "core_overlap": 0.0
+  }
+]

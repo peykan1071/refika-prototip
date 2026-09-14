@@ -1,0 +1,199 @@
+[
+  {
+    "teacher": "Özlem GÖREZ",
+    "schools": [
+      "Akdamar İlkokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=%C3%96zlem+G%C3%96REZ&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Seyfullah Bastepe",
+    "schools": [
+      "Aziziye Atatürk Ortaokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Seyfullah+Bastepe&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "ARZU ÇİFTÇİ",
+    "schools": [
+      "Aziziye Ilıca Anadolu İmam Hatip Lisesi",
+      "Aziziye Ilıca Anadolu İmam Hatip Lisesi"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=ARZU+%C3%87%C4%B0FT%C3%87%C4%B0&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Merve Ay",
+    "schools": [
+      "Aziziye Ilıca Anadolu İmam Hatip Lisesi"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Merve+Ay&categorized_user_validation_status=All",
+    "results": [
+      {
+        "name": "Çağlayan Merve Yücel",
+        "organisation": "Şehit Abdullah Bozkurt İlkokulu (Türkiye)",
+        "registered": "25.02.2021",
+        "links": [
+          "/en/connect/people/457758",
+          "/en/connect/schools-organisations/sehit-abdullah-bozkurt-ilkokulu"
+        ]
+      },
+      {
+        "name": "Maya merve Kenan",
+        "organisation": "Zekeriye Konukoğlu İlkokulu (Türkiye)",
+        "registered": "06.09.2022",
+        "links": [
+          "/en/connect/people/663908",
+          "/en/connect/schools-organisations/zekeriye-konukoglu-ilkokulu"
+        ]
+      },
+      {
+        "name": "merve abacıoğlu gayberi",
+        "organisation": "Şanlıurfa Anadolu Lisesi (Türkiye)",
+        "registered": "23.02.2022",
+        "links": [
+          "/en/connect/people/585312",
+          "/en/connect/schools-organisations/sanliurfa-anadolu-lisesi"
+        ]
+      },
+      {
+        "name": "Merve Günay",
+        "organisation": "Derya Yeşim Altaş Anaokulu (Türkiye)",
+        "registered": "27.02.2019",
+        "links": [
+          "/en/connect/people/203750",
+          "/en/connect/schools-organisations/derya-yesim-altas-anaokulu-1"
+        ]
+      },
+      {
+        "name": "merve hazal kaya",
+        "organisation": "Özel Burdur Bahçeşehir Koleji İlkokulu (Türkiye)",
+        "registered": "08.11.2022",
+        "links": [
+          "/en/connect/people/732116",
+          "/en/connect/schools-organisations/ozel-burdur-bahcesehir-koleji-ilkokulu"
+        ]
+      },
+      {
+        "name": "merve özdemir kaya",
+        "organisation": "Tekkeköy İmam Hatip Ortaokulu (Türkiye)",
+        "registered": "04.12.2024",
+        "links": [
+          "/en/connect/people/1769951",
+          "/en/connect/schools-organisations/tekkekoy-imam-hatip-ortaokulu"
+        ]
+      },
+      {
+        "name": "merve saydam",
+        "organisation": "Remzi Oğuz Arık İlkokulu (Türkiye)",
+        "registered": "12.03.2019",
+        "links": [
+          "/en/connect/people/207084",
+          "/en/connect/schools-organisations/remzi-oguz-arik-ilkokulu"
+        ]
+      },
+      {
+        "name": "Merve ULUKAYA",
+        "organisation": "Şahinbey Belediyesi Bilim ve Sanat Merkezi (Türkiye)",
+        "registered": "23.10.2019",
+        "links": [
+          "/en/connect/people/260520",
+          "/en/connect/schools-organisations/sahinbey-belediyesi-bilim-ve-sanat-merkezi"
+        ]
+      }
+    ]
+  },
+  {
+    "teacher": "Simge ATAL",
+    "schools": [
+      "Başçakmak Ortaokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Simge+ATAL&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Ahmet Ziya BAYAR",
+    "schools": [
+      "Budaklı İlkokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Ahmet+Ziya+BAYAR&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Halil ÖZDEMİR",
+    "schools": [
+      "Dumlu Şehit Muhammed Ferdi Güntekin Ortaokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Halil+%C3%96ZDEM%C4%B0R&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Selda AYDIN",
+    "schools": [
+      "Dumlu Şehit Muhammed Ferdi Güntekin Ortaokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Selda+AYDIN&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Beyhan Sedefoğlu",
+    "schools": [
+      "Erzurum Oltu Hattat Hasan Çelebi İmam Hatip Ortaokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Beyhan+Sedefo%C4%9Flu&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Merve Aktürk Polat",
+    "schools": [
+      "Erzurum Pasinler Serçeboğazı İlkokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Merve+Akt%C3%BCrk+Polat&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Ayşe Kiraz",
+    "schools": [
+      "Erzurum İbrahim Hakkı Fen Lisesi",
+      "Erzurum İbrahim Hakkı Fen Lisesi"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Ay%C5%9Fe+Kiraz&categorized_user_validation_status=All",
+    "results": [
+      {
+        "name": "Ayşe Kiraz",
+        "organisation": "Evyap İbrahim Hakkı Fen Lisesi (Türkiye)",
+        "registered": "07.07.2018",
+        "links": [
+          "/en/connect/people/159281",
+          "/en/connect/schools-organisations/evyap-ibrahim-hakki-fen-lisesi"
+        ]
+      }
+    ]
+  },
+  {
+    "teacher": "Erhan Doğubeyi",
+    "schools": [
+      "Göreşken Ergün Sevinç Şahin İlkokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Erhan+Do%C4%9Fubeyi&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Ferit AŞÇI",
+    "schools": [
+      "Hasan Basri Demirbağ Çok Programlı Anadolu Lisesi"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=Ferit+A%C5%9E%C3%87I&categorized_user_validation_status=All",
+    "results": []
+  },
+  {
+    "teacher": "Hülya ATASOYU",
+    "schools": [
+      "Toplu Konut İlkokulu"
+    ],
+    "query_url": "https://school-education.ec.europa.eu/en/connect/people?name=H%C3%BClya+ATASOYU&categorized_user_validation_status=All",
+    "results": []
+  }
+]

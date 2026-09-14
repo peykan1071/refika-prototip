@@ -1,0 +1,140 @@
+{"yegitek_unique_schools": 221, "counts": {"ESEP'te bulundu": 88, "Elle kontrol": 14, "ESEP'te bulunamad�": 12, "Sorgu tamamlanmad�": 107}}
+
+Elle kontrol
+0.817	1071 Malazgirt �lkokulu	1071 �LKOKULU
+0.938	12 Mart �lkokulu	11 Mart �lkokulu
+0.941	22 Nisan �lkokulu	23 Nisan �lkokulu
+0.723	23 Temmuz Ortaokulu	15 Temmuz �ehitler Ortaokulu
+0.817	Alag�z �lkokulu	Bahattin alag�z ilkokulu
+0.875	A�kale Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.863	A��k S�mmani �lkokulu	Narman A��k S�mmani �lkokulu
+0.850	Bardak�� �lkokulu	Cemal Bardak�� Ilkokulu
+0.844	Cumhuriyet �lkokulu	60. Y�l Cumhuriyet �lkokulu
+0.857	Dumlu Ortaokulu	Dumlup�nar Ortaokulu
+0.824	Fatih �lkokulu	Alaca Fatih �lkokulu
+0.943	Gazi �mam Hatip Ortaokulu	Gaziler �mam Hatip Ortaokulu
+0.817	Horasan Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.890	Yakutiye Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+
+ESEP'te bulunamad�
+0.867	Akdamar �lkokulu	Ak�ar �lkokulu
+0.743	Aziziye Atat�rk Ortaokulu	�AT YAV� ORTAOKULU
+0.857	Aziziye Il�ca Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.735	Ba��akmak Ortaokulu	Mare�al Fevzi �akmak Ortaokulu
+0.733	Budakl� �lkokulu	Ak�ar �lkokulu
+0.978	Dumlu �ehit Muhammed Ferdi G�ntekin Ortaokulu	DUMLU �EH�T MUHAMMET FERD� G�NTEK�N ORTAOKULU
+0.675	Erzurum Oltu Hattat Hasan �elebi �mam Hatip Ortaokulu	Ha�im ��can �mam Hatip Ortaokulu
+0.677	Erzurum Pasinler Ser�ebo�az� �lkokulu	Erzurum Pasinler Milli Egemenlik �lkokulu
+0.588	Erzurum �brahim Hakk� Fen Lisesi	Erzurum Lisesi
+0.613	G�re�ken Erg�n Sevin� �ahin �lkokulu	Erzurum �enkaya Yedinisan �lkokulu
+0.607	Hasan Basri Demirba� �ok Programl� Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.684	Toplu Konut �lkokulu	OTLUKKAPI �LKOKULU
+
+Sorgu tamamlanmad�
+0.711	H�samettin Yavuz �lkokulu	Halil �avu� �lkokulu
+0.824	H�n�s Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.688	Kad�celal �lkokulu	Ak�ar �lkokulu
+0.750	Kandilli G�ven� Ortaokulu	Erzurum A�kale Kandilli G�ven� �lkokulu
+0.750	Karafatma �lkokulu	Ak�ar �lkokulu
+0.879	Karayaz� Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.670	Karayaz� �ok Programl� Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.817	Kara�oban Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.627	Kara�oban �mkb Yat�l� B�lge Ortaokulu	Ya�anbaba �mam Hatip Ortaokulu
+0.476	Kayak Yolu �imento M�stahsilleri ��veren Sendikas� Ortaokulu	DUMLU �EH�T MUHAMMET FERD� G�NTEK�N ORTAOKULU
+0.684	Kayakyolu Anaokulu	YAHYA KEMAL ANAOKULU
+0.722	Kayakyolu �lkokulu	Dumankaya �lkokulu
+0.796	Kaz�m Karabekir Mesleki ve Teknik Anadolu Lisesi	erzurum yakutiye �ehit burak tatar mesleki ve teknik anadolu lisesi
+0.596	Kaz�m Yurdalan TOK� Anaokulu	Erzurum Kara�oban Nene Hatun Anaokulu
+0.600	Kaz�m Yurdalan Toki �lkokulu	HORASAN FAT�H �LKOKULU
+0.653	Kaz�m Yurdalan �lkokulu	Erzurum �enkaya Yedinisan �lkokulu
+0.800	Ko�kaya ortaokulu	�AT YAV� ORTAOKULU
+0.833	Ko�ap�nar �lkokulu	Yaz�p�nar �lkokulu
+0.400	K�pr�k�y	Yakutiye Kocatepe �lkokulu
+0.636	K�pr�k�y G�l�ay�r �lkokulu	OTLUKKAPI �LKOKULU
+0.600	K�lt�r Kurumu Anaokulu	KURTULU� ORTAOKULU
+0.611	K�lt�r Kurumu �lkokulu	Ak�ar �lkokulu
+0.800	K�rklar �lkokulu	Ak�ar �lkokulu
+0.516	K�z�lay Dervi� Hopiko�lu Anaokulu	Erzurum Kara�oban Nene Hatun Anaokulu
+0.710	K��lak�y �lkokulu	Ak�ar �lkokulu
+0.787	Maksut Efendi �mam Hatip Ortaokulu	Tekman �mam Hatip Ortaokulu
+0.817	Mecidiye Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.710	Mecidiye �lkokulu	Aziziye �eker �lkokulu
+0.725	Mi�mtaz Turhan Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.692	Molla Mehmet �lkokulu	OLTU MEHMET AK�F ERSOY �LKOKULU
+0.698	Mustafa Kemal Ortaokulu	YAHYA KEMAL ANAOKULU
+0.714	Mustafa Kemal �lkokulu	MUSA G�NDE� �LKOKULU
+0.725	M�mtaz Turhan Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.640	M�mtaz Turhan Ortaokulu	Tekman �mam Hatip Ortaokulu
+0.609	Narman A��k S�mmani �lkokulu	Dumankaya �lkokulu
+0.759	Narman �lkokulu	Ak�ar �lkokulu
+0.889	Narman �mam Hatip Ortaokulu	Tekman �mam Hatip Ortaokulu
+0.973	Nene Hatun Anaokulu	AZ�Z�YE NENEHATUN ANAOKULU
+0.727	Nevzat Karaba� Anadolu Lisesi	HARPUT KAPI ANADOLU L�SES�
+0.848	Oltu Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.839	Oltu Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.690	Oltu Fen Lisesi	Erzurum Anadolu Lisesi
+0.788	Oltu K�z Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.851	Oltu Nenehatun Mesleki ve Teknik Anadolu Lisesi	Erzurum Dedeman Mesleki ve Teknik Anadolu Lisesi
+0.588	Orgeneral Selahattin Demircio�lu Ortaokulu	SABAHATT�N ERYURT ANAOKULU
+0.732	Ortabah�e �lkokulu	ERZURUM HORASAN HAR�LI �LKOKULU
+0.852	Paland�ken K�z Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.653	Pasinler Atat�rk Yat�l� B�lge Ortaokulu	�ehit Astsubay �avu� Soner �z�bek Yat�l� B�lge Ortaokulu
+0.720	Pasinler �brahim Hakk� �mam Hatip Ortaokulu	Ha�im ��can �mam Hatip Ortaokulu
+0.828	Pa�al� �lkokulu	Ak�ar �lkokulu
+0.667	Pehlivanl� �lkokulu	Binp�nar �lkokulu
+0.643	Pirali Akkeran Mahallesi �lkokulu	ERZURUM HORASAN HAR�LI �LKOKULU
+0.718	Polis Amca �lkokulu	Halil �avu� �lkokulu
+0.542	Prof. Dr. Necmettin Erbakan Fen Lisesi	Erzurum Lisesi
+0.795	Rabia Hatun K�z Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.806	Raif Azak �mam Hatip Ortaokulu	Ha�im ��can �mam Hatip Ortaokulu
+0.817	Remzi Sakao�lu Bilim Ve Sanat Merkezi	YAKUT�YE B�L�M VE SANAT MERKEZ�
+0.792	R�fk� Salim Bur�ak Mesleki ve Teknik Anadolu Lisesi	erzurum yakutiye �ehit burak tatar mesleki ve teknik anadolu lisesi
+0.733	Sabanc� �lkokulu	Ak�ar �lkokulu
+0.703	Saltukbey Ortaokulu	�AT YAV� ORTAOKULU
+0.962	Sebahattin Eryurt Anaokulu	SABAHATT�N ERYURT ANAOKULU
+0.759	Seyhan �lkokulu	Ak�ar �lkokulu
+0.700	So�ukp�nar Ortaokulu	�ZEL G�NE� ORTAOKULU
+0.676	S�dd�k Tivnikli Haf�z �mam Hatip Ortaokulu	Ha�im ��can �mam Hatip Ortaokulu
+0.906	Tekman Anadolu �mam Hatip Lisesi	Narman Anadolu �mam Hatip Lisesi
+0.670	Tekman �ok Programl� Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.725	Tevfik �leri Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.683	Toplu Konut Ortaokulu	�ZEL G�NE� ORTAOKULU
+0.617	Tortum �ehit Murat Karata� Yat�l� B�lge Ortaokulu	DUMLU �EH�T MUHAMMET FERD� G�NTEK�N ORTAOKULU
+0.817	Uzundere Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.692	Vali Vefik Kitap��gil �lkokulu	Nihat Kitap�� �lkokulu
+0.727	Veysefendi �lkokulu	Aziziye �eker �lkokulu
+0.848	Yavi Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.818	Yedinisan �lkokulu	Erzurum �enkaya Yedinisan �lkokulu
+0.743	Yenikent Anaokulu	AZ�Z�YE NENEHATUN ANAOKULU
+0.727	Y�ld�zkent Anaokulu	Il�ca Anaokulu
+0.800	Y�ld�zkent Borsa �stanbul Ortaokulu	Kopal Borsa �stanbul Ortaokulu
+0.783	Y�ld�zkent Nafizbey Mesleki ve Teknik Anadolu Lisesi	Erzurum Dedeman Mesleki ve Teknik Anadolu Lisesi
+0.703	Y�ld�zkent �lkokulu	Yaz�p�nar �lkokulu
+0.769	Ziya G�kalp Anadolu Lisesi	HARPUT KAPI ANADOLU L�SES�
+0.700	Z�beyde Han�m Anaokulu	AZ�Z�YE NENEHATUN ANAOKULU
+0.651	Z�beyde Han�m Ortaokulu	TED ERZURUM KOLEJ� ORTAOKULU
+0.611	Z�beyde Han�m �lkokulu	Aziziye �eker �lkokulu
+0.727	�at Kara�eyh �lk/Ortaokulu	�AT YAV� ORTAOKULU
+0.863	�at �mam Hatip Ortaokulu	Tekman �mam Hatip Ortaokulu
+0.464	�ocuklar G�ls�n Diye Murat Osanmaz Anaokulu	SABAHATT�N ERYURT ANAOKULU
+0.700	�mer Duygun �lkokulu	MUSA G�NDE� �LKOKULU
+0.800	�zel Final Ortaokulu	�ZEL G�NE� ORTAOKULU
+0.718	�zel G�ne� Koleji	�zel Erzurum Bah�e�ehir Koleji
+0.769	�zel Hedef Koleji	�zel Erzurum Bah�e�ehir Koleji
+0.703	�brahim Hakk� Kubilay �mam Hatip Ortaokulu	Ha�im ��can �mam Hatip Ortaokulu
+0.691	�brahim Hakk� �lkokulu	ERZURUMLU �BRAH�M HAKKI ORTAOKULU
+0.727	�nk�lap Ortaokulu	50. Y�l Ortaokulu
+0.788	�nk�lap �lkokulu	Binp�nar �lkokulu
+0.793	�spir �mam Hatip Ortaokulu	Ha�im ��can �mam Hatip Ortaokulu
+0.769	�air Nefi Ortaokulu	Erzurum A�� Koleji Ortaokulu
+0.764	�ehit Birol �li Bilim Ve Sanat Merkezi	YAKUT�YE B�L�M VE SANAT MERKEZ�
+0.670	�ehit M�cahit Da�tan Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.625	�ehit Osman G�lmez Ortaokulu	�ZEL G�NE� ORTAOKULU
+0.678	�ehit Yakup S�r�c� Anadolu Lisesi	HARPUT KAPI ANADOLU L�SES�
+0.609	�ehit �ste�men �smail Aksu �lkokulu	�ehit ��retmen �lyas Acar Anaokulu
+0.677	�ehit �lhami Ko�ak �lkokulu	�EH�T B�NBA�I L�TF� CEYLAN �LKOKULU
+0.839	�ehitler �lkokulu	Aziziye �eker �lkokulu
+0.817	�enyurt Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.817	��kr�pa�a Anadolu Lisesi	Erzurum Anadolu Lisesi
+0.649	��kr�pa�a Ortaokulu	�AT YAV� ORTAOKULU
+0.750	��kr�pa�a �lkokulu	Ak�ar �lkokulu

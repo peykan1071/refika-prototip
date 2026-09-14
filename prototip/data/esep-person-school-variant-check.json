@@ -1,0 +1,166 @@
+[
+  {
+    "teacher": "Özlem GÖREZ",
+    "schools": [
+      "Akdamar İlkokulu"
+    ],
+    "variant_query": "GÖREZ",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=G%C3%96REZ&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 0,
+    "error": null
+  },
+  {
+    "teacher": "Seyfullah Bastepe",
+    "schools": [
+      "Aziziye Atatürk Ortaokulu"
+    ],
+    "variant_query": "Bastepe",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=Bastepe&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 0,
+    "error": null
+  },
+  {
+    "teacher": "ARZU ÇİFTÇİ",
+    "schools": [
+      "Aziziye Ilıca Anadolu İmam Hatip Lisesi"
+    ],
+    "variant_query": "ÇİFTÇİ",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=%C3%87%C4%B0FT%C3%87%C4%B0&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 13,
+    "error": null
+  },
+  {
+    "teacher": "Merve Ay",
+    "schools": [
+      "Aziziye Ilıca Anadolu İmam Hatip Lisesi"
+    ],
+    "variant_query": "Ay",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=Ay&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 25,
+    "error": null
+  },
+  {
+    "teacher": "Simge ATAL",
+    "schools": [
+      "Başçakmak Ortaokulu"
+    ],
+    "variant_query": "ATAL",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=ATAL&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 25,
+    "error": null
+  },
+  {
+    "teacher": "Ahmet Ziya BAYAR",
+    "schools": [
+      "Budaklı İlkokulu"
+    ],
+    "variant_query": "BAYAR",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=BAYAR&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 10,
+    "error": null
+  },
+  {
+    "teacher": "Halil ÖZDEMİR",
+    "schools": [
+      "Dumlu Şehit Muhammed Ferdi Güntekin Ortaokulu"
+    ],
+    "variant_query": "ÖZDEMİR",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=%C3%96ZDEM%C4%B0R&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 25,
+    "error": null
+  },
+  {
+    "teacher": "Selda AYDIN",
+    "schools": [
+      "Dumlu Şehit Muhammed Ferdi Güntekin Ortaokulu"
+    ],
+    "variant_query": "AYDIN",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=AYDIN&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 25,
+    "error": null
+  },
+  {
+    "teacher": "Beyhan Sedefoğlu",
+    "schools": [
+      "Erzurum Oltu Hattat Hasan Çelebi İmam Hatip Ortaokulu"
+    ],
+    "variant_query": "Sedefoğlu",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=Sedefo%C4%9Flu&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 0,
+    "error": null
+  },
+  {
+    "teacher": "Merve Aktürk Polat",
+    "schools": [
+      "Erzurum Pasinler Serçeboğazı İlkokulu"
+    ],
+    "variant_query": "Polat",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=Polat&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 19,
+    "error": null
+  },
+  {
+    "teacher": "Ayşe Kiraz",
+    "schools": [
+      "Erzurum İbrahim Hakkı Fen Lisesi"
+    ],
+    "variant_query": null,
+    "variant_url": null,
+    "exact_matches": [
+      {
+        "name": "Ayşe Kiraz",
+        "organisation": "Evyap İbrahim Hakkı Fen Lisesi (Türkiye)",
+        "registered": "07.07.2018",
+        "links": [
+          "/en/connect/people/159281",
+          "/en/connect/schools-organisations/evyap-ibrahim-hakki-fen-lisesi"
+        ]
+      }
+    ],
+    "returned_rows": 1,
+    "error": null
+  },
+  {
+    "teacher": "Erhan Doğubeyi",
+    "schools": [
+      "Göreşken Ergün Sevinç Şahin İlkokulu"
+    ],
+    "variant_query": "Doğubeyi",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=Do%C4%9Fubeyi&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 0,
+    "error": null
+  },
+  {
+    "teacher": "Ferit AŞÇI",
+    "schools": [
+      "Hasan Basri Demirbağ Çok Programlı Anadolu Lisesi"
+    ],
+    "variant_query": "AŞÇI",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=A%C5%9E%C3%87I&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 2,
+    "error": null
+  },
+  {
+    "teacher": "Hülya ATASOYU",
+    "schools": [
+      "Toplu Konut İlkokulu"
+    ],
+    "variant_query": "ATASOYU",
+    "variant_url": "https://school-education.ec.europa.eu/en/connect/people?name=ATASOYU&categorized_user_validation_status=All",
+    "exact_matches": [],
+    "returned_rows": 0,
+    "error": null
+  }
+]
