@@ -38,3 +38,5 @@ next-env.d.ts
 /work/
 
 /.sites-runtime/
+data/
+docs/

@@ -6,6 +6,35 @@ import { districts, mentorQuota, saveMentor, saveSupport, supportStates } from '
 const empty = () => ({ teacher:'', school:'', district:'', topic:'', question:'', mentor:'', source:'', answer:'', supportPath:'refika', status:'open' });
 const emptyMentor = () => ({ name:'', school:'', schoolId:'', district:'Yakutiye', experience:'', expertise:'' });
 
+function buildGuidanceDraft(topic, question) {
+  const text = `${topic} ${question}`.toLocaleLowerCase('tr-TR');
+  const common = 'İşlem öncesinde güncel resmî sayfayı kontrol edin; kişisel şifre, doğrulama kodu veya ham yazışma paylaşmayın.';
+  if (/görün|profil|yaygınlaştır|paylaş/.test(text)) return {
+    source: 'eTwinning Türkiye – proje süreci, TwinSpace ve yaygınlaştırma rehberleri',
+    answer: `Proje görünürlüğü için önce proje sayfasında amaç, ortaklar, öğrenci ürünleri ve düzenli çalışma kayıtlarının yer aldığını kontrol edin. TwinSpace içinde sayfaları hedef kitleye uygun biçimde düzenleyin; izinli görseller, kısa etkinlik özeti ve ürün bağlantılarını ekleyin. Okul/proje profilinde görünürlük sorunu sürerse ekran görüntüsü ve proje bağlantısı ile teknik destek kaydı hazırlayın. ${common}`
+  };
+  if (/ortak|proje başla|görev paylaş/.test(text)) return {
+    source: 'eTwinning Türkiye – proje ve ortaklık geliştirme rehberi',
+    answer: `Önce yaş grubu, ders alanı, tema ve yaklaşık takvimi netleştirin. Ortak ararken kısa proje özeti, öğrenci katılımı planı ve ilk görev paylaşımını hazırlayın. Uygun ortaklarla amaç, ürünler, iletişim sıklığı ve güvenlik kurallarını yazılı olarak eşleştirin. ${common}`
+  };
+  if (/kalite|etiket|kanıt/.test(text)) return {
+    source: 'eTwinning Türkiye – kalite etiketi kriterleri ve başvuru rehberi',
+    answer: `Kanıtları ölçütlere göre sınıflandırın: proje sayfası, öğrenci katkısı, iş birliği, görünürlük, dijital güvenlik ve değerlendirme. Her kanıtın neyi gösterdiğini kısa notla açıklayın; bağlantıları çalışır durumda tutun. Başvuru formuna geçmeden önce proje ortağıyla ortak ürünleri ve öğrenci izlerini birlikte kontrol edin. ${common}`
+  };
+  if (/okul|üyelik|yönetici|kurum/.test(text)) return {
+    source: 'eTwinning Türkiye – kayıt ve okul üyeliği rehberi',
+    answer: `Önce okul adı, kurum bağlantısı ve yetkili yönetici bilgisini resmî kayıtlarda doğrulayın. Eksik veya farklı görünen bilgiler için okuldan güncel kurum bilgisini isteyin; ardından uygun düzeltme türünü ve dayanak notunu kaydedin. Gerekirse koordinatör, kanıtla birlikte resmî destek kanalı için taslak hazırlar. ${common}`
+  };
+  if (/giriş|hesap|şifre|kayıt/.test(text)) return {
+    source: 'eTwinning Türkiye – kayıt ve hesap kontrol rehberi',
+    answer: `Önce kullanılan giriş yöntemi, kurum bağlantısı ve hesapta görünen e-posta bilgisini kontrol edin. Şifre veya doğrulama kodu istemeden, hata ekranı ve kurum doğrulaması gibi gerekli kanıtları not edin. Hesap bulunamıyorsa uygun resmî destek talebi için açıklama ve kanıt listesi hazırlayın. ${common}`
+  };
+  return {
+    source: 'Koordinatör tarafından doğrulanacak güncel resmî eTwinning kaynağı',
+    answer: `Soruyu önce konu, kurum bilgisi ve beklenen işlem açısından netleştirin. Ardından ilgili resmî kaynakta güncel adımları kontrol edip öğretmene uygulanabilir sırayla rehberlik verin. Çözüm uzman görüşü gerektiriyorsa ilçe mentörüne yönlendirin ve sonucu kayda işleyin. ${common}`
+  };
+}
+
 export default function MentorshipWorkspace({ items, onChange, mentors, onMentorsChange, group, onGroupChange, ready = true }) {
   const [activeArea,setActiveArea] = useState('mentors');
   const [draft,setDraft] = useState(empty);
@@ -17,7 +46,7 @@ export default function MentorshipWorkspace({ items, onChange, mentors, onMentor
   const open = items.filter(item=>item.status!=='resolved').length;
   const field=(key,label,multiline=false,required=false)=><label className="field">{label}{multiline?<textarea id={`support-${key}`} rows={3} required={required} value={draft[key]} onChange={e=>setDraft({...draft,[key]:e.target.value})}/>:<input id={`support-${key}`} required={required} value={draft[key]} onChange={e=>setDraft({...draft,[key]:e.target.value})}/>}</label>;
   function submit(e){e.preventDefault();if(!ready)return;try{onChange(saveSupport(items,draft,editing||crypto.randomUUID()));setDraft(empty());setEditing(null);setError('');setNotice('Destek kaydı çalışma masasına eklendi.');}catch(err){setError(err.message);}}
-  function prepareDemoDraft(){if(!draft.topic.trim()||!draft.question.trim()){setError('Önce talebin konusunu ve soruyu yazın.');return;}setDraft({...draft,supportPath:'refika',status:'aiDraft',answer:`${draft.topic} konusundaki soru için REFİKA yanıt taslağı burada oluşturulur. Koordinatör, taslağı resmî kaynakla karşılaştırıp gerekli düzeltmeleri yaptıktan sonra kullanır.`,source:'Koordinatör tarafından seçilecek güncel resmî ESEP / eTwinning kaynağı'});setError('');setNotice('Prototip yanıt akışı hazırlandı. Bu sürüm canlı yapay zekâya bağlı değildir.');}
+  function prepareDemoDraft(){if(!draft.topic.trim()||!draft.question.trim()){setError('Önce talebin konusunu ve soruyu yazın.');return;}const guidance=buildGuidanceDraft(draft.topic,draft.question);setDraft({...draft,supportPath:'refika',status:'aiDraft',answer:guidance.answer,source:guidance.source});setError('');setNotice('REFİKA rehberlik taslağı konuya göre oluşturuldu. Göndermeden önce resmî kaynakla doğrulayın.');}
   function submitMentor(e){e.preventDefault();if(!ready)return;try{onMentorsChange(saveMentor(mentors,mentorDraft,editingMentor||crypto.randomUUID()));setMentorDraft(emptyMentor());setEditingMentor(null);setError('');setNotice('Mentör ilçe görev listesine kaydedildi.');}catch(err){setError(err.message);}}
   return <>
     <section className="mentor-intro">
@@ -44,7 +73,7 @@ export default function MentorshipWorkspace({ items, onChange, mentors, onMentor
         <p className="coordinator-note"><b>Bu formu il koordinatörü doldurur.</b> REFİKA ilk yanıt taslağını resmî kaynaklara dayanarak hazırlar. Yalnız uzman görüşü gereken sorular ilçedeki mentöre yönlendirilir.</p>
         <form onSubmit={submit}><fieldset disabled={!ready} className="mentor-form">
           {field('teacher','Destek isteyen öğretmen',false,true)}{field('school','Görev yaptığı okul')}<label className="field">İlçe<select value={draft.district} onChange={e=>setDraft({...draft,district:e.target.value,mentor:''})}><option value="">Seçin</option>{districts.map(item=><option key={item}>{item}</option>)}</select></label>{field('topic','Talebin konusu',false,true)}{field('question','Öğretmenin ilettiği soru',true,true)}<label className="field">Destek yolu<select value={draft.supportPath} onChange={e=>setDraft({...draft,supportPath:e.target.value,mentor:e.target.value==='mentor'?draft.mentor:''})}><option value="refika">REFİKA yanıt taslağı</option><option value="mentor">Uzman mentör desteği</option></select></label>{draft.supportPath==='mentor'&&<label className="field">Yönlendirilecek mentör<select id="support-mentor" value={draft.mentor} onChange={e=>setDraft({...draft,mentor:e.target.value})}><option value="">Seçin</option>{mentors.filter(item=>!draft.district||item.district===draft.district).map(item=><option key={item.id} value={item.name}>{item.name} · {item.district}</option>)}</select></label>}{field('source','Yanıtın resmî kaynağı / dayanağı',true)}{field('answer','REFİKA yanıt taslağı / doğrulanmış cevap',true)}
-          <div className="ai-draft-action"><button type="button" className="secondary" onClick={prepareDemoDraft}><Sparkles size={17}/> REFİKA yanıt akışını göster</button><small>Prototipte örnek akış gösterilir; canlı yapay zekâ bağlantısı henüz etkin değildir.</small></div>
+          <div className="ai-draft-action"><button type="button" className="secondary" onClick={prepareDemoDraft}><Sparkles size={17}/> REFİKA rehberlik taslağını oluştur</button><small>Bu sürüm, konuyu sınıflandırarak kaynaklı yerel taslak üretir. Canlı yapay zekâ bağlantısı ayrıca etkinleştirilebilir.</small></div>
           <label className="field">İşlem durumu<select id="support-status" value={draft.status} onChange={e=>setDraft({...draft,status:e.target.value})}><option value="open">Soru kaydedildi</option><option value="aiDraft">REFİKA taslağı inceleniyor</option><option value="assigned">Mentöre yönlendirildi</option><option value="resolved">Sonuçlandırıldı</option></select></label>
           <div className="actions"><button className="primary">{draft.status==='resolved'?'Cevabı ve sonucu kaydet':'Destek talebini kaydet'}</button>{editing&&<button type="button" className="secondary" onClick={()=>{setDraft(empty());setEditing(null);setError('');}}>Vazgeç</button>}</div>
         </fieldset></form>

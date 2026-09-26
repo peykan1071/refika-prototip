@@ -25,6 +25,7 @@ import {
   Pencil,
   Save,
   ChartColumn,
+  BarChart3,
   Menu,
   X,
   LogOut,
@@ -55,6 +56,7 @@ import ReportCorrespondenceWorkspace from '../components/report-correspondence-w
 import QualityLabelWorkspace from '../components/quality-label-workspace';
 import SupportBridgeWorkspace from '../components/support-bridge-workspace';
 import OfficialResourcesWorkspace from '../components/official-resources-workspace';
+import QuestionPoolWorkspace from '../components/question-pool-workspace';
 import { loadDemo, saveDemo } from '../lib/storage.mjs';
 import { initialAccountReview } from '../lib/account-review.mjs';
 import { initialMentorGroup, restoreMentorGroup, restoreMentors, restoreSupports } from '../lib/mentorship.mjs';
@@ -142,6 +144,19 @@ const stages = {
   sent: 'Deneme gönderimi',
   complete: 'Sonuç kaydedildi',
 };
+const questionCategories = [
+  [/kalite|etiket|kanıt|başvuru formu/i, 'Kalite etiketi', 'Kalite etiketi ölçütlerini ve kanıt düzenini kontrol edin. Proje sayfası, öğrenci katkısı, iş birliği ve görünürlük kanıtlarını başlıklar hâlinde eşleştirin.', 'Kalite etiketi kanıt rehberi'],
+  [/okul etiketi|etwinning okulu|eTwinning Okulu/i, 'eTwinning Okulu', 'Okulun ortak vizyon, liderlik, e-güvenlik ve görünürlük kanıtlarını başvuru ölçütlerine göre hazırlayın.', 'eTwinning Okulu başvuru rehberi'],
+  [/proje|ortak|twinspace/i, 'Proje ve TwinSpace', 'Önce proje amacı, ortak profili, görev paylaşımı ve öğrenci katılımını netleştirin; ardından ortak bulma ve çalışma alanı adımlarını planlayın.', 'Proje tasarımı ve ortaklık rehberi'],
+  [/mentör|mentor|webinar|eğitim|kurs|çalıştay/i, 'Eğitim ve mentörlük', 'İhtiyacı hedef kitle, içerik, yöntem ve beklenen çıktı üzerinden kaydedin; uygun webinar veya mentörlük desteğini planlayın.', 'Eğitim ve mentörlük planı'],
+  [/ite/i, 'ITE', 'ITE çalışması için eğitim fakültesi iş birliği, izin süreci, hedef grup ve uygulama takvimini birlikte planlayın.', 'ITE iş birliği kılavuzu'],
+  [/rapor|faaliyet plan|haber|tören|sergi|dergi/i, 'Faaliyet planı ve raporlama', 'Faaliyetin tarihini, hedef kitlesini, çıktısını, kanıtını ve ilgili rapor dönemini netleştirerek plan veya rapor kaydına aktarın.', 'Faaliyet planı ve raporlama rehberi'],
+  [/okul üyeli|okul bağlant|okul hesab/i, 'Okul üyeliği', 'Okul kaydı, kurum bilgisi ve yetkili kullanıcı ilişkisini resmî platformda kontrol edin; gerekirse kanıtla desteklenen talep taslağı hazırlayın.', 'Okul üyeliği kontrol listesi'],
+  [/kayıt|hesap|validasyon|onay|giriş/i, 'Kayıt ve hesap', 'Önce kullanıcı ve kurum bilgisini doğrulayın. Şifre veya doğrulama kodu istemeden, gerekli kanıtı ve uygun destek kanalını belirleyin.', 'Kayıt ve hesap kontrol listesi'],
+];
+function classifyQuestion(summary) {
+  return questionCategories.find(([pattern]) => pattern.test(summary)) || ['Diğer', 'Soruyu amaç, mevcut durum ve beklenen destek başlıklarıyla netleştirin; ardından uygun resmî kaynak ve rehberlik yolunu belirleyin.', 'REFİKA bilgi havuzu'];
+}
 function IconButton({ children, onClick, label }) {
   return (
     <button
@@ -195,6 +210,8 @@ export default function Page() {
     [subject, setSubject] = useState(''),
     [body, setBody] = useState(''),
     [command, setCommand] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [questionSeed, setQuestionSeed] = useState('');
   const [requestDraft, setRequestDraft] = useState(blankRequest);
   const [repeatReason, setRepeatReason] = useState('');
   const [accountReview, setAccountReview] = useState(initialAccountReview);
@@ -214,7 +231,7 @@ export default function Page() {
     if (!active) return;
     try {
       const saved = loadDemo(localStorage);
-      if (saved) { const restoredProjects=restoreProjects(saved.projects || []); setTasks(restoreTasks(saved.tasks)); setEvents(restoreEvents(saved.events)); setSupports(restoreSupports(saved.supports || [])); setMentorGroup(restoreMentorGroup(saved.mentorGroup)); setMentors(restoreMentors(saved.mentors || [])); setProjects(restoredProjects); setProjectServices(restoreProjectServices(saved.projectServices || [],restoredProjects)); setState(saved.state); setAccountReview(saved.accountReview || initialAccountReview()); setSubject(saved.subject || ''); setBody(saved.body || ''); }
+      if (saved) { const restoredProjects=restoreProjects(saved.projects || []); setTasks(restoreTasks(saved.tasks)); setEvents(restoreEvents(saved.events)); setSupports(restoreSupports(saved.supports || [])); setMentorGroup(restoreMentorGroup(saved.mentorGroup)); setMentors(restoreMentors(saved.mentors || [])); setProjects(restoredProjects); setProjectServices(restoreProjectServices(saved.projectServices || [],restoredProjects)); setQuestions(Array.isArray(saved.questions) ? saved.questions : []); setState(saved.state); setAccountReview(saved.accountReview || initialAccountReview()); setSubject(saved.subject || ''); setBody(saved.body || ''); }
       setLoaded(true);
     } catch { setStorageError('Önceki demo kaydı okunamadı. Kayıt korunuyor; devam etmek için Örnek akışı sıfırla seçeneğini kullanın.'); }
     });
@@ -222,9 +239,9 @@ export default function Page() {
   }, []);
   useEffect(() => {
     if (!loaded) return;
-    try { saveDemo(localStorage, { state, accountReview, subject, body, tasks, events, supports, mentorGroup, mentors, projects, projectServices }); queueMicrotask(() => setStorageError('')); }
+    try { saveDemo(localStorage, { state, accountReview, subject, body, tasks, events, supports, mentorGroup, mentors, projects, projectServices, questions }); queueMicrotask(() => setStorageError('')); }
     catch { queueMicrotask(() => setStorageError('Tarayıcıya kayıt yapılamadı. Bu oturumdaki değişiklikler yenilemede kaybolabilir.')); }
-  }, [loaded, state, accountReview, subject, body, tasks, events, supports, mentorGroup, mentors, projects, projectServices]);
+  }, [loaded, state, accountReview, subject, body, tasks, events, supports, mentorGroup, mentors, projects, projectServices, questions]);
   const live = useRef({ signed, state });
   useEffect(() => {
     live.current = { signed, state };
@@ -331,18 +348,23 @@ export default function Page() {
   }
   function assistant(e) {
     e.preventDefault();
+    const [category, guidance, source] = classifyQuestion(command);
+    const isQuestion = /\?|nasıl|ne zaman|neden|hangi|yardım|destek|bilir misiniz|olur mu/i.test(command);
+    if (isQuestion) {
+      setQuestions(current => [{ id: crypto.randomUUID(), date: new Date().toISOString().slice(0, 10), district: '', category, channel: 'Çevrim içi', summary: command.trim(), guidance, source, outcome: 'Açık', recurring: current.some(item => item.category === category), automatic: true }, ...current]);
+      setQuestionSeed('');
+      go('Soru Havuzu');
+      notify('Soru anonim olarak sınıflandı ve prototip yanıt taslağıyla kaydedildi.');
+      setCommand('');
+      return;
+    }
     if (/valid|kayıt|hesap/i.test(command)) {
       go('Kayıt ve Validasyon');
       notify('Örnek validasyon kayıtları açıldı.');
     } else if (/rapor/i.test(command)) go('Raporlar ve Yazışmalar');
     else if (/ziyaret/i.test(command)) go('Okul Ziyaretleri');
     else if (/eğitim|etkinlik|webinar|çalıştay/i.test(command)) go('Eğitim ve Etkinlikler');
-    else
-      setModal({
-        type: 'info',
-        title: 'REFİKA örnek görevleri',
-        text: 'Bu prototipte “validasyonları hazırla”, “ziyaretleri planla”, “çalıştay planla” ve “aylık raporu oluştur” komutları ilgili çalışma alanını açar. Serbest metin yapay zekâ bağlantısı henüz etkin değildir.',
-      });
+    else { setQuestionSeed(command); go('Soru Havuzu'); notify('Komut soru biçiminde olmadığı için anonim kayıt taslağına aktarıldı.'); }
     setCommand('');
   }
   const info = (title, text) => setModal({ type: 'info', title, text });
@@ -659,7 +681,7 @@ export default function Page() {
                     <input
                       type="email"
                       required
-                      defaultValue="koordinator@example.invalid"
+                      placeholder="ornek@eposta.com"
                       autoComplete="off"
                       aria-label="E-posta adresi"
                     />
@@ -672,7 +694,7 @@ export default function Page() {
                     <input
                       required
                       type={show ? 'text' : 'password'}
-                      defaultValue="refika-demo"
+                      placeholder="Demo şifreniz"
                       autoComplete="off"
                       aria-label="Şifre"
                     />
@@ -709,7 +731,7 @@ export default function Page() {
                 </span>
               </div>
               <p className="demo-note">
-                Örnek hesap hazır. Gerçek şifrenizi kullanmayın.
+                Demo için örnek bilgiler kullanın. Gerçek şifrenizi yazmayın.
               </p>
               <div className="support">
                 Hesabınıza erişemiyor musunuz?
@@ -795,6 +817,10 @@ export default function Page() {
                 <BookOpen />
                 Resmî Kaynaklar
               </button>
+              <button className={view === 'Soru Havuzu' ? 'selected' : ''} onClick={() => go('Soru Havuzu')}>
+                <BarChart3 />
+                Soru Havuzu
+              </button>
               <button className={view === 'Sonuç Takibi' ? 'selected' : ''} onClick={() => go('Sonuç Takibi')}><ListChecks />Sonuç Takibi</button>
               <hr />
               <button
@@ -854,7 +880,7 @@ export default function Page() {
                   <Users size={23} />
                   <span>
                     <b>İl Koordinatörü</b>
-                    <small>Erzurum · Örnek hesap</small>
+                    <small>Zülal Ülker Daştan · Erzurum</small>
                   </span>
                 </button>
                 <IconButton
@@ -1367,6 +1393,7 @@ export default function Page() {
               {view === 'Güncel Kaynaklar' && (
                 <OfficialResourcesWorkspace />
               )}
+              {view === 'Soru Havuzu' && <QuestionPoolWorkspace questions={questions} onChange={setQuestions} seed={questionSeed} download={download} />}
               {(view === 'Okul Ziyaretleri' || view === 'Takvimim') && <VisitWorkspace tasks={tasks} onChange={setTasks} mode={view === 'Takvimim' ? 'calendar' : 'visits'} onOpen={() => go('Okul Ziyaretleri')} onReport={() => go('Raporlar ve Yazışmalar')} ready={loaded} />}
               {(view === 'Eğitim ve Etkinlikler' || view === 'Takvimim') && <EventWorkspace events={events} onChange={setEvents} mode={view === 'Takvimim' ? 'calendar' : 'events'} onOpen={() => go('Eğitim ve Etkinlikler')} ready={loaded} />}
               {view === 'Rehberlik ve Mentörlük' && <MentorshipWorkspace items={supports} onChange={setSupports} mentors={mentors} onMentorsChange={setMentors} group={mentorGroup} onGroupChange={setMentorGroup} ready={loaded} />}
