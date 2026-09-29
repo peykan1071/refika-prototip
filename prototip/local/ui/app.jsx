@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  House,
   FolderInput,
-  ClipboardCheck,
-  CalendarDays,
-  FileText,
-  Settings,
   ArrowRight,
   Plus,
   Download,
@@ -16,11 +11,16 @@ import {
   RefreshCw,
   AlertCircle,
   File,
-  ChevronRight,
   X,
   Sparkles,
 } from 'lucide-react';
 import './style.css';
+import './demo-theme.css';
+import {
+  DemoShell,
+  DemoDashboard,
+  HistoryWorkspace,
+} from './demo-workspace.jsx';
 
 const statusLabels = {
   planned: 'Planlandı',
@@ -146,34 +146,20 @@ function Setup({ state, run, busy }) {
     [year, setYear] = useState('2026–2027');
   return (
     <main className="onboarding">
-      <div className="welcome-copy">
-        <span className="eyebrow">REFİKA · YOL ARKADAŞINIZ</span>
-        <h1>
-          İlinizin çalışma alanını
-          <br />
-          birlikte oluşturalım.
-        </h1>
-        <p>
-          ESEP kayıtları, faaliyet planı ve gerçekleşen işler aynı yerde.
-          Kaydettiğiniz bilgiler bu bilgisayarda korunur.
-        </p>
-        <div className="welcome-steps">
-          <span>
-            <FolderInput /> Verilerinizi aktarın
-          </span>
-          <span>
-            <CalendarDays /> Çalışmalarınızı planlayın
-          </span>
-          <span>
-            <FileText /> Sonuçları raporlayın
-          </span>
+      <div className="demo-welcome">
+        <div className="demo-welcome-art">
+          <img
+            src="/welcome-agent-v11.png"
+            alt="REFİKA. Yol arkadaşınız. Ortak platform, size özel çalışma alanı. 81 ilin koordinatörleri için."
+          />
         </div>
       </div>
       <section className="panel setup-panel">
-        <Badge>İlk kurulum</Badge>
-        <h2>İl çalışma alanı</h2>
+        <span className="eyebrow">İL KOORDİNATÖRÜ ÇALIŞMA ALANI</span>
+        <h1>Hoş geldiniz.</h1>
         <p className="muted">
-          Bu bilgisayarda yeni, boş bir çalışma alanı açılır.
+          Çalışma alanınızı oluşturmak için ilinizi ve koordinatör bilgilerinizi
+          seçin.
         </p>
         <form
           onSubmit={(e) => {
@@ -224,141 +210,6 @@ function Setup({ state, run, busy }) {
         </form>
       </section>
     </main>
-  );
-}
-function Dashboard({ state, go }) {
-  const completed = state.activities.filter((a) => a.status === 'completed'),
-    planned = state.activities
-      .filter((a) => a.status === 'planned')
-      .sort((a, b) => a.startDate.localeCompare(b.startDate)),
-    review = state.records.filter((r) => r.status === 'review');
-  return (
-    <>
-      <div className="page-heading">
-        <div>
-          <span className="eyebrow">İL KOORDİNATÖRÜ ÇALIŞMA ALANI</span>
-          <h1>Bugün nereden başlayalım?</h1>
-          <p>Planınız, bekleyen işleriniz ve kaydettiğiniz sonuçlar.</p>
-        </div>
-        <button className="primary" onClick={() => go('import')}>
-          <Plus size={18} /> Veri veya plan getir
-        </button>
-      </div>
-      <div className="metrics">
-        {[
-          [review.length, 'İncelenecek kayıt', 'records'],
-          [planned.length, 'Planlanan faaliyet', 'activities'],
-          [completed.length, 'Tamamlanan faaliyet', 'reports'],
-          [
-            completed.reduce((n, a) => n + a.actualParticipants, 0),
-            'Toplam katılım',
-            'reports',
-          ],
-        ].map(([n, label, view]) => (
-          <button className="metric" key={label} onClick={() => go(view)}>
-            <span>{label}</span>
-            <strong>{n}</strong>
-            <ChevronRight size={17} />
-          </button>
-        ))}
-      </div>
-      <div className="dashboard-grid">
-        <section className="panel">
-          <div className="section-head">
-            <h2>Yaklaşan çalışmalar</h2>
-            <button className="text-button" onClick={() => go('activities')}>
-              Planı aç <ArrowRight size={16} />
-            </button>
-          </div>
-          {planned.length ? (
-            <div className="activity-list">
-              {planned.slice(0, 5).map((a) => (
-                <article key={a.id}>
-                  <div className="date-box">{formatDate(a.startDate)}</div>
-                  <div>
-                    <b>{a.title}</b>
-                    <p>
-                      {a.kind} · {a.audience || 'Hedef kitle eklenmedi'}
-                    </p>
-                  </div>
-                  <Badge status="planned" />
-                </article>
-              ))}
-            </div>
-          ) : (
-            <Empty
-              title="Planınız burada görünecek"
-              action={
-                <button onClick={() => go('activities')}>
-                  İlk faaliyeti ekle
-                </button>
-              }
-            >
-              Faaliyet planınızı aktarabilir veya tek tek çalışma
-              ekleyebilirsiniz.
-            </Empty>
-          )}
-        </section>
-        <section className="panel">
-          <h2>Bağlantılarınız</h2>
-          <div className="connection">
-            <HardDrive />
-            <div>
-              <b>Bu bilgisayarda kayıt</b>
-              <p>Faaliyetler ve kanıt dosyaları kalıcı olarak saklanır.</p>
-            </div>
-            <Badge status="ready">Etkin</Badge>
-          </div>
-          <div className="connection">
-            <Cloud />
-            <div>
-              <b>Merkez bağlantısı</b>
-              <p>
-                {state.center.configured
-                  ? state.shareSummary
-                    ? 'Özet paylaşımı açık'
-                    : 'Özet paylaşımı kapalı'
-                  : 'Merkez hizmeti henüz bağlanmadı.'}
-              </p>
-            </div>
-          </div>
-          <div className="connection">
-            <Sparkles />
-            <div>
-              <b>Yapay zekâ</b>
-              <p>
-                {state.ai.configured
-                  ? state.ai.label
-                  : 'Model bağlantısı henüz kurulmadı. Şablonla çalışma hazır.'}
-              </p>
-            </div>
-          </div>
-          <button onClick={() => go('settings')}>
-            Bağlantılar ve yedekleme
-          </button>
-        </section>
-      </div>
-      <section className="panel">
-        <h2>Son işlemler</h2>
-        {state.history.length ? (
-          <ul className="history">
-            {state.history.slice(0, 6).map((h) => (
-              <li key={h.id}>
-                <CheckCircle2 size={17} />
-                <span>{h.message}</span>
-                <time>{new Date(h.at).toLocaleString('tr-TR')}</time>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>Henüz işlem yapılmadı.</p>
-        )}
-      </section>
-      <p className="footnote">
-        Toplam katılım, tamamlanan faaliyetlerde bildirilen katılımların
-        toplamıdır; benzersiz kişi sayısı değildir.
-      </p>
-    </>
   );
 }
 function ImportWorkspace({ state, run, busy }) {
@@ -686,8 +537,8 @@ function ImportWorkspace({ state, run, busy }) {
     </>
   );
 }
-function Records({ state, run, busy }) {
-  const [filter, setFilter] = useState('all'),
+function Records({ state, run, busy, initialFilter = 'all', results = false }) {
+  const [filter, setFilter] = useState(initialFilter),
     [query, setQuery] = useState(''),
     [selected, setSelected] = useState(null),
     [note, setNote] = useState('');
@@ -704,7 +555,7 @@ function Records({ state, run, busy }) {
       <div className="page-heading">
         <div>
           <span className="eyebrow">VERİLER VE TALEPLER</span>
-          <h1>Kayıtları birlikte kontrol edin</h1>
+          <h1>{results ? 'Sonuç Takibi' : 'Kayıt ve Validasyon'}</h1>
           <p>İnceleme ve sonuç bilgisi aynı kayıtta saklanır.</p>
         </div>
         <a className="button" href="/api/export/records">
@@ -873,10 +724,22 @@ const blankActivity = () => ({
   evidence: '',
   planCode: '',
 });
-function Activities({ state, run, busy }) {
+function Activities({ state, run, busy, scope = 'all' }) {
   const [draft, setDraft] = useState(null),
     [query, setQuery] = useState('');
+  const scopeKinds =
+    scope === 'visits'
+      ? ['Okul ziyareti']
+      : scope === 'events'
+        ? ['Eğitim', 'Webinar', 'Toplantı']
+        : null;
+  const newActivity = () => ({
+    ...blankActivity(),
+    kind: scopeKinds?.[0] || 'Eğitim',
+    responsible: state.settings.operator,
+  });
   const visible = state.activities
+    .filter((a) => !scopeKinds || scopeKinds.includes(a.kind))
     .filter((a) =>
       a.title.toLocaleLowerCase('tr').includes(query.toLocaleLowerCase('tr')),
     )
@@ -897,18 +760,16 @@ function Activities({ state, run, busy }) {
       <div className="page-heading">
         <div>
           <span className="eyebrow">PLAN VE FAALİYETLER</span>
-          <h1>Planlayın, gerçekleştirin, kaydedin.</h1>
+          <h1>
+            {scope === 'visits'
+              ? 'Okul Ziyaretleri'
+              : scope === 'events'
+                ? 'Eğitim ve Etkinlikler'
+                : 'İl Koordinatörü Faaliyet Planı'}
+          </h1>
           <p>Faaliyetin planı ve gerçekleşen sonucu aynı kayıtta.</p>
         </div>
-        <button
-          className="primary"
-          onClick={() =>
-            setDraft({
-              ...blankActivity(),
-              responsible: state.settings.operator,
-            })
-          }
-        >
+        <button className="primary" onClick={() => setDraft(newActivity())}>
           <Plus size={17} /> Yeni faaliyet
         </button>
       </div>
@@ -939,7 +800,7 @@ function Activities({ state, run, busy }) {
                   value={draft.kind}
                   onChange={(e) => setDraft({ ...draft, kind: e.target.value })}
                 >
-                  {kinds.map((k) => (
+                  {(scopeKinds || kinds).map((k) => (
                     <option key={k}>{k}</option>
                   ))}
                 </select>
@@ -1131,7 +992,7 @@ function Activities({ state, run, busy }) {
           <Empty
             title="İlk çalışmanızı planlayın"
             action={
-              <button onClick={() => setDraft(blankActivity())}>
+              <button onClick={() => setDraft(newActivity())}>
                 Faaliyet ekle
               </button>
             }
@@ -1154,7 +1015,7 @@ function Reports({ run, busy }) {
       <div className="page-heading">
         <div>
           <span className="eyebrow">BELGELER VE RAPORLAR</span>
-          <h1>Gerçekleşen işlerden rapora</h1>
+          <h1>Raporlar ve Yazışmalar</h1>
           <p>Tarihi, katılımı, sonucu ve kanıtı kaydedilen faaliyetler.</p>
         </div>
       </div>
@@ -1482,115 +1343,89 @@ function App() {
     setNotice('');
     window.scrollTo({ top: 0 });
   }
-  const nav = [
-    ['home', 'Bugün', House],
-    ['import', 'Veri aktar', FolderInput],
-    ['records', 'Kayıt inceleme', ClipboardCheck],
-    ['activities', 'Plan ve faaliyetler', CalendarDays],
-    ['reports', 'Raporlar', FileText],
-    ['settings', 'Ayarlar ve yedek', Settings],
-  ];
-  return (
-    <>
-      {state?.settings && (
-        <aside className="sidebar">
-          <div className="brand">
-            <img src="/refika-logo-v9.png" alt="" />
-            <div>
-              <b>REFİKA</b>
-              <small>Yol arkadaşınız.</small>
-            </div>
-          </div>
-          <div className="province-label">
-            <span>İL ÇALIŞMA ALANI</span>
-            <strong>
-              {state.provinces[Number(state.settings.province) - 1]}
-            </strong>
-            <small>{state.settings.year}</small>
-          </div>
-          <nav aria-label="Ana menü">
-            {nav.map(([key, label, Icon]) => (
-              <button
-                key={key}
-                className={view === key ? 'active' : ''}
-                onClick={() => go(key)}
-              >
-                <Icon size={19} />
-                {label}
-                {view === key && <ChevronRight size={16} />}
-              </button>
-            ))}
-          </nav>
-          <div className="sidebar-bottom">
-            <HardDrive size={18} />
-            <span>
-              Yerel kayıt etkin<small>Çalışan pilot · 0.2.0</small>
-            </span>
-          </div>
-        </aside>
+  const feedback = (error || notice || busy) && (
+    <div className="feedback" aria-live="polite">
+      {error && (
+        <div className="error" role="alert">
+          <AlertCircle size={18} />
+          {error}
+        </div>
       )}
-      <div className={state?.settings ? 'main-shell' : ''}>
-        {state?.settings && (
-          <header className="topbar">
-            <span>{nav.find((n) => n[0] === view)?.[1]}</span>
-            <div>
-              <span className="status-dot" /> Bu bilgisayarda kayıt{' '}
-              <span className="operator">{state.settings.operator}</span>
+      {notice && (
+        <div className="success">
+          <CheckCircle2 size={18} />
+          {notice}
+        </div>
+      )}
+      {busy && (
+        <div className="working">
+          <RefreshCw size={16} />
+          İşlem sürüyor…
+        </div>
+      )}
+    </div>
+  );
+  if (!state)
+    return (
+      <main className="loading">
+        <h1>REFİKA açılıyor…</h1>
+        {feedback}
+        {error && (
+          <button onClick={() => window.location.reload()}>Yeniden dene</button>
+        )}
+      </main>
+    );
+  if (!state.settings)
+    return (
+      <>
+        {feedback}
+        <Setup state={state} run={run} busy={busy} />
+      </>
+    );
+  return (
+    <DemoShell state={state} view={view} go={go}>
+      {feedback}
+      <main className="workspace">
+        {view === 'home' && <DemoDashboard state={state} go={go} />}
+        {view === 'import' && (
+          <ImportWorkspace state={state} run={run} busy={busy} />
+        )}
+        {(view === 'records' || view === 'results') && (
+          <Records
+            key={view}
+            state={state}
+            run={run}
+            busy={busy}
+            results={view === 'results'}
+            initialFilter={view === 'results' ? 'ready' : 'all'}
+          />
+        )}
+        {['activities', 'visits', 'events'].includes(view) && (
+          <Activities
+            key={view}
+            state={state}
+            run={run}
+            busy={busy}
+            scope={view === 'activities' ? 'all' : view}
+          />
+        )}
+        {view === 'reports' && <Reports run={run} busy={busy} />}
+        {view === 'settings' && (
+          <SettingsPanel state={state} run={run} busy={busy} />
+        )}
+        {view === 'history' && (
+          <>
+            <div className="page-heading">
+              <div>
+                <h1>İşlem Geçmişi</h1>
+                <p>Çalışma alanınızda kaydedilen son 100 işlem.</p>
+              </div>
             </div>
-          </header>
+            <HistoryWorkspace state={state} />
+          </>
         )}
-        {(error || notice || busy) && (
-          <div className="feedback" aria-live="polite">
-            {error && (
-              <div className="error" role="alert">
-                <AlertCircle size={18} />
-                {error}
-              </div>
-            )}
-            {notice && (
-              <div className="success">
-                <CheckCircle2 size={18} />
-                {notice}
-              </div>
-            )}
-            {busy && (
-              <div className="working">
-                <RefreshCw size={16} /> İşlem sürüyor…
-              </div>
-            )}
-          </div>
-        )}
-        {!state ? (
-          <main className="loading">
-            <h1>REFİKA açılıyor…</h1>
-            {error && (
-              <button onClick={() => window.location.reload()}>
-                Yeniden dene
-              </button>
-            )}
-          </main>
-        ) : !state.settings ? (
-          <Setup state={state} run={run} busy={busy} />
-        ) : (
-          <main className="workspace">
-            {view === 'home' && <Dashboard state={state} go={go} />}{' '}
-            {view === 'import' && (
-              <ImportWorkspace state={state} run={run} busy={busy} />
-            )}{' '}
-            {view === 'records' && (
-              <Records state={state} run={run} busy={busy} />
-            )}{' '}
-            {view === 'activities' && (
-              <Activities state={state} run={run} busy={busy} />
-            )}{' '}
-            {view === 'reports' && <Reports run={run} busy={busy} />}{' '}
-            {view === 'settings' && (
-              <SettingsPanel state={state} run={run} busy={busy} />
-            )}
-          </main>
-        )}
-      </div>
-    </>
+      </main>
+    </DemoShell>
   );
 }
 createRoot(document.getElementById('root')).render(<App />);

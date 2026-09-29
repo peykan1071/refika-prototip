@@ -14,12 +14,19 @@ await build({
   jsx: 'automatic',
   target: 'chrome140',
   minify: true,
+  external: ['/refika-logo-v9.png', '/welcome.png'],
   outfile: resolve(out, 'app.js'),
   legalComments: 'eof',
 });
 await copyFile('local/ui/index.html', resolve(out, 'index.html'));
-await copyFile('public/refika-logo-v9.png', resolve(out, 'refika-logo-v9.png'));
-for (const file of ['app.js', 'app.css', 'index.html', 'refika-logo-v9.png'])
+const brandAssets = [
+  'refika-logo-v9.png',
+  'welcome-agent-v11.png',
+  'welcome.png',
+];
+for (const file of brandAssets)
+  await copyFile(resolve('public', file), resolve(out, file));
+for (const file of ['app.js', 'app.css', 'index.html', ...brandAssets])
   await copyFile(resolve(out, file), resolve(stage, 'ui', file));
 await build({
   entryPoints: ['local/desktop.mjs'],
@@ -52,6 +59,6 @@ await writeFile(
 );
 await writeFile(
   resolve(stage, 'KULLANIM.txt'),
-  'REFİKA 0.2.0 — çalışan pilot\r\n\r\nREFIKA.exe dosyasını açın; ilk kurulumda ilinizi seçin.\r\nKayıtlar Windows kullanıcı profilinizde REFİKA uygulama alanında saklanır.\r\nVeri aktar bölümünden Excel/CSV; Plan ve faaliyetler bölümünden yeni çalışma ekleyin.\r\nAyarlar ve yedek bölümünden düzenli şifreli yedek alın.\r\nMerkez ve AI hizmetleri ayrıca yapılandırılır.\r\nBu paket imzalanmamış bir pilottur; kurum geneli dağıtım öncesi pilot kabulü ve imzalama gerekir.\r\n',
+  'REFİKA 0.2.0 — çalışan pilot\r\n\r\nREFIKA.exe dosyasını açın; ilk kurulumda ilinizi seçin.\r\nKayıtlar Windows kullanıcı profilinizde REFİKA uygulama alanında saklanır.\r\nVeri aktar bölümünden Excel/CSV; Faaliyet Planı bölümünden yeni çalışma ekleyin.\r\nAyarlar ve yedek bölümünden düzenli şifreli yedek alın.\r\nMerkez ve AI hizmetleri ayrıca yapılandırılır.\r\nBu paket imzalanmamış bir pilottur; kurum geneli dağıtım öncesi pilot kabulü ve imzalama gerekir.\r\n',
 );
 console.log(`Yerel arayüz ve masaüstü paketi hazır: ${root}`);

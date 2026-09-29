@@ -2,13 +2,15 @@
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
+Görsel referans mevcut REFİKA demosudur: `app/page.jsx` ve `app/globals.css`. Onaylı `refika-logo-v9.png`, `welcome-agent-v11.png` ve `welcome.png` dosyaları değiştirilmeden kullanılır. Logo oranı ve yerleşimi, lacivert–sarı renkler, açık mavi zemin, yazı tipi ve çalışma masası düzeni korunur. Yeni özellikler bu tasarımın içine eklenir. İlk kurulum ekranı yerel il seçimini açıklar; kurumsal giriş varmış gibi bir parola formu göstermez. Henüz yerel veri bağlantısı olmayan demo bölümleri menüde “Yakında” olarak belirtilir.
+
 ## Windows'ta ilk kullanım
 
 1. Dağıtım ZIP'ini bir klasöre çıkarın. `REFIKA.exe` ile yanındaki dosya ve klasörleri birlikte tutun.
 2. `REFIKA.exe` dosyasını açın. İl, koordinatör adı ve eğitim yılını seçin. Bu adım bir kurum hesabı veya giriş yetkisi oluşturmaz; bilgisayardaki çalışma alanını tanımlar.
 3. **Veri aktar** bölümünden boş şablonu indirin. ESEP/NSO listenizi veya faaliyet planınızı Excel/CSV biçiminde seçin. Kaynak sütunlarını eşleştirin, önizlemeyi kontrol edin, ardından içeri alın.
 4. **Kayıt inceleme** bölümünde öğretmen ve okul üyeliklerini kontrol edip dayanak notuyla durum kaydedin. Resmî sonucu yalnız ilgili işlem gerçekten sonuçlandığında girin.
-5. **Plan ve faaliyetler** bölümünde faaliyeti planlayın. Gerçekleştiğinde tarih, katılım, sonuç ve kanıt notunu doldurun. Kaydettiğiniz faaliyete kanıt dosyası ekleyebilirsiniz.
+5. **Faaliyet Planı** bölümünde faaliyeti planlayın. Gerçekleştiğinde tarih, katılım, sonuç ve kanıt notunu doldurun. Kaydettiğiniz faaliyete kanıt dosyası ekleyebilirsiniz.
 6. **Raporlar** bölümünde tarih aralığını seçin. Excel/metin çıktısı alın veya yazdırma penceresinden PDF kaydedin.
 7. **Ayarlar ve yedek** bölümünden düzenli şifreli yedek indirin. Parolanızı saklayın; unutulan parola kurtarılamaz.
 
