@@ -1,5 +1,7 @@
 # REFİKA yarışma demosu
 
+Bu dosya önceki tarayıcı demosunu anlatır. Kalıcı kayıt kullanan Windows pilotu için [yerel uygulama kılavuzuna](local/README.md) bakın. `npm run desktop:package` Windows paketini üretir; aşağıdaki demo akışı masaüstü pilotundan ayrıdır.
+
 ## Gösterim akışı
 
 1. Hazır örnek bilgilerle giriş yapın.

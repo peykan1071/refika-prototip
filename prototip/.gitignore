@@ -38,5 +38,11 @@ next-env.d.ts
 /work/
 
 /.sites-runtime/
+/.local-data/
+/.local-data-test/
+/.hub-data/
+/.local-package/
+/local-dist/
+/release/
 data/
 docs/
