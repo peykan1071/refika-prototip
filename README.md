@@ -1,19 +1,47 @@
 # REFİKA
 
-Rehber eTwinning Faaliyetleri İl Koordinatörü Ajanı — yarışma prototipi.
+Rehber eTwinning Faaliyetleri İl Koordinatörü Ajanı.
 
-Uygulama `prototip/` klasöründedir. Node.js 22.13+ ile:
+REFİKA, 81 il koordinatörünün kayıt inceleme, faaliyet planlama, sonuç takibi ve raporlama işlerini yürütmesi için geliştirilen bir uygulamadır. Her il kendi verisini kendi bilgisayarında tutar; merkez, illerin çalışma özetlerini ortak ekrandan izler.
+
+## Çalışma düzeni
+
+- **İl çalışma alanı:** Öğretmen ve okul kayıtları, faaliyetler ve kanıt dosyaları yerel veri tabanında saklanır. İnternet bağlantısı olmadan yerel çalışma sürdürülebilir.
+- **Ortak merkez:** İl ve eğitim yılı bazında faaliyet, katılım ve kayıt durum sayıları paylaşılır. Öğretmen adları, e-posta adresleri ve kanıt dosyaları bu özete dahil edilmez.
+- **Veri aktarımı:** ESEP/NSO listeleri ve faaliyet planları dosyadan alınır; sütun eşleştirme, eksik alan, yanlış il ve tekrar kontrollerinden sonra kaydedilir.
+- **Yapay zekâ desteği:** Word faaliyet planlarını alanlara ayırmak için isteğe bağlı model bağlantısı bulunur. Öneriler kaydedilmeden önce koordinatör tarafından incelenir.
+- **Görsel kimlik:** Onaylanan REFİKA logosu, görselleri, lacivert–sarı renkleri ve mevcut ekran düzeni geliştirmede korunur.
+
+## Mevcut durum
+
+Güncel uygulama [geliştirme dalında](https://github.com/peykan1071/refika-prototip/tree/codex/refika-calisan-pilot) bulunur; ana dala aktarımı [#1 numaralı geliştirme kaydında](https://github.com/peykan1071/refika-prototip/pull/1) izlenir.
+
+Yerel kayıt, Excel/CSV aktarımı, kayıt inceleme, faaliyet planı ve sonuç girişi, kanıt ekleme, rapor üretme ve şifreli yedekleme uygulanmıştır. Windows paketini üretme araçları ve 81 il özet ekranının servis kodu mevcuttur.
+
+Canlı merkez kurulumu, kurumsal kullanıcı yetkileri, model hizmeti, güncel resmî çıktı şablonları ve saha doğrulaması tamamlanacaktır. ESEP'e otomatik giriş, veri çekme veya resmî işlem gönderme henüz yoktur. Windows paketi imzasızdır; son açılış denemesi bu bilgisayarın Uygulama Denetimi tarafından engellenmiştir. Kurum geneli dağıtım için hazır sürüm olarak sunulmaz.
+
+## Geliştirme sürümünü çalıştırma
+
+Node.js 22.13 veya üzeri gerekir. Depo kökünde:
 
 ```sh
+git switch codex/refika-calisan-pilot
 cd prototip
 npm ci
-npm run dev
+npm run local:build
+npm run local:start
 ```
 
-Çalışan kapsam: kayıt inceleme, hesap ve okul üyeliği talepleri, taslak, koordinatör onayı, simüle gönderim, paket ve talep bazında sonuç takibi, rapor indirme.
+Uygulama bu bilgisayarda `http://127.0.0.1:4317` adresinde açılır. İlk kullanımda il, koordinatör adı ve eğitim yılıyla boş bir çalışma alanı oluşturulur.
 
-Demo kayıtları tarayıcıda saklanır; gerçek kimlik doğrulaması, sunucu veritabanı, yapay zekâ ve dış gönderim yoktur. Hesap inceleme örneği temsilidir. Diğer modüller geliştirme kapsamını gösterir.
+Windows x64 paketini üretmek için aynı klasörde:
 
-[Yarışma senaryosu ve doğrulama](prototip/README.md)
+```sh
+npm run desktop:package
+```
 
-Kişisel saha dosyaları, çalışma arşivleri, bağımlılıklar ve üretilen derlemeler depoya dahil edilmez.
+Çıktı: `prototip/release/REFIKA-win32-x64/REFIKA.exe`. Dağıtımda bütün klasör birlikte verilir; son kullanıcıya Node.js kurulumu gerekmez.
+
+[Kullanım, veri aktarımı, yedekleme ve bağlantı kılavuzu](https://github.com/peykan1071/refika-prototip/blob/codex/refika-calisan-pilot/prototip/local/README.md) · [Geliştirme yapısı](prototip/README.md)
+
+Kişisel saha dosyaları, çalışma arşivleri, erişim anahtarları ve üretilen dağıtım dosyaları kaynak kod deposuna dahil edilmez.
