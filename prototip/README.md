@@ -1,48 +1,60 @@
-# REFİKA yarışma demosu
+# REFİKA uygulaması
 
-Bu dosya önceki tarayıcı demosunu anlatır. Kalıcı kayıt kullanan Windows pilotu için [yerel uygulama kılavuzuna](local/README.md) bakın. `npm run desktop:package` Windows paketini üretir; aşağıdaki demo akışı masaüstü pilotundan ayrıdır.
+REFİKA'nın geliştirme odağı, il koordinatörlerinin günlük işlerini kalıcı kayıtlarla yürüten yerel uygulama ve 81 ilin özetini sunan ortak merkezdir.
 
-## Gösterim akışı
+## Güncel çalışma alanı
 
-1. Hazır örnek bilgilerle giriş yapın.
-2. Kayıt ve Validasyon ekranında eksik kayıtları inceleyip okul bilgisini ve kontrol onayını tamamlayın.
-3. Liste ve e-posta taslağını hazırlayın; gönderim öncesi kontrolden geçirerek gönderimi simüle edin.
-4. Yeni talep oluşturun: Öğretmen, Okul bağlantısını kaldırma; temsili hesap kimliği, okul kimliği ve gerekçe girin.
-5. Yeni talep hazırlanırken Sonuç Takibine dönün. Önceki paketin bir talebine sonuç girin; diğerleri beklemeye devam eder.
-6. Sayfayı yenileyip tekrar giriş yapın. Paket, sonuç ve yeni talep korunur.
-7. Raporlar ve Yazışmalardan faaliyet özetini indirin. Benzersiz talepler ile gönderimlerdeki toplam talep sayısı ayrı gösterilir.
-8. Gösterim sonunda İşlem Geçmişinden Örnek akışı sıfırla seçeneğini kullanın.
+Güncel uygulama `codex/refika-calisan-pilot` dalındaki `local/` klasöründedir. Ana dala aktarımı [#1](https://github.com/peykan1071/refika-prototip/pull/1) üzerinden izlenir.
 
-## Kapsam
-
-Koordinatör onayı zorunludur. Tekrar gönderim aynı talep numarasını korur ve yeni bir gönderim kaydı oluşturur. Her gönderimdeki talepler ayrı sonuç alır. Okul üyeliği onayı ve okul bağlantısını kaldırma, hesap silmeden ayrı işlemlerdir.
-
-Tarayıcı kaydı cihaz ve tarayıcı profiline özeldir; bulut yedekleme ve çok kullanıcılı çalışma yoktur. Aynı anda bir sekmede kullanın. Depolama hatası ekranda bildirilir. Hesap incelemesindeki kişi ve kimlikler temsilidir. Gerçek veri ve şifre girmeyin.
-
-2024–2026 inceleme özeti tarihli saha bulgularıdır; canlı eşitleme veya tamamlanmış işlem sayısı değildir. Yapay zekâ, gerçek oturum açma ve e-posta gönderimi etkin değildir. Komut kutusu ilgili ekranı açar. Okul ziyaretleri ile eğitim ve etkinlikler için plan, sonuç, çalışma masası, takvim ve ayrı faaliyet özeti çalışır. Mentörlük gibi diğer alanlar hazırlık ekranlarıdır.
-
-## Doğrulama
+Depo kökünden başlatın:
 
 ```sh
-node --test lib/workflow.test.mjs lib/account-review.test.mjs lib/demo-regression.test.mjs lib/tasks.test.mjs lib/events.test.mjs lib/dashboard.test.mjs
-npx oxlint app lib components/account-review.jsx components/result-tracker.jsx components/visit-workspace.jsx components/event-workspace.jsx components/coordinator-dashboard.jsx
-npm run build
+git switch codex/refika-calisan-pilot
+cd prototip
+npm ci
+npm run local:build
+npm run local:start
 ```
 
-Mevcut Sites kimliği ve lacivert–sarı marka görünümü korunur. GitHub'a kaynak aktarımı Sites'taki yayını otomatik güncellemez.
+Node.js 22.13+ gerekir. Tarayıcıda `http://127.0.0.1:4317` açılır; kayıtlar `prototip/.local-data` altında SQLite veri tabanına yazılır.
 
-## Okul ziyareti akışı
+## Kullanım akışı
 
-Okul Ziyaretleri alanında temsili okul, başlık, amaç ve tarih girip planı kaydedin. Plan çalışma masasında ve Takvimim alanında görünür. Düzenle / sonuç gir ile sonuç yazıp Tamamlandı seçin. Raporlar ve Yazışmalar alanından ziyaret özetini indirin. Yenilemede kayıtlar korunur; örnek akışı sıfırlamak ziyaretleri de temizler.
+1. İl, koordinatör adı ve eğitim yılıyla çalışma alanını oluşturun.
+2. **Veri aktar** bölümünde ESEP/NSO listesini veya faaliyet planını seçin. Sütunları eşleştirip kontrol sonuçlarını inceleyin ve uygun kayıtları içeri alın.
+3. **Kayıt ve Validasyon** bölümünde kayıtları dayanak notlarıyla inceleyin; resmî sonucu işlem gerçekten sonuçlandığında girin.
+4. **Faaliyet Planı**, **Okul Ziyaretleri** veya **Eğitim ve Etkinlikler** üzerinden çalışmayı planlayın; gerçekleşen tarih, katılım, sonuç ve kanıtı aynı kayda ekleyin.
+5. **Raporlar ve Yazışmalar** bölümünden tarih aralığına göre çıktı alın.
+6. **Ayarlar ve yedek** bölümünden şifreli yedek oluşturun. Merkez bağlantısı kurulduğunda il özetinin paylaşımını buradan açın.
 
-PostgreSQL başlangıç şeması `database/001_tasks.sql` dosyasındadır; henüz kurulmuş veya uygulamaya bağlanmış bir veri tabanı değildir.
+[Kullanım ve bağlantı kılavuzu](https://github.com/peykan1071/refika-prototip/blob/codex/refika-calisan-pilot/prototip/local/README.md), aktarım kurallarını, veri konumlarını, yedekten dönüşü ve merkez/model yapılandırmasını açıklar.
 
-## Eğitim ve etkinlik akışı
+## Görsel referans ve kod yapısı
 
-Eğitim ve Etkinlikler alanında çalıştay, eğitim, webinar veya toplantı planlayın. Uygulama biçimini, hedef kitleyi, tarihi ve planlanan katılımı kaydedin. Etkinlik tamamlandığında gerçekleşen katılımı, sonucu ve kanıt notunu aynı kayda girin. Kayıt çalışma masasına ve Takvimim alanına yansır; Raporlar ve Yazışmalar bölümünden ayrı etkinlik özeti indirilebilir.
+Mevcut demo, REFİKA'nın onaylanan görsel referansıdır. Logo, karşılama görselleri, lacivert–sarı renkler, yazı tipi ve çalışma masası düzeni korunur; yeni işlevler bu görünümün içine eklenir.
 
-Sunucu veri modeli için `database/001_tasks.sql` sonrasında `database/002_event_details.sql` taslağı bulunur. Bu şemalar henüz kurulmuş veya uygulamaya bağlanmış değildir.
+| Konum | İşlev |
+| --- | --- |
+| `local/` | Kalıcı kayıt kullanan yerel uygulama, merkez servisi ve testler |
+| `scripts/build-local.mjs` | Yerel arayüz ve masaüstü çalışma dosyalarını derleme |
+| `scripts/package-local.mjs` | Windows dağıtım klasörünü üretme |
+| `app/`, `components/`, `lib/` | Önceki tarayıcı demosu ve görsel referans |
+| `public/` | Mevcut logo ve görseller |
+| `database/` | Önceki sunucu veri modeli taslakları; yerel uygulamanın veri tabanı değildir |
 
-## Koordinatör çalışma masası
+Görsel referansı açmak için `npm run dev` kullanılır. Bu ayrı tarayıcı demosu örnek kayıtlarını tarayıcıda saklar; gerçek oturum açma ve gönderim yapmaz. Yerel uygulamanın SQLite kayıtlarına bağlı değildir ve gerçek kişisel veriyle kullanılmaz. GitHub'a yapılan değişiklikler mevcut Sites yayınına kendiliğinden aktarılmaz.
 
-Ana ekran, ziyaret ve validasyon kayıtlarından türetilen güncel sayıları gösterir: bugünkü ve planlanan ziyaretler, incelenecek validasyon kayıtları, gönderim öncesi kontrol, sonucu açık talepler ve tamamlanan faaliyetler. Öncelikli işler kullanıcıyı doğrudan ilgili çalışma alanına götürür. Sayılar ayrı bir kopyada tutulmaz; kayıtların mevcut durumundan hesaplanır.
+## Doğrulama ve paketleme
+
+`prototip/` klasöründe:
+
+```sh
+npm run local:test
+npx oxlint -c local/oxlint.json local scripts/build-local.mjs scripts/package-local.mjs
+npm run local:build
+npm run desktop:package
+```
+
+Windows çıktısı `release/REFIKA-win32-x64` klasörünün tamamıdır. Paket imzasızdır; son açılış denemesinde bu bilgisayarın Uygulama Denetimi çalıştırmayı engellemiştir. Dağıtım ve açılış doğrulaması tamamlanmalıdır.
+
+Canlı merkez, kurumsal yetkilendirme, model hizmeti, resmî çıktı şablonları, yıl ve cihaz geçişi ile saha doğrulaması geliştirme kapsamındadır. Mevcut sürümün ayrıntılı sınırları kullanım kılavuzunda belirtilir.

@@ -1,4 +1,4 @@
-# REFİKA 0.2.0 · Yerel pilot
+# REFİKA 0.2.0 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -9,12 +9,12 @@ Görsel referans mevcut REFİKA demosudur: `app/page.jsx` ve `app/globals.css`. 
 1. Dağıtım ZIP'ini bir klasöre çıkarın. `REFIKA.exe` ile yanındaki dosya ve klasörleri birlikte tutun.
 2. `REFIKA.exe` dosyasını açın. İl, koordinatör adı ve eğitim yılını seçin. Bu adım bir kurum hesabı veya giriş yetkisi oluşturmaz; bilgisayardaki çalışma alanını tanımlar.
 3. **Veri aktar** bölümünden boş şablonu indirin. ESEP/NSO listenizi veya faaliyet planınızı Excel/CSV biçiminde seçin. Kaynak sütunlarını eşleştirin, önizlemeyi kontrol edin, ardından içeri alın.
-4. **Kayıt inceleme** bölümünde öğretmen ve okul üyeliklerini kontrol edip dayanak notuyla durum kaydedin. Resmî sonucu yalnız ilgili işlem gerçekten sonuçlandığında girin.
+4. **Kayıt ve Validasyon** bölümünde öğretmen ve okul üyeliklerini kontrol edip dayanak notuyla durum kaydedin. Resmî sonucu yalnız ilgili işlem gerçekten sonuçlandığında girin.
 5. **Faaliyet Planı** bölümünde faaliyeti planlayın. Gerçekleştiğinde tarih, katılım, sonuç ve kanıt notunu doldurun. Kaydettiğiniz faaliyete kanıt dosyası ekleyebilirsiniz.
-6. **Raporlar** bölümünde tarih aralığını seçin. Excel/metin çıktısı alın veya yazdırma penceresinden PDF kaydedin.
+6. **Raporlar ve Yazışmalar** bölümünde tarih aralığını seçin. Excel/metin çıktısı alın veya yazdırma penceresinden PDF kaydedin.
 7. **Ayarlar ve yedek** bölümünden düzenli şifreli yedek indirin. Parolanızı saklayın; unutulan parola kurtarılamaz.
 
-Bir çalışma alanı bu pilotta bir il ve bir eğitim yılı içindir. İl/yıl değiştirme, çok cihazlı düzenleme ve eski yarışma demosundan otomatik veri taşıma yoktur. Örnek kişisel kayıtlar pakete dahil edilmez.
+Bir çalışma alanı bu sürümde bir il ve bir eğitim yılı içindir. İl/yıl değiştirme, çok cihazlı düzenleme ve önceki tarayıcı demosundan otomatik veri taşıma yoktur. Örnek kişisel kayıtlar pakete dahil edilmez.
 
 ## Aktarım kuralları
 
@@ -92,6 +92,6 @@ npm run local:test
 npx oxlint -c local/oxlint.json local scripts/build-local.mjs scripts/package-local.mjs
 ```
 
-Testler gerçek geçici SQLite dosyaları, Excel/CSV örnekleri, şifreli yedek, yerel HTTP ve merkez sunucusunu kullanır. Arayüzden kayıt oluşturma ve yenileme ile Windows paketinin açılışı ayrıca kontrol edilir. Canlı ESEP, dış AI modeli ve 81 cihazlık saha kullanımı test edilmemiştir.
+Testler gerçek geçici SQLite dosyaları, Excel/CSV örnekleri, şifreli yedek, yerel HTTP ve merkez sunucusunu kullanır. Tarayıcı arayüzünde kayıt oluşturma ve yenileme doğrulanmıştır. Son Windows paketinin açılış denemesi bu bilgisayarın Uygulama Denetimi tarafından engellenmiştir; güncel paket için başarılı açılış doğrulaması beklemektedir. Canlı ESEP, dış AI modeli ve 81 cihazlık saha kullanımı test edilmemiştir.
 
 Bu sürüm kişisel bilgisayarda tek koordinatörün pilot kullanımı içindir. Kurum geneli dağıtım öncesinde gerçek veriyle aktarım eşleştirmesi, resmî çıktı şablonu, yıl geçişi, cihaz değişimi, kullanıcı yetkileri, imzalı dağıtım ve destek süreci tamamlanmalıdır. Eski web demosunun bağımlılık denetiminde kalan bulgular ayrıca ele alınmalıdır; bu masaüstü paketi o web sunucusunu içermez.
