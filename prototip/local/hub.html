@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>REFİKA · Merkez</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f3f5f8;
+        color: #182a49;
+        font: 16px/1.6 system-ui;
+      }
+      main {
+        max-width: 1150px;
+        margin: 40px auto;
+        padding: 24px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #e5b24d;
+      }
+      h1 {
+        font-size: 30px;
+      }
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin: 24px 0;
+      }
+      input,
+      button {
+        font: inherit;
+        padding: 10px;
+        border: 1px solid #bac4d2;
+        border-radius: 8px;
+      }
+      button {
+        background: #182a49;
+        color: white;
+        cursor: pointer;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+      td,
+      th {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #e1e5eb;
+      }
+      th {
+        font-size: 14px;
+      }
+      #table {
+        overflow: auto;
+      }
+      #error {
+        color: #a51d2d;
+      }
+      .muted {
+        color: #56677d;
+      }
+      .stale {
+        color: #976020;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p>REFİKA / MERKEZ</p>
+          <h1>81 il, ortak görünüm</h1>
+        </div>
+        <span>Paylaşılan il özetleri</span>
+      </header>
+      <p class="muted">
+        İllerin son eşitlenen durumu. Katılım toplamı, benzersiz kişi sayısı
+        değildir. Kişisel kayıtlar bu ekrana aktarılmaz.
+      </p>
+      <form id="login">
+        <label
+          >Yönetici bağlantı anahtarı
+          <input id="key" type="password" required autocomplete="off" /></label
+        ><button>Merkez ekranını aç</button>
+      </form>
+      <p id="error" role="alert"></p>
+      <section id="result" hidden>
+        <button id="refresh">Güncelle</button>
+        <p id="summary" aria-live="polite"></p>
+        <div id="table">
+          <table>
+            <thead>
+              <tr>
+                <th>İl</th>
+                <th>Eğitim yılı</th>
+                <th>Planlanan</th>
+                <th>Tamamlanan</th>
+                <th>Toplam katılım</th>
+                <th>İncelenecek</th>
+                <th>Hazır</th>
+                <th>Sonuçlanan</th>
+                <th>Son aktarım</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script>
+      let token = '';
+      async function refresh() {
+        try {
+          const response = await fetch('/api/overview', {
+            headers: { Authorization: 'Bearer ' + token },
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error);
+          document.getElementById('rows').replaceChildren();
+          for (let i = 0; i < data.provinces.length; i++) {
+            const records = data.rows.filter(
+              (r) => Number(r.province) === i + 1,
+            );
+            for (const row of records.length ? records : [null]) {
+              const tr = document.createElement('tr');
+              const values = [
+                data.provinces[i],
+                row?.year ?? '—',
+                row?.planned ?? '—',
+                row?.completed ?? '—',
+                row?.participations ?? '—',
+                row?.review ?? '—',
+                row?.ready ?? '—',
+                row?.resolved ?? '—',
+                row
+                  ? new Date(row.receivedAt).toLocaleString('tr-TR')
+                  : 'Henüz veri yok',
+              ];
+              for (const value of values) {
+                const td = document.createElement('td');
+                td.textContent = value;
+                tr.append(td);
+              }
+              if (row && Date.now() - Date.parse(row.receivedAt) > 86400000)
+                tr.lastChild.className = 'stale';
+              document.getElementById('rows').append(tr);
+            }
+          }
+          document.getElementById('summary').textContent =
+            new Set(data.rows.map((r) => r.province)).size +
+            ' / 81 ilden veri alındı';
+          document.getElementById('result').hidden = false;
+          document.getElementById('login').hidden = true;
+          document.getElementById('error').textContent = '';
+        } catch (e) {
+          document.getElementById('error').textContent = e.message;
+        }
+      }
+      document.getElementById('login').addEventListener('submit', (e) => {
+        e.preventDefault();
+        token = document.getElementById('key').value;
+        document.getElementById('key').value = '';
+        refresh();
+      });
+      document.getElementById('refresh').addEventListener('click', refresh);
+    </script>
+  </body>
+</html>
