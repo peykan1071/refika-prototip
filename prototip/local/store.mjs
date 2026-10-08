@@ -5,6 +5,7 @@ import { dirname } from 'node:path';
 import { migrateValidation, ValidationStore } from './validation-store.mjs';
 import { validationWorkItems } from './validation.mjs';
 import { cleanPlan } from './plans.mjs';
+import { ReportStore } from './reports.mjs';
 import {
   digest,
   provinceCode,
@@ -32,6 +33,7 @@ export class Store {
       throw error;
     }
     this.validation = new ValidationStore(this);
+    this.reports = new ReportStore(this);
     if (!this.meta('installationId'))
       this.setMeta('installationId', randomUUID());
   }
@@ -67,7 +69,7 @@ export class Store {
     this.setMeta('revision', (this.meta('revision') || 0) + 1);
   }
   list(table) {
-    if (!['records', 'activities', 'plans'].includes(table))
+    if (!['records', 'activities', 'plans', 'reports'].includes(table))
       throw new Error('Geçersiz tablo.');
     return this.db
       .prepare(`SELECT id,body,version FROM ${table} ORDER BY rowid DESC`)
@@ -79,7 +81,7 @@ export class Store {
       }));
   }
   get(table, id) {
-    if (!['records', 'activities', 'plans'].includes(table))
+    if (!['records', 'activities', 'plans', 'reports'].includes(table))
       throw new Error('Geçersiz tablo.');
     const row = this.db
       .prepare(`SELECT body,version FROM ${table} WHERE id=?`)
@@ -89,7 +91,7 @@ export class Store {
       : undefined;
   }
   put(table, id, body, expectedVersion) {
-    if (!['records', 'activities', 'plans'].includes(table))
+    if (!['records', 'activities', 'plans', 'reports'].includes(table))
       throw new Error('Geçersiz tablo.');
     const existing = this.db
       .prepare(`SELECT version FROM ${table} WHERE id=?`)
@@ -138,6 +140,7 @@ export class Store {
       records: this.list('records'),
       validationCases: this.validation.list(),
       plans: this.list('plans'),
+      reports: this.reports.list(),
       activities: this.list('activities'),
       files: this.db
         .prepare(
@@ -268,7 +271,8 @@ export class Store {
   exportArchive() {
     return {
       format: 'refika-backup',
-      version: 3,
+      version: 4,
+      reports: this.reports.archive(),
       plans: this.list('plans'),
       validation: this.validation.archive(),
       history: this.db
@@ -286,7 +290,7 @@ export class Store {
   restoreArchive(data, confirmedProvince) {
     if (
       data?.format !== 'refika-backup' ||
-      ![1, 2, 3].includes(data.version) ||
+      ![1, 2, 3, 4].includes(data.version) ||
       !provinceCode(data.settings?.province) ||
       confirmedProvince !== data.settings.province
     )
@@ -369,6 +373,11 @@ export class Store {
         ? data.validation
         : { cases: [], events: [], files: [] };
     this.validation.validateArchive(validation, data.settings, records);
+    const reports =
+      data.version >= 4
+        ? data.reports
+        : { reports: [], versions: [], files: [] };
+    this.reports.validateArchive(reports, confirmedProvince);
     const history = data.version >= 2 ? data.history : [];
     if (
       !Array.isArray(history) ||
@@ -396,6 +405,20 @@ export class Store {
     };
     this.transaction(() => {
       this.validation.restore(validation);
+      this.reports.restore(
+        reports,
+        new Map(
+          data.activities.map((a) => [
+            a.id,
+            {
+              previous: a.version,
+              restored:
+                Math.max(versions.activities.get(a.id) || 0, a.version || 0) +
+                1,
+            },
+          ]),
+        ),
+      );
       this.db.exec(
         'DELETE FROM files; DELETE FROM records; DELETE FROM activities; DELETE FROM plans;',
       );

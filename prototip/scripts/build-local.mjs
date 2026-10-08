@@ -47,7 +47,7 @@ await writeFile(
     {
       name: 'refika',
       productName: 'REFİKA',
-      version: '0.4.0',
+      version: '0.5.0',
       description: 'REFİKA il koordinatörü çalışma alanı',
       author: 'REFİKA',
       main: 'main.mjs',
@@ -59,6 +59,6 @@ await writeFile(
 );
 await writeFile(
   resolve(stage, 'KULLANIM.txt'),
-  'REFİKA 0.4.0 — çalışan pilot\r\n\r\nREFIKA.exe dosyasını açın; ilk kurulumda ilinizi seçin.\r\nKayıtlar Windows kullanıcı profilinizde REFİKA uygulama alanında saklanır.\r\nVeri aktar bölümünden Excel/CSV; Faaliyet Planı > Plan ekle bölümünden aylık planınızı alın; maddelerden faaliyet kaydı oluşturun.\r\nAyarlar ve yedek bölümünden düzenli şifreli yedek alın.\r\nMerkez ve AI hizmetleri ayrıca yapılandırılır.\r\nBu paket imzalanmamış bir pilottur; kurum geneli dağıtım öncesi pilot kabulü ve imzalama gerekir.\r\n',
+  'REFİKA 0.5.0 — çalışan pilot\r\n\r\nREFIKA.exe dosyasını açın; ilk kurulumda ilinizi seçin.\r\nKayıtlar Windows kullanıcı profilinizde REFİKA uygulama alanında saklanır.\r\nVeri aktar bölümünden Excel/CSV; Faaliyet Planı > Plan ekle bölümünden aylık planınızı alın; maddelerden faaliyet kaydı oluşturun.\r\nAyarlar ve yedek bölümünden düzenli şifreli yedek alın.\r\nMerkez ve AI hizmetleri ayrıca yapılandırılır.\r\nBu paket imzalanmamış bir pilottur; kurum geneli dağıtım öncesi pilot kabulü ve imzalama gerekir.\r\n',
 );
 console.log(`Yerel arayüz ve masaüstü paketi hazır: ${root}`);

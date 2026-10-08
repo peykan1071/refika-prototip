@@ -627,7 +627,7 @@ export function DemoDashboard({ state, go }) {
             'reports',
             'Raporlar ve Yazışmalar',
             FileText,
-            'Dönem özeti ve Excel çıktısı',
+            'Rapor arşivi, yeni rapor ve dönem özeti',
           ],
         ].map(([target, label, Icon, detail]) => (
           <button

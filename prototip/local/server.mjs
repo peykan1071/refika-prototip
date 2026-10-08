@@ -15,6 +15,7 @@ import { body, json, download, staticFile } from './http.mjs';
 import { encryptBackup, decryptBackup } from './backup.mjs';
 import { syncSummary, syncStatus } from './sync.mjs';
 import { previewPlan, commitPlan } from './plans.mjs';
+import { reportText } from './reports.mjs';
 import {
   caseExportHeaders,
   caseExportRow,
@@ -361,6 +362,75 @@ export async function startLocal({
             'text/plain; charset=utf-8',
           );
         return json(res, 200, report);
+      }
+      if (path === '/api/reports/import-preview' && req.method === 'POST')
+        return json(res, 200, store.reports.previewImport(await body(req)));
+      if (path === '/api/reports/import' && req.method === 'POST')
+        return json(res, 200, store.reports.import(await body(req)));
+      if (path === '/api/reports/generate' && req.method === 'POST')
+        return json(res, 200, store.reports.generate(await body(req)));
+      if (path === '/api/reports' && req.method === 'POST')
+        return json(res, 200, store.reports.save(await body(req)));
+      const reportRoute = path.match(
+        /^\/api\/reports\/([a-zA-Z0-9-]+)(?:\/(export|ready|submission|files|versions\/\d+))?$/,
+      );
+      if (reportRoute) {
+        const [, id, action] = reportRoute;
+        if (req.method === 'GET' && !action)
+          return json(res, 200, store.reports.detail(id));
+        if (req.method === 'GET' && action === 'export') {
+          const report = store.reports.get(id);
+          if (url.searchParams.get('format') === 'json')
+            return download(
+              res,
+              'REFIKA-rapor.json',
+              Buffer.from(
+                JSON.stringify(
+                  { format: 'refika-report', version: 1, report },
+                  null,
+                  2,
+                ),
+              ),
+              'application/json; charset=utf-8',
+            );
+          return download(
+            res,
+            'REFIKA-rapor.txt',
+            Buffer.from('\uFEFF' + reportText(report)),
+            'text/plain; charset=utf-8',
+          );
+        }
+        if (req.method === 'GET' && action?.startsWith('versions/')) {
+          const row = store.db
+            .prepare(
+              'SELECT body FROM report_versions WHERE report_id=? AND version=?',
+            )
+            .get(id, Number(action.split('/')[1]));
+          if (!row) throw new Error('Rapor sürümü bulunamadı.');
+          return json(res, 200, JSON.parse(row.body));
+        }
+        if (req.method === 'POST' && action === 'ready')
+          return json(res, 200, store.reports.ready(id, await body(req)));
+        if (req.method === 'POST' && action === 'submission')
+          return json(
+            res,
+            200,
+            store.reports.recordSubmission(id, await body(req)),
+          );
+        if (req.method === 'POST' && action === 'files')
+          return json(
+            res,
+            200,
+            store.reports.addFile(id, await body(req, 15 * 1024 * 1024)),
+          );
+      }
+      const reportFileRoute = path.match(/^\/api\/report-files\/([a-f0-9]+)$/);
+      if (reportFileRoute && req.method === 'GET') {
+        const file = store.db
+          .prepare('SELECT * FROM report_files WHERE id=?')
+          .get(reportFileRoute[1]);
+        if (!file) throw new Error('Rapor eki bulunamadı.');
+        return download(res, file.name, Buffer.from(file.body));
       }
       if (path === '/api/backup' && req.method === 'POST') {
         const input = await body(req);

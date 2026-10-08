@@ -115,7 +115,7 @@ test('Plan, ilerleme ve faaliyet bağı yedekle geri gelir; eski yedekler açıl
   const store = workspace(t),
     plan = await save(store);
   const archive = store.exportArchive();
-  assert.equal(archive.version, 3);
+  assert.equal(archive.version, 4);
   store.restoreArchive(archive, '25');
   assert.equal(store.state().plans[0].items.length, 4);
   assert.equal(store.state().plans[0].progressText, source.progressText);

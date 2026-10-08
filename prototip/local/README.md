@@ -1,4 +1,4 @@
-# REFİKA 0.4.0 · Yerel uygulama
+# REFİKA 0.5.0 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -11,7 +11,7 @@ Görsel referans mevcut REFİKA demosudur: `app/page.jsx` ve `app/globals.css`. 
 3. **Veri aktar** bölümünden boş şablonu indirin. ESEP/NSO listenizi veya faaliyet planınızı Excel/CSV biçiminde seçin. Kaynak sütunlarını eşleştirin, önizlemeyi kontrol edin, ardından içeri alın.
 4. **Kayıt ve Validasyon** tablosunda **İncele** ile ilgili kaydı açın veya **Yeni talep oluştur** ile elle başlayın. Talebe özel kontrolleri ve dayanakları kaydedin. **Listeyi ve e-postayı hazırla → Taslaklar → Onaya sun → Onay Merkezi** adımlarını izleyin; gerçekleşen gönderimden sonra **Sonuç Takibi** bölümünü kullanın.
 5. **Faaliyet Planı → Plan ekle** ile aylık planınızı alın. Bir maddedeki **Faaliyet kaydı oluştur** düğmesiyle somut çalışmayı planlayın. Gerçekleştiğinde tarih, katılım, sonuç ve kanıt notunu doldurun. Kaydettiğiniz faaliyete kanıt dosyası ekleyebilirsiniz.
-6. **Raporlar ve Yazışmalar** bölümünde tarih aralığını seçin. Excel/metin çıktısı alın veya yazdırma penceresinden PDF kaydedin.
+6. **Raporlar ve Yazışmalar** bölümünde arşivi açın veya **Yeni etkinlik raporu** hazırlayın. Toplu Excel/metin çıktısı ve yazdırma için **Dönem faaliyet özeti** sekmesini kullanın.
 7. **Ayarlar ve yedek** bölümünden düzenli şifreli yedek indirin. Parolanızı saklayın; unutulan parola kurtarılamaz.
 
 Bir çalışma alanı bu sürümde bir il ve bir eğitim yılı içindir. İl/yıl değiştirme, çok cihazlı düzenleme ve önceki tarayıcı demosundan otomatik veri taşıma yoktur. Örnek kişisel kayıtlar pakete dahil edilmez.
@@ -26,7 +26,18 @@ Bir çalışma alanı bu sürümde bir il ve bir eğitim yılı içindir. İl/y�
 
 Plan maddeleri gerçekleşmiş faaliyet veya katılımcı sayılmaz. Kaynak ilerleme notu otomatik tamamlama değildir. Genel esaslar ve tam plan metni kaynak bölümünde korunur. Aylık planı almak için model hizmeti gerekmez; gelecekte etkinlik hazırlığında kullanılmak üzere kaynak metin, ilerleme ve yapılandırılmış maddeler ayrı saklanır. **Plan verisini indir** bu alanları JSON dosyası olarak verir; bu dosya şifreli yedeğin yerine geçmez.
 
-Şifreli yedek biçimi 3, aylık planları ve faaliyetlerle bağlantılarını da kapsar. Önceki biçim 1 ve 2 yedekleri okunur; yeni yedekler eski uygulama sürümünde açılmaz. Kişisel plan içerikleri dağıtım paketine veya GitHub'a eklenmez.
+Şifreli yedek biçimi 4, aylık planları, faaliyet bağlantılarını, raporları, sürüm geçmişini ve yerel rapor eklerini kapsar. Önceki biçim 1, 2 ve 3 yedekleri okunur; yeni yedekler eski uygulama sürümünde açılmaz. Kişisel plan ve rapor içerikleri dağıtım paketine veya GitHub'a eklenmez.
+
+## Rapor arşivi ve YEĞİTEK’e aktarım
+
+- **Rapor arşivi:** İçe alınmış raporlar döneme ve başlığa göre bulunur. Kaynak alanları ve haber/ek bağlantıları korunur. Boş katılımcı alanları sıfır sayılmaz. “Bu bilgisayarda” işaretli eklerin dosya içeriği yerel veri tabanında ve şifreli yedekte bulunur; kaynak bağlantıları ayrıca saklanır. Arşivlenen raporlar faaliyet istatistiklerine tekrar eklenmez.
+- Kaynak aktarım API’si koordinatör ve il eşleşmesini kontrol eder; önizleme belirteci olmadan kaydetmez. Aynı kaynak bağlantısı ve içerik ikinci kayıt oluşturmaz; değişen kaynak önceki sürümü korur. Bu sürümde geçmiş raporlar oturum açılmış YEĞİTEK ekranından kontrollü aktarılmıştır; uygulama giriş bilgisi saklamaz ve arka planda otomatik çekmez.
+- **Yeni etkinlik raporu:** Takvim yılını ve üç aylık dönemi seçin. Tamamlanmış bir faaliyetten başlayabilir veya boş form açabilirsiniz. Başlık, gerçekleşme tarihi, sonuç ve toplam katılım seçilen faaliyetten gelir. İlçe, etkinlik seçimi/formatı/türü, eğitmen, katılımcı dağılımı ve haber bağlantıları koordinatör tarafından tamamlanır. Alanlar 9 Ekim 2026’da görülen YEĞİTEK rapor formuna dayanır; eğitim içeriği en fazla 800 karakterdir. Kaynaktaki uzun metin otomatik kesilmez.
+- **Taslağı kaydet → Aktarıma hazırla:** Eksik taslak saklanabilir. Aktarıma hazırlarken içerik kontrolü, gerçek ve dönem içindeki etkinlik tarihi, alan seçenekleri ve katılımcı toplam tutarlılığı denetlenir. Boş kategori bilinmiyor olarak kalır. Raporda veya ekte değişiklik yapılınca yeniden inceleme gerekir. Kaynak faaliyet sonradan değişirse güncel faaliyetten yeni taslak hazırlanır; önceki rapor korunur.
+- **YEĞİTEK’e aktarım:** Hazır alanları kopyalayın, resmî rapor formunu açın ve ekleri seçerek orada kaydedin. Sonrasında gerçek kayıt tarihi, görüntüleme bağlantısı ve kayıt dayanağını REFİKA’da saklayın. Bu bilgi koordinatör beyanıdır; otomatik gönderim, resmî kabul veya teslimat doğrulaması değildir. Doğrudan API/eşitleme bağlantısı henüz uygulanmamıştır.
+- **Sürüm geçmişi:** Taslak değişiklikleri ve durum geçişleri eski içerikleri korur. **Rapor metnini indir** ve **Rapor verisini indir** kaydedilmiş sürümü dışa verir; kaydedilmemiş düzenlemeler çıktıya girmez. Ek dosyalar ayrı indirilir. Geçmiş kaynak raporu ve kayıt bilgisi eklenmiş rapor doğrudan düzenlenmez.
+
+Rapor hazırlama bu sürümde AI kullanmaz. Sonraki AI desteğinin dayanağı olarak kaynak faaliyet bağlantısı, rapor alanları ve eski sürümler korunur.
 
 ## Aktarım kuralları
 
@@ -56,7 +67,7 @@ Masaüstü uygulaması veriyi varsayılan olarak Windows kullanıcı profilinde 
 
 Kanıtların dosya içeriği SQLite içinde tutulur ve yedeğe dahildir. İndirilen `.refika` yedeği scrypt ve AES-256-GCM ile şifrelenir; yerel SQLite dosyası şifreli değildir. Windows hesabı ve disk koruması ayrı sorumluluktur. Tek yedeğin açılmış veri sınırı 40 MB'dir; büyük arşivler için parçalara ayırma sonraki geliştirmedir.
 
-Geri yükleme aynı il onayı ister ve mevcut kayıtların yerini alır. Önce mevcut çalışma alanınızın yedeğini alın. İşlem başarısız olursa kayıtlar birlikte geri alınır. Yedekler bağlantı anahtarlarını taşımaz. 0.3.0 yedeği validasyon dosyaları, yazışma geçmişi, kanıtlar ve işlem geçmişini içerir. Eski biçim 1 yedeği açılabilir; bu birleştirme değil tam geri yüklemedir ve yeni dosyalar eski yedekte bulunmaz. Yeni biçim 2 yedeği eski uygulamada açılmaz. Veri tabanı ilk açılışta mevcut kayıtlara dokunmadan ek tablolarla yükseltilir; geri yükleme açık formların eski sürümle kayıt ezmesini engeller.
+Geri yükleme aynı il onayı ister ve mevcut kayıtların yerini alır. Önce mevcut çalışma alanınızın yedeğini alın. İşlem başarısız olursa kayıtlar birlikte geri alınır. Yedekler bağlantı anahtarlarını taşımaz. Güncel biçim 4; validasyon, yazışma, aylık plan, rapor geçmişi ve dosyaları birlikte içerir. Eski biçim 1–3 açılabilir; bu birleştirme değil tam geri yüklemedir ve eski yedekte bulunmayan yeni kayıtlar korunmaz. Veri tabanı ilk açılışta mevcut kayıtlara dokunmadan ek tablolarla yükseltilir; geri yükleme açık formların eski sürümle kayıt ezmesini engeller.
 
 ## Kaynaktan çalıştırma
 

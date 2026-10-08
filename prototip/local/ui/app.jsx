@@ -18,6 +18,7 @@ import './style.css';
 import './demo-theme.css';
 import { ClassicValidation } from './classic-validation.jsx';
 import { PlanWorkspace } from './plan-workspace.jsx';
+import { ReportWorkspace } from './report-workspace.jsx';
 import {
   DemoShell,
   DemoDashboard,
@@ -925,14 +926,9 @@ function Reports({ run, busy }) {
   const query = report ? `from=${report.from}&to=${report.to}` : '';
   return (
     <>
-      <div className="page-heading">
-        <div>
-          <span className="eyebrow">BELGELER VE RAPORLAR</span>
-          <h1>Raporlar ve Yazışmalar</h1>
-          <p>Tarihi, katılımı, sonucu ve kanıtı kaydedilen faaliyetler.</p>
-        </div>
-      </div>
       <section className="panel">
+        <h2>Dönem faaliyet özeti</h2>
+        <p>Tarihi, katılımı, sonucu ve kanıtı kaydedilen faaliyetler.</p>
         <form
           className="filter-row"
           onSubmit={(e) => {
@@ -1327,7 +1323,16 @@ function App() {
             scope={view === 'activities' ? 'all' : view}
           />
         )}
-        {view === 'reports' && <Reports run={run} busy={busy} />}
+        {view === 'reports' && (
+          <ReportWorkspace
+            state={state}
+            api={api}
+            run={run}
+            busy={busy}
+            fileData={fileData}
+            summary={<Reports run={run} busy={busy} />}
+          />
+        )}
         {view === 'settings' && (
           <SettingsPanel state={state} run={run} busy={busy} />
         )}
