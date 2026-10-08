@@ -59,6 +59,8 @@ npm run local:start
 
 Tarayıcı: `http://127.0.0.1:4317`. Bu kullanım veriyi `prototip/.local-data` klasöründe tutar. Sunucu yalnız bu bilgisayardan erişilebilir. `PORT` ve `REFIKA_DATA_DIR` ile test ortamı ayrılabilir.
 
+Windows'ta kaynak kurulumundan günlük kullanım için `prototip/REFIKA-Baslat.cmd` dosyasına çift tıklayın. Başlatıcı, sunucu kapalıysa arka planda açar; zaten çalışıyorsa ikinci sunucu başlatmaz. Çalışma alanının yanıt verdiğini kontrol ettikten sonra tarayıcıyı açar. Başlatma penceresinin veya sohbetin kapanması sunucuyu durdurmaz; bilgisayar yeniden başlatıldığında dosyayı tekrar açın. Node.js ve yukarıdaki ilk kurulum gerekir; bu, Windows dağıtım paketinden ayrı bir başlatıcıdır. Sunucu kaydı `.local-data/server.log` dosyasındadır. Komut satırında `npm run local:open` aynı sunucuyu başlatır, tarayıcı açmaz. `npm run local:start` ise ön planda çalışır ve terminal kapanınca durur.
+
 ```sh
 npm run desktop
 npm run desktop:package
