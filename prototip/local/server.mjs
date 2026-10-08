@@ -17,6 +17,10 @@ import { syncSummary, syncStatus } from './sync.mjs';
 import { previewPlan, commitPlan } from './plans.mjs';
 import { reportText } from './reports.mjs';
 import {
+  validationPeriodSummary,
+  validationPeriodWorkbook,
+} from './validation-periods.mjs';
+import {
   caseExportHeaders,
   caseExportRow,
   caseGroup,
@@ -33,8 +37,7 @@ export async function startLocal({
   const store = new Store(resolve(dataDir, 'refika.sqlite')),
     session = randomBytes(32).toString('hex'),
     aiPreviews = new Map();
-  let origin,
-    syncing = false;
+  let syncing = false;
   const server = createServer(async (req, res) => {
     try {
       if (req.headers.host !== new URL(origin).host)
@@ -164,6 +167,31 @@ export async function startLocal({
         return json(res, 200, store.saveActivity(await body(req)));
       if (path === '/api/validation' && req.method === 'POST')
         return json(res, 200, store.validation.save(await body(req)));
+      if (path === '/api/validation-history' && req.method === 'POST')
+        return json(res, 200, store.validation.importHistory(await body(req)));
+      if (path === '/api/validation-periods' && req.method === 'GET') {
+        const summary = validationPeriodSummary(
+          store,
+          url.searchParams.get('year'),
+          url.searchParams.get('quarter') || 'all',
+        );
+        const format = url.searchParams.get('format');
+        if (format === 'xlsx')
+          return download(
+            res,
+            `REFIKA-validasyon-${summary.period.year}-${summary.period.quarter}.xlsx`,
+            await validationPeriodWorkbook(summary),
+          );
+        if (format === 'txt')
+          return download(
+            res,
+            'REFIKA-validasyon-donem-ozeti.txt',
+            Buffer.from('\uFEFF' + summary.text),
+            'text/plain; charset=utf-8',
+          );
+        if (format) throw new Error('Çıktı biçimi geçersiz.');
+        return json(res, 200, summary);
+      }
       if (path === '/api/validation-export' && req.method === 'GET') {
         const group = url.searchParams.get('group'),
           status = url.searchParams.get('status'),
@@ -475,7 +503,7 @@ export async function startLocal({
     server.once('error', reject);
     server.listen(port, '127.0.0.1', accept);
   });
-  origin = `http://127.0.0.1:${server.address().port}`;
+  const origin = `http://127.0.0.1:${server.address().port}`;
   const timer = setInterval(async () => {
     if (
       syncing ||

@@ -10,6 +10,7 @@ import {
   X,
 } from 'lucide-react';
 import { eventReportFields, eventReportProblems } from '../report-schema.mjs';
+import { ValidationPeriods } from './validation-periods.jsx';
 import './report-workspace.css';
 
 const statuses = {
@@ -130,8 +131,16 @@ export function ReportWorkspace({ state, api, run, busy, fileData, summary }) {
         >
           Dönem faaliyet özeti
         </button>
+        <button
+          aria-pressed={tab === 'validation'}
+          onClick={() => setTab('validation')}
+        >
+          Validasyon dönem özeti
+        </button>
       </nav>
-      {tab === 'summary' ? (
+      {tab === 'validation' ? (
+        <ValidationPeriods state={state} api={api} run={run} busy={busy} />
+      ) : tab === 'summary' ? (
         summary
       ) : (
         <>

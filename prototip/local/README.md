@@ -1,4 +1,4 @@
-# REFİKA 0.5.0 · Yerel uygulama
+# REFİKA 0.6.0 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -62,6 +62,14 @@ Rapor hazırlama bu sürümde AI kullanmaz. Sonraki AI desteğinin dayanağı ol
 - **Kanıt ve geçmiş:** Dosya ekleri, inceleme anındaki içerik, taslak, gönderilen metin, yanıt ve sonuç geçmişi saklanır. Liste ve yazışma geçmişi Excel olarak indirilebilir. Merkeze yalnız sayılar gider; metin, alıcı ve ekler paylaşılmaz. Merkezde bekleyen gönderimler için ilave sütun vardır; eski merkez servisinin de güncellenmesi gerekir.
 
 ## Yerel veri ve yedek
+
+**Kayıt ve Validasyon → Dönemlik kayıt listesi** ve **Raporlar ve Yazışmalar → Validasyon dönem özeti** aynı tarihli kayıtlardan hesaplanır. Takvim yılının dört dönemi (Ocak–Mart, Nisan–Haziran, Temmuz–Eylül, Ekim–Aralık) ve yıllık toplam birlikte görünür. Sonuç tarihi Türkiye saatine göre değerlendirilir; REFİKA’ya kayıt tarihi ayrıca saklanır. Kesin gerçekleşme tarihi bilinmiyorsa kaynakta görülen **sonuç bildirimi tarihi** seçilir ve listede açıkça belirtilir.
+
+Kişi hesabının olumlu sonucu, benzersiz ESEP hesap kimliğiyle sayılır. Organizasyon değişikliği, yeni okul, okul birleştirme, genel destek ve olumsuz sonuçlar ayrı tutulur. Aynı hesabın birden fazla onay işlemi geçmişte kalır; yıllık kişi sayısı dönemlerin aritmetik toplamı değildir. İnceleme, hazır taslak ve gönderim onay sayılmaz. Yalnız çalışma alanında kaydedilen veriler kapsanır; eksik arşivler sıfır faaliyet anlamına gelmez.
+
+**Geçmiş kayıt ekle** ile gönderilmiş e-posta veya belgeye dayalı talep, kişi/okul kimliği, kaynak ve gerçek gönderim tarihi girilir. Ayrı sonuç kaynağı yoksa dosya sonuç bekler. Açık sonuç dayanağı varsa tarihi ve türü eklenir. Bu aktarım ESEP kontrollerini yapılmış olarak işaretlemez. Kaynak, hesap, okul ve işlem türü aynıysa ikinci kopya oluşmaz; sonraki yanıt mevcut dosyanın **Sonuç Takibi** alanına eklenir. Değişebilen ortak tabloların bugünkü içeriği geçmiş onay listesi olarak kabul edilmemelidir.
+
+**Ayrıntılı Excel indir** dört dönem/yıl özeti, tarihli sonuçlar, tarihli gönderimler, REFİKA’da açılan kayıtlar ve sayım açıklamalarını içerir. Güncel dosya durumu dönem sonu durumu değildir. Rapor için özeti kopyalayabilir veya metin olarak indirebilirsiniz; YEĞİTEK’e otomatik gönderim yapılmaz. Kişisel kaynak mailler ve listeler dağıtım paketine/Git deposuna eklenmez.
 
 Masaüstü uygulaması veriyi varsayılan olarak Windows kullanıcı profilinde `%APPDATA%\REFIKA\workspace\refika.sqlite` dosyasında tutar. `REFIKA_USER_DATA_DIR` veya `REFIKA_DATA_DIR` verilirse konum değişir. Paket klasörünü güncellemek kayıtları silmez.
 

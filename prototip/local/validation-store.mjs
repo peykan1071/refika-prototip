@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 import {
   cleanCase,
   readyProblems,
@@ -169,6 +169,116 @@ export class ValidationStore {
       );
     const issues = readyProblems(row);
     if (issues.length) throw new Error(issues.join(' '));
+  }
+  importHistory(input) {
+    const settings = this.store.meta('settings');
+    if (!settings) throw new Error('Önce il çalışma alanını oluşturun.');
+    if (input.confirmed !== true)
+      throw new Error('Kaynak ve tarih teyidi gerekli.');
+    const values = cleanCase({
+      ...input,
+      sourceRecordId: '',
+      checks: {},
+      reviewedOn: '',
+    });
+    if (
+      ['person', 'membership'].includes(values.kind) &&
+      (!values.name || !values.accountId)
+    )
+      throw new Error(
+        'Geçmiş kişi kaydında ad-soyad ve ESEP hesap ID gerekli.',
+      );
+    if (
+      ['school', 'merger'].includes(values.kind) &&
+      (!values.school || !values.schoolId)
+    )
+      throw new Error('Geçmiş okul kaydında okul adı ve ID gerekli.');
+    const happenedAt = timestamp(input.happenedAt);
+    const messageUrl = safeLink(input.messageUrl);
+    if (!messageUrl)
+      throw new Error('Gönderilmiş e-posta veya kaynak bağlantısı gerekli.');
+    const note = text(input.note, 4000);
+    if (!note)
+      throw new Error('Kaynağın kapsamını ve eşleştirme dayanağını yazın.');
+    let result;
+    if (input.result) {
+      const r = input.result;
+      result = {
+        outcome: r.outcome,
+        happenedAt: timestamp(r.happenedAt),
+        note: text(r.note, 4000),
+        evidenceUrl: safeLink(r.evidenceUrl),
+        dateBasis: r.dateBasis || 'notification',
+      };
+      if (
+        !['approved', 'rejected', 'other'].includes(result.outcome) ||
+        !result.note ||
+        !result.evidenceUrl
+      )
+        throw new Error('Sonuç, dayanak açıklaması ve sonuç kaynağı gerekli.');
+      if (!['actual', 'notification'].includes(result.dateBasis))
+        throw new Error('Sonuç tarihi dayanağı geçersiz.');
+      if (result.happenedAt < happenedAt)
+        throw new Error('Sonuç zamanı talep gönderiminden önce olamaz.');
+    }
+    // The same source + account + school + request type is one historical request.
+    const url = new URL(messageUrl);
+    const sourceKey =
+      url.hostname === 'mail.google.com' && url.hash.includes('/')
+        ? 'gmail:' + url.hash.split('/').at(-1)
+        : messageUrl;
+    const id =
+      'history-' +
+      createHash('sha256')
+        .update(
+          JSON.stringify([
+            sourceKey,
+            values.kind,
+            values.accountId,
+            values.schoolId,
+          ]),
+        )
+        .digest('hex');
+    const previous = this.get(id);
+    if (previous) return { ...previous, alreadyImported: true };
+    const at = new Date().toISOString();
+    return this.store.transaction(() => {
+      const row = {
+        ...values,
+        id,
+        province: settings.province,
+        year: settings.year,
+        status: result ? 'completed' : 'waiting',
+        ruleVersion,
+        sourceFingerprint: '',
+        createdAt: at,
+        updatedAt: at,
+        result: result?.note || '',
+        outcome: result?.outcome || '',
+        resolvedAt: result?.happenedAt || '',
+      };
+      const saved = this.put(row, 0);
+      this.append(id, 'sent', {
+        purpose: 'request',
+        channel: 'email',
+        happenedAt,
+        messageUrl,
+        proof: note,
+        subject: values.title,
+        body: values.requestedAction,
+        recipient: text(input.recipient, 500),
+        snapshot: row,
+        historical: true,
+      });
+      if (result)
+        this.append(id, 'result', {
+          ...result,
+          snapshot: row,
+          historical: true,
+        });
+      this.store.log(`${row.title}: kaynaklı geçmiş kayıt aktarıldı.`);
+      return saved;
+    });
   }
   save(input) {
     const settings = this.store.meta('settings');
@@ -363,6 +473,11 @@ export class ValidationStore {
     )
       throw new Error('Sonuç türünü seçin.');
     if (input.type === 'result') {
+      if (
+        input.dateBasis &&
+        !['actual', 'notification'].includes(input.dateBasis)
+      )
+        throw new Error('Sonuç tarihi dayanağı geçersiz.');
       const sent = this.events(id).find(
         (e) => e.type === 'sent' && e.purpose === 'request',
       );
@@ -394,6 +509,9 @@ export class ValidationStore {
         evidenceUrl,
         happenedAt,
         outcome: input.type === 'result' ? input.outcome : '',
+        ...(input.type === 'result'
+          ? { snapshot: row, dateBasis: input.dateBasis || 'actual' }
+          : {}),
       });
       const next = { ...row, updatedAt: event.at };
       if (input.type === 'result')

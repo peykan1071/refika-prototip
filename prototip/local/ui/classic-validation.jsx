@@ -20,6 +20,7 @@ import {
   validationWorkItems,
 } from '../validation.mjs';
 import { ValidationWorkspace, sourceCase } from './validation-workspace.jsx';
+import { ValidationPeriods } from './validation-periods.jsx';
 import './classic-workspace.css';
 
 function CaseDialog({ editor, state, api, fileData, run, busy, close }) {
@@ -98,6 +99,7 @@ export function ClassicValidation({
   const [filter, setFilter] = useState(initialFilter);
   const [group, setGroup] = useState('all');
   const [editor, setEditor] = useState(null);
+  const [workspace, setWorkspace] = useState('requests');
   const cases = state.validationCases || [];
   const items = validationWorkItems(state);
   const pending = items.filter((r) => r.status === 'review' || r.sourceChanged);
@@ -165,288 +167,325 @@ export function ClassicValidation({
         <span className="badge pilot-badge">YEREL ÇALIŞMA ALANI</span>
       </div>
       {screen === 'records' && (
-        <>
-          <ol
-            className="validation-path"
-            aria-label="Kayıt ve validasyon adımları"
+        <nav className="plan-tabs" aria-label="Validasyon çalışma alanları">
+          <button
+            aria-pressed={workspace === 'requests'}
+            onClick={() => setWorkspace('requests')}
           >
-            {[
-              [
-                Search,
-                'Bekleyen kaydı aç',
-                () =>
-                  document
-                    .getElementById('validation-requests')
-                    ?.scrollIntoView({ behavior: 'smooth' }),
-              ],
-              [
-                ExternalLink,
-                'ESEP’te kontrol et',
-                () =>
-                  window.open(
-                    'https://school-education.ec.europa.eu/en/nso-desktop/registrations/etwinners',
-                    '_blank',
-                    'noopener,noreferrer',
-                  ),
-              ],
-              [
-                ShieldCheck,
-                'Kişi ve kurum teyidini kaydet',
-                () => first && open(first),
-                !first,
-              ],
-              [
-                ListChecks,
-                'İşlem türünü seç',
-                () => (first ? open(first) : setEditor({})),
-              ],
-              [Mail, 'Liste ve e-postayı hazırla', prepare, !ready.length],
-            ].map(([Icon, label, action, disabled], index) => (
-              <li key={label}>
-                <button disabled={busy || disabled} onClick={action}>
-                  <span className="validation-step-number">{index + 1}</span>
-                  <Icon size={19} />
-                  <b>{label}</b>
-                </button>
-              </li>
-            ))}
-          </ol>
-          <p className="notice">
-            <BookOpen size={20} />
-            <span>
-              <b>ESEP kontrol köprüsü:</b> Koordinatör ESEP’te kişi ve okul
-              kaydını kontrol eder, dayanağını burada kaydeder; REFİKA uygun
-              talep taslağını hazırlar.
-            </span>
-          </p>
-        </>
+            Validasyon talepleri
+          </button>
+          <button
+            aria-pressed={workspace === 'periods'}
+            onClick={() => setWorkspace('periods')}
+          >
+            Dönemlik kayıt listesi
+          </button>
+        </nav>
       )}
-      <section className="panel" id="validation-requests">
-        <div className="section-head">
-          <h2>
-            {screen === 'records'
-              ? 'Validasyon talepleri'
-              : screen === 'drafts'
-                ? 'Merkez listesi ve e-posta'
-                : screen === 'approval'
-                  ? 'Gönderim öncesi kontrol'
-                  : 'Gönderilen talepler'}
-          </h2>
-          <span className="badge pilot-badge">
-            {screen === 'records'
-              ? `${pending.length} kontrol bekliyor`
-              : `${rows.length} talep`}
-          </span>
-        </div>
-        <div className="classic-toolbar">
+      {screen === 'records' && workspace === 'periods' ? (
+        <ValidationPeriods
+          state={state}
+          api={api}
+          run={run}
+          busy={busy}
+          openCase={(id) => {
+            const row = cases.find((r) => r.id === id);
+            if (row) open(row, 'results');
+          }}
+        />
+      ) : (
+        <>
           {screen === 'records' && (
             <>
-              <button disabled={busy} onClick={() => setEditor({})}>
-                Yeni talep oluştur
-              </button>
-              <div className="tabs">
-                <button
-                  className={filter === 'all' ? 'selected' : ''}
-                  onClick={() => setFilter('all')}
+              <ol
+                className="validation-path"
+                aria-label="Kayıt ve validasyon adımları"
+              >
+                {[
+                  [
+                    Search,
+                    'Bekleyen kaydı aç',
+                    () =>
+                      document
+                        .getElementById('validation-requests')
+                        ?.scrollIntoView({ behavior: 'smooth' }),
+                  ],
+                  [
+                    ExternalLink,
+                    'ESEP’te kontrol et',
+                    () =>
+                      window.open(
+                        'https://school-education.ec.europa.eu/en/nso-desktop/registrations/etwinners',
+                        '_blank',
+                        'noopener,noreferrer',
+                      ),
+                  ],
+                  [
+                    ShieldCheck,
+                    'Kişi ve kurum teyidini kaydet',
+                    () => first && open(first),
+                    !first,
+                  ],
+                  [
+                    ListChecks,
+                    'İşlem türünü seç',
+                    () => (first ? open(first) : setEditor({})),
+                  ],
+                  [Mail, 'Liste ve e-postayı hazırla', prepare, !ready.length],
+                ].map(([Icon, label, action, disabled], index) => (
+                  <li key={label}>
+                    <button disabled={busy || disabled} onClick={action}>
+                      <span className="validation-step-number">
+                        {index + 1}
+                      </span>
+                      <Icon size={19} />
+                      <b>{label}</b>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+              <p className="notice">
+                <BookOpen size={20} />
+                <span>
+                  <b>ESEP kontrol köprüsü:</b> Koordinatör ESEP’te kişi ve okul
+                  kaydını kontrol eder, dayanağını burada kaydeder; REFİKA uygun
+                  talep taslağını hazırlar.
+                </span>
+              </p>
+            </>
+          )}
+          <section className="panel" id="validation-requests">
+            <div className="section-head">
+              <h2>
+                {screen === 'records'
+                  ? 'Validasyon talepleri'
+                  : screen === 'drafts'
+                    ? 'Merkez listesi ve e-posta'
+                    : screen === 'approval'
+                      ? 'Gönderim öncesi kontrol'
+                      : 'Gönderilen talepler'}
+              </h2>
+              <span className="badge pilot-badge">
+                {screen === 'records'
+                  ? `${pending.length} kontrol bekliyor`
+                  : `${rows.length} talep`}
+              </span>
+            </div>
+            <div className="classic-toolbar">
+              {screen === 'records' && (
+                <>
+                  <button disabled={busy} onClick={() => setEditor({})}>
+                    Yeni talep oluştur
+                  </button>
+                  <div className="tabs">
+                    <button
+                      className={filter === 'all' ? 'selected' : ''}
+                      onClick={() => setFilter('all')}
+                    >
+                      Tüm kayıtlar
+                    </button>
+                    <button
+                      className={filter === 'issues' ? 'selected' : ''}
+                      onClick={() => setFilter('issues')}
+                    >
+                      Eksik / şüpheli
+                    </button>
+                  </div>
+                </>
+              )}
+              <label className="classic-search">
+                <Search size={18} />
+                <input
+                  type="search"
+                  placeholder="Kayıt veya okul ara"
+                  aria-label="Kayıt veya okul ara"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="classic-list-filter">
+              <label>
+                Çalışma listesi{' '}
+                <select
+                  value={group}
+                  onChange={(e) => setGroup(e.target.value)}
                 >
-                  Tüm kayıtlar
-                </button>
+                  <option value="all">Tüm çalışma listeleri</option>
+                  {Object.entries(caseGroups).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <small>
+                Hesap onayı, inceleme, okul birleştirme ve destek talepleri
+              </small>
+            </div>
+            {!rows.length ? (
+              <div className="empty">
+                <FileText size={28} />
+                <h3>
+                  {screen === 'records'
+                    ? 'Henüz kayıt yok'
+                    : screen === 'results'
+                      ? 'Gönderilmiş talep yok'
+                      : screen === 'approval'
+                        ? 'Kontrole sunulmuş taslak yok'
+                        : 'Hazır talep bulunmuyor'}
+                </h3>
+                <p>
+                  {screen === 'records'
+                    ? 'ESEP listenizi aktarabilir veya yeni talep oluşturabilirsiniz.'
+                    : screen === 'approval'
+                      ? 'Taslak ekranında metni inceleyip “Onaya sun” ile buraya getirin.'
+                      : 'İncelemeyi tamamlayarak ilgili adıma geçebilirsiniz.'}
+                </p>
                 <button
-                  className={filter === 'issues' ? 'selected' : ''}
-                  onClick={() => setFilter('issues')}
+                  onClick={() =>
+                    go(
+                      screen === 'records'
+                        ? 'import'
+                        : screen === 'approval'
+                          ? 'drafts'
+                          : 'records',
+                    )
+                  }
                 >
-                  Eksik / şüpheli
+                  {screen === 'records'
+                    ? 'Liste aktar'
+                    : screen === 'approval'
+                      ? 'Taslakları incele'
+                      : 'Kayıtları incele'}
+                  <ArrowRight size={17} />
                 </button>
               </div>
-            </>
-          )}
-          <label className="classic-search">
-            <Search size={18} />
-            <input
-              type="search"
-              placeholder="Kayıt veya okul ara"
-              aria-label="Kayıt veya okul ara"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </label>
-        </div>
-        <div className="classic-list-filter">
-          <label>
-            Çalışma listesi{' '}
-            <select value={group} onChange={(e) => setGroup(e.target.value)}>
-              <option value="all">Tüm çalışma listeleri</option>
-              {Object.entries(caseGroups).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <small>
-            Hesap onayı, inceleme, okul birleştirme ve destek talepleri
-          </small>
-        </div>
-        {!rows.length ? (
-          <div className="empty">
-            <FileText size={28} />
-            <h3>
-              {screen === 'records'
-                ? 'Henüz kayıt yok'
-                : screen === 'results'
-                  ? 'Gönderilmiş talep yok'
-                  : screen === 'approval'
-                    ? 'Kontrole sunulmuş taslak yok'
-                    : 'Hazır talep bulunmuyor'}
-            </h3>
-            <p>
-              {screen === 'records'
-                ? 'ESEP listenizi aktarabilir veya yeni talep oluşturabilirsiniz.'
-                : screen === 'approval'
-                  ? 'Taslak ekranında metni inceleyip “Onaya sun” ile buraya getirin.'
-                  : 'İncelemeyi tamamlayarak ilgili adıma geçebilirsiniz.'}
-            </p>
-            <button
-              onClick={() =>
-                go(
-                  screen === 'records'
-                    ? 'import'
-                    : screen === 'approval'
-                      ? 'drafts'
-                      : 'records',
-                )
-              }
-            >
-              {screen === 'records'
-                ? 'Liste aktar'
-                : screen === 'approval'
-                  ? 'Taslakları incele'
-                  : 'Kayıtları incele'}
-              <ArrowRight size={17} />
-            </button>
-          </div>
-        ) : (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Kayıt</th>
-                  <th>Durum</th>
-                  <th>Okul / gerekli düzeltme</th>
-                  <th>İşlem</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.slice(0, 500).map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      <span className="record-name">
-                        <Users size={16} />
-                        {r.name || r.title || r.school}
-                      </span>
-                      <small>
-                        {r.kind ? caseKinds[r.kind] : 'ESEP kaynak kaydı'} ·{' '}
-                        {r.accountId || r.schoolId || r.id.slice(0, 8)}
-                      </small>
-                    </td>
-                    <td>
-                      <span className={'badge ' + r.status}>
-                        {r.sourceChanged
-                          ? 'Yeniden kontrol gerekli'
-                          : r.kind
-                            ? r.status === 'ready' &&
-                              r.draftStage === 'approval'
-                              ? 'Onay bekliyor'
-                              : r.status === 'ready' && r.draftStage
-                                ? 'Taslak hazır'
-                                : caseStatuses[r.status]
-                            : r.status === 'ready'
-                              ? 'Kontrol edildi'
-                              : r.status === 'completed'
-                                ? 'Önceki sonuç kaydı'
-                                : 'İnceleme bekliyor'}
-                      </span>
-                    </td>
-                    <td>
-                      {r.holdReason || r.school || r.reason || '—'}
-                      {r.result && <small>Sonuç: {r.result}</small>}
-                    </td>
-                    <td>
-                      <button
-                        className="text-button"
-                        disabled={busy}
-                        onClick={() =>
-                          open(
-                            r,
-                            screen === 'records'
-                              ? 'review'
+            ) : (
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Kayıt</th>
+                      <th>Durum</th>
+                      <th>Okul / gerekli düzeltme</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.slice(0, 500).map((r) => (
+                      <tr key={r.id}>
+                        <td>
+                          <span className="record-name">
+                            <Users size={16} />
+                            {r.name || r.title || r.school}
+                          </span>
+                          <small>
+                            {r.kind ? caseKinds[r.kind] : 'ESEP kaynak kaydı'} ·{' '}
+                            {r.accountId || r.schoolId || r.id.slice(0, 8)}
+                          </small>
+                        </td>
+                        <td>
+                          <span className={'badge ' + r.status}>
+                            {r.sourceChanged
+                              ? 'Yeniden kontrol gerekli'
+                              : r.kind
+                                ? r.status === 'ready' &&
+                                  r.draftStage === 'approval'
+                                  ? 'Onay bekliyor'
+                                  : r.status === 'ready' && r.draftStage
+                                    ? 'Taslak hazır'
+                                    : caseStatuses[r.status]
+                                : r.status === 'ready'
+                                  ? 'Kontrol edildi'
+                                  : r.status === 'completed'
+                                    ? 'Önceki sonuç kaydı'
+                                    : 'İnceleme bekliyor'}
+                          </span>
+                        </td>
+                        <td>
+                          {r.holdReason || r.school || r.reason || '—'}
+                          {r.result && <small>Sonuç: {r.result}</small>}
+                        </td>
+                        <td>
+                          <button
+                            className="text-button"
+                            disabled={busy}
+                            onClick={() =>
+                              open(
+                                r,
+                                screen === 'records'
+                                  ? 'review'
+                                  : screen === 'results'
+                                    ? 'results'
+                                    : screen === 'approval'
+                                      ? 'approval'
+                                      : 'draft',
+                                screen === 'drafts',
+                              )
+                            }
+                          >
+                            {screen === 'records'
+                              ? 'İncele'
                               : screen === 'results'
-                                ? 'results'
+                                ? 'Sonucu izle'
                                 : screen === 'approval'
-                                  ? 'approval'
-                                  : 'draft',
-                            screen === 'drafts',
-                          )
-                        }
-                      >
-                        {screen === 'records'
-                          ? 'İncele'
-                          : screen === 'results'
-                            ? 'Sonucu izle'
-                            : screen === 'approval'
-                              ? 'Liste ve e-postayı incele'
-                              : 'Taslağı aç'}
-                        <ChevronRight size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {rows.length > 500 && (
-          <p>İlk 500 kayıt gösteriliyor. Aramayla daraltabilirsiniz.</p>
-        )}
-        <div className="actions">
-          {screen === 'records' && (
-            <>
-              <button
-                className="primary"
-                disabled={!ready.length}
-                onClick={prepare}
-              >
-                Listeyi ve e-postayı hazırla
-                <ArrowRight size={17} />
-              </button>
-              <button onClick={() => go('drafts')}>
-                Listeyi ve e-posta taslağını aç
-              </button>
-            </>
-          )}
-          {screen !== 'records' && (
-            <a
-              className="button"
-              href={`/api/validation-export?group=${group}&stage=${screen}&status=${screen === 'results' ? 'all' : 'ready'}`}
-            >
-              <Download size={17} />
-              Merkez listesini indir
-            </a>
-          )}
-          {screen === 'drafts' && (
-            <button onClick={() => go('approval')}>
-              Onay Merkezi
-              <ShieldCheck size={17} />
-            </button>
-          )}
-        </div>
-        {screen === 'drafts' && (
-          <p className="muted">
-            Liste Excel olarak alınır; bu sürümde her talebin e-posta taslağı
-            ayrı hazırlanır ve saklanır. Taslak hazırlamak ileti göndermez.
-          </p>
-        )}
-      </section>
+                                  ? 'Liste ve e-postayı incele'
+                                  : 'Taslağı aç'}
+                            <ChevronRight size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {rows.length > 500 && (
+              <p>İlk 500 kayıt gösteriliyor. Aramayla daraltabilirsiniz.</p>
+            )}
+            <div className="actions">
+              {screen === 'records' && (
+                <>
+                  <button
+                    className="primary"
+                    disabled={!ready.length}
+                    onClick={prepare}
+                  >
+                    Listeyi ve e-postayı hazırla
+                    <ArrowRight size={17} />
+                  </button>
+                  <button onClick={() => go('drafts')}>
+                    Listeyi ve e-posta taslağını aç
+                  </button>
+                </>
+              )}
+              {screen !== 'records' && (
+                <a
+                  className="button"
+                  href={`/api/validation-export?group=${group}&stage=${screen}&status=${screen === 'results' ? 'all' : 'ready'}`}
+                >
+                  <Download size={17} />
+                  Merkez listesini indir
+                </a>
+              )}
+              {screen === 'drafts' && (
+                <button onClick={() => go('approval')}>
+                  Onay Merkezi
+                  <ShieldCheck size={17} />
+                </button>
+              )}
+            </div>
+            {screen === 'drafts' && (
+              <p className="muted">
+                Liste Excel olarak alınır; bu sürümde her talebin e-posta
+                taslağı ayrı hazırlanır ve saklanır. Taslak hazırlamak ileti
+                göndermez.
+              </p>
+            )}
+          </section>
+        </>
+      )}
       {editor && (
         <CaseDialog
           key={editor.row?.id || editor.source?.id || 'new'}

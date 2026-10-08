@@ -433,7 +433,8 @@ export function ValidationWorkspace({
           <div className="case-status-line">
             <Status row={saved} />
             <small>
-              Dosya: {saved.id.slice(0, 8)} · Kural seti {saved.ruleVersion}
+              Dosya: {saved.id.replace(/^history-/, '').slice(0, 8)} · Kural
+              seti {saved.ruleVersion}
             </small>
           </div>
         )}
@@ -987,7 +988,7 @@ export function ValidationWorkspace({
                             )}
                           </select>
                         </Field>
-                        <Field label="Gerçekleşme zamanı">
+                        <Field label="Gerçekleşme / sonuç bildirim zamanı">
                           <input
                             required
                             type="datetime-local"
@@ -1000,6 +1001,31 @@ export function ValidationWorkspace({
                             }
                           />
                         </Field>
+                        {progress.type === 'result' && (
+                          <Field label="Sonuç tarihi dayanağı">
+                            <select
+                              value={progress.dateBasis || 'actual'}
+                              onChange={(e) =>
+                                setProgress({
+                                  ...progress,
+                                  dateBasis: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="actual">
+                                Belgeli gerçekleşme tarihi
+                              </option>
+                              <option value="notification">
+                                Sonuç bildirimindeki tarih
+                              </option>
+                            </select>
+                            <small>
+                              Dönem hesabında bu tarih kullanılır. Kesin
+                              gerçekleşme tarihi bilinmiyorsa bildirim tarihini
+                              seçin.
+                            </small>
+                          </Field>
+                        )}
                         {progress.type === 'result' && (
                           <Field label="Sonuç türü">
                             <select
@@ -1171,7 +1197,11 @@ export function ValidationWorkspace({
                   )}
                   {event.snapshot && (
                     <details>
-                      <summary>O andaki dosya bilgileri</summary>
+                      <summary>
+                        {event.historical
+                          ? 'Aktarımda kaydedilen dosya bilgileri'
+                          : 'O andaki dosya bilgileri'}
+                      </summary>
                       <p className="case-pre">
                         {event.snapshot.title}
                         <br />
@@ -1309,7 +1339,9 @@ export function ValidationWorkspace({
                       <td>
                         <strong>{r.title}</strong>
                         <br />
-                        <small>{r.id.slice(0, 8)}</small>
+                        <small>
+                          {r.id.replace(/^history-/, '').slice(0, 8)}
+                        </small>
                       </td>
                       <td>{caseKinds[r.kind]}</td>
                       <td>
