@@ -25,6 +25,10 @@ import {
   CheckCircle2,
   Save,
   Cloud,
+  ShieldCheck,
+  LockKeyhole,
+  Mail,
+  Info,
 } from 'lucide-react';
 
 // Keep the navigation names and visual hierarchy of app/page.jsx.
@@ -44,6 +48,8 @@ const navigation = [
   ['results', 'Sonuç Takibi', ListChecks],
 ];
 const tools = [
+  ['approval', 'Onay Merkezi', ShieldCheck],
+  ['drafts', 'Taslaklar', Mail],
   ['import', 'Veri aktar', FolderInput],
   ['history', 'İşlem Geçmişi', History],
   ['settings', 'Ayarlar ve yedek', Settings],
@@ -203,6 +209,10 @@ export function DemoDashboard({ state, go }) {
   const workItems = validationWorkItems(state);
   const review = workItems.filter((r) => r.status === 'review');
   const waiting = workItems.filter((r) => r.status === 'waiting');
+  const ready = (state.validationCases || []).filter(
+    (r) => r.status === 'ready' && !r.sourceChanged,
+  );
+  const approvals = ready.filter((r) => r.draftStage === 'approval');
   const metrics = [
     [
       planned.filter((a) => a.startDate <= today && a.endDate >= today).length,
@@ -224,16 +234,34 @@ export function DemoDashboard({ state, go }) {
       'events',
     ],
     [review.length, 'Validasyon incelemesi', ClipboardCheck, 'records'],
+    [approvals.length, 'Gönderim öncesi kontrol', ShieldCheck, 'approval'],
     [waiting.length, 'Sonucu beklenen dosya', ListChecks, 'results'],
     [completed.length, 'Tamamlanan faaliyet', FileText, 'reports'],
-    [
-      completed.reduce((sum, a) => sum + a.actualParticipants, 0),
-      'Toplam katılım',
-      Users,
-      'reports',
-    ],
   ];
   const actions = [
+    ...(approvals.length
+      ? [
+          {
+            id: 'approval',
+            label: 'Onay bekliyor',
+            title: `${approvals.length} talep gönderim öncesi kontrol bekliyor`,
+            detail: 'Alıcı, metin ve kanıtları inceleyin.',
+            target: 'approval',
+            button: 'Listeyi ve e-postayı incele',
+          },
+        ]
+      : ready.length
+        ? [
+            {
+              id: 'draft',
+              label: 'Taslak hazırlığı',
+              title: `${ready.length} talep için liste ve e-posta`,
+              detail: 'Kontrol edilen taleplerin yazışmalarını hazırlayın.',
+              target: 'drafts',
+              button: 'Taslakları incele',
+            },
+          ]
+        : []),
     ...(review.length
       ? [
           {
@@ -288,7 +316,8 @@ export function DemoDashboard({ state, go }) {
         <div>
           <h1>Koordinatör çalışma masam</h1>
           <p>
-            Günün işlerini planlayın, kayıtları inceleyin, süreçleri takip edin.
+            Günün işlerini planlayın, taslakları inceleyin, süreçleri takip
+            edin.
           </p>
         </div>
         <span className="badge pilot-badge">YEREL ÇALIŞMA ALANI</span>
@@ -323,7 +352,8 @@ export function DemoDashboard({ state, go }) {
           <div className="priority-heading">
             <h3>Öncelikli işler</h3>
             <span>
-              {review.length + planned.length} bekleyen kayıt / faaliyet
+              {review.length + planned.length + ready.length} bekleyen kayıt /
+              faaliyet
             </span>
           </div>
           {actions.length ? (
@@ -394,11 +424,11 @@ export function DemoDashboard({ state, go }) {
       </div>
       <div className="workflow" aria-label="REFİKA çalışma adımları">
         {[
-          [Search, 'Görevi belirle'],
-          [BookOpen, 'Kaynağı kontrol et'],
+          [Search, 'Görevi algıla'],
+          [BookOpen, 'ESEP kaydını ve kuralı kontrol et'],
           [ListChecks, 'Adımları sırala'],
-          [Pencil, 'Planı hazırla'],
-          [CheckCircle2, 'Kontrol et'],
+          [Pencil, 'Taslağı hazırla'],
+          [LockKeyhole, 'Onayla ve uygula'],
           [Save, 'Sonucu kaydet'],
           [BarChart3, 'Raporla'],
         ].map(([Icon, label], i) => (
@@ -423,54 +453,133 @@ export function DemoDashboard({ state, go }) {
             </h2>
             <span className="badge">{workItems.length} kayıt / dosya</span>
           </div>
-          {review.length ? (
-            <ul className="dashboard-records">
-              {review.slice(0, 3).map((r) => (
-                <li key={r.id}>
-                  <Users size={18} />
-                  <div>
-                    <strong>{r.title || r.name}</strong>
-                    <small>{r.school}</small>
-                  </div>
-                  <button className="text-button" onClick={() => go('records')}>
-                    İncele <ArrowRight size={15} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>
-              Yeni listenizi aktarabilir, incelenen kayıtların sonuçlarını takip
-              edebilirsiniz.
-            </p>
-          )}
-          <div className="actions">
-            <button onClick={() => go('import')}>
-              <FolderInput size={17} /> Liste aktar
+          <div className="tabs">
+            <button className="selected" onClick={() => go('records')}>
+              Bekleyen hesaplar
             </button>
+            <button onClick={() => go('records', { filter: 'issues' })}>
+              Eksik / şüpheli
+            </button>
+            <button onClick={() => go('drafts')}>Merkez listesi</button>
+          </div>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kayıt</th>
+                  <th>Durum</th>
+                  <th>Gerekli düzeltme</th>
+                </tr>
+              </thead>
+              <tbody>
+                {review.slice(0, 2).map((r) => (
+                  <tr key={r.id}>
+                    <td>
+                      <span className="record-name">
+                        <Users size={16} />
+                        {r.name || r.title}
+                      </span>
+                      <small>{r.accountId || r.id.slice(0, 8)}</small>
+                    </td>
+                    <td>
+                      <span className="badge review">İnceleme bekliyor</span>
+                    </td>
+                    <td>
+                      {r.holdReason || r.school || 'Kontrol bilgisi gerekli'}
+                      <button
+                        className="text-button"
+                        onClick={() => go('records')}
+                      >
+                        İncele
+                        <ArrowRight size={15} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {!review.length && (
+              <p className="muted" style={{ padding: '12px' }}>
+                Bekleyen kayıt yok. ESEP listenizi aktararak başlayabilirsiniz.
+              </p>
+            )}
+          </div>
+          <div className="document-chips">
+            <button onClick={() => go('drafts')}>
+              <FileText size={16} />
+              Merkez listesi · Taslak
+            </button>
+            <button onClick={() => go('drafts')}>
+              <Mail size={16} />
+              E-posta · Taslak
+            </button>
+          </div>
+          <div className="actions">
+            <button onClick={() => go('drafts')}>Taslakları incele</button>
             <button className="primary" onClick={() => go('records')}>
               Kayıtları incele <ArrowRight size={17} />
             </button>
           </div>
+          <p className="card-note">
+            <Info />
+            Gönderim tarihi, durum ve sonuç takip listesine kaydedilir.
+          </p>
         </section>
-        <section className="panel next-step-card">
+        <section className="panel approval-card">
           <div className="section-head">
             <h2>
-              <CalendarDays size={23} />
-              Sıradaki adım
+              <LockKeyhole size={23} />
+              Gönderim öncesi kontrol
             </h2>
-            <span className="badge pilot-badge">Faaliyetten rapora</span>
+            <span className="badge pilot-badge">
+              {approvals.length
+                ? 'Onay bekliyor'
+                : ready.length
+                  ? 'Taslak hazırlığı'
+                  : 'İnceleme'}
+            </span>
           </div>
-          <h3>Planlanan çalışmanın sonucunu kaydedin</h3>
-          <p>
-            Gerçekleşme tarihi, katılım, sonuç ve kanıtı tamamlanan faaliyetler
-            dönem raporuna alınır.
+          <div className="approval-inner">
+            <span className="mail-circle">
+              <Mail />
+            </span>
+            <div>
+              <h3>Validasyon listesi ve e-posta taslağı</h3>
+              <p>
+                {approvals.length
+                  ? 'Gönderilecek metni ve alıcıyı kontrol edin.'
+                  : ready.length
+                    ? 'Kontrol edilen kayıtların taslaklarını inceleyin.'
+                    : 'Kayıt incelemesi tamamlanınca liste ve e-posta hazırlanabilir.'}
+              </p>
+              <div className="actions">
+                <button
+                  className="primary"
+                  onClick={() =>
+                    go(
+                      approvals.length
+                        ? 'approval'
+                        : ready.length
+                          ? 'drafts'
+                          : 'records',
+                    )
+                  }
+                >
+                  {approvals.length
+                    ? 'Listeyi ve e-postayı incele'
+                    : ready.length
+                      ? 'Taslakları incele'
+                      : 'Kayıtları incele'}{' '}
+                  <ArrowRight size={17} />
+                </button>
+              </div>
+            </div>
+          </div>
+          <p className="card-note">
+            <Info />
+            Koordinatör kontrol eder; gerçekleşen gönderim ve resmî sonuç ayrı
+            kaydedilir.
           </p>
-          <div className="actions">
-            <button className="primary" onClick={() => go('activities')}>
-              Faaliyet planını aç <ArrowRight size={17} />
-            </button>
-          </div>
         </section>
       </div>
       <h2 className="section-label">Çalışma alanlarım</h2>
@@ -495,32 +604,96 @@ export function DemoDashboard({ state, go }) {
             'Ziyaret planı ve sonuçları',
           ],
           [
+            'mentors',
+            'Rehberlik ve Mentörlük',
+            Users,
+            'Öğretmen ve yönetici desteği',
+          ],
+          [
+            'projects',
+            'Projeler ve TwinSpace',
+            Network,
+            'Fikir geliştirme, ortak bulma',
+          ],
+          [
             'events',
             'Eğitim ve Etkinlikler',
             GraduationCap,
             'Eğitim, webinar ve toplantı',
           ],
+          ['quality', 'Kalite Etiketleri', Award, 'Ulusal / Avrupa rehberliği'],
+          ['bridge', 'Destek Köprüsü', Network, 'İller arası ortak çalışmalar'],
           [
             'reports',
             'Raporlar ve Yazışmalar',
             FileText,
             'Dönem özeti ve Excel çıktısı',
           ],
-          [
-            'import',
-            'Veri aktar',
-            FolderInput,
-            'ESEP listesi ve faaliyet planı',
-          ],
         ].map(([target, label, Icon, detail]) => (
-          <button className="area-card" key={target} onClick={() => go(target)}>
+          <button
+            className="area-card"
+            key={target}
+            disabled={navigation.find(([key]) => key === target)?.[3]}
+            onClick={() => go(target)}
+          >
             <Icon />
             <span>
               <b>{label}</b>
               <small>{detail}</small>
+              {navigation.find(([key]) => key === target)?.[3] && (
+                <small>Yerel bağlantısı hazırlanacak</small>
+              )}
             </span>
           </button>
         ))}
+      </div>
+      <div className="classic-bottom-grid">
+        <section className="panel">
+          <h2>
+            <CalendarDays />
+            Takvimim
+          </h2>
+          <p>Ziyaret ve eğitim planları</p>
+          <p>{planned.length} planlanan faaliyet</p>
+          <button onClick={() => go('activities')}>
+            Takvimi aç
+            <ArrowRight size={17} />
+          </button>
+        </section>
+        <section className="panel">
+          <h2>
+            <BookOpen />
+            Resmî Kaynaklar
+          </h2>
+          <p>İşlem öncesi güncel bilgiyi resmî kaynaktan kontrol edin.</p>
+          <p>
+            <a
+              href="https://etwinning.meb.gov.tr/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              eTwinning Türkiye
+            </a>
+          </p>
+          <a
+            href="https://school-education.ec.europa.eu/en/etwinning"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Avrupa platformu
+          </a>
+        </section>
+        <section className="panel">
+          <h2>
+            <FileText />
+            İşlemden rapora
+          </h2>
+          <p>Gerçekleşen faaliyetleri, katılımı ve kanıtları rapora aktarın.</p>
+          <button onClick={() => go('reports')}>
+            Raporları aç
+            <ArrowRight size={17} />
+          </button>
+        </section>
       </div>
       <div className="dashboard-bottom">
         <HistoryWorkspace state={state} compact />

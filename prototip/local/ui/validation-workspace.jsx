@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Plus,
   Download,
@@ -36,6 +36,39 @@ const blank = () => ({
   checks: {},
   status: 'review',
 });
+export function sourceCase(source) {
+  if (!source) return blank();
+  return {
+    ...blank(),
+    sourceRecordId: source.id,
+    title: source.name + ' / ESEP incelemesi',
+    ...Object.fromEntries(
+      [
+        'name',
+        'accountId',
+        'school',
+        'schoolId',
+        'district',
+        'email',
+        'profileUrl',
+      ].map((key) => [key, source[key] || '']),
+    ),
+    reason: source.sourceStatus || '',
+    reviewNote: source.note || '',
+  };
+}
+function draftMessage(row) {
+  const draft = row?.currentDraft;
+  return {
+    purpose: 'request',
+    channel: 'email',
+    happenedAt: clockValue(),
+    confirmed: false,
+    ...(draft
+      ? { recipient: draft.recipient, subject: draft.subject, body: draft.body }
+      : {}),
+  };
+}
 const labels = {
   review: 'İnceleme kaydı',
   draft: 'Gönderilmemiş taslak',
@@ -50,7 +83,8 @@ const outcomes = {
   rejected: 'Uygun bulunmadı',
   other: 'Diğer sonuç',
 };
-function Field({ label, children, wide = false }) {
+function Field({ label, children, wide = false, hidden = false }) {
+  if (hidden) return null;
   return (
     <label className={'field' + (wide ? ' wide' : '')}>
       <span>{label}</span>
@@ -146,19 +180,22 @@ export function ValidationWorkspace({
   api,
   fileData,
   results = false,
+  initialCase = null,
+  initialForm = null,
+  initialSection = 'review',
+  onClose,
+  onDirtyChange,
 }) {
   const [group, setGroup] = useState(results ? 'all' : 'review');
   const [filter, setFilter] = useState(results ? 'waiting' : 'all');
   const [query, setQuery] = useState('');
-  const [form, setForm] = useState(null);
-  const [saved, setSaved] = useState(null);
-  const [section, setSection] = useState('review');
-  const [message, setMessage] = useState({
-    purpose: 'request',
-    channel: 'email',
-    happenedAt: clockValue(),
-    confirmed: false,
-  });
+  const [form, setForm] = useState(initialCase || initialForm);
+  const [saved, setSaved] = useState(initialCase);
+  const [section, setSection] = useState(initialSection);
+  const [message, setMessage] = useState(() => draftMessage(initialCase));
+  const [savedMessage, setSavedMessage] = useState(() =>
+    draftMessage(initialCase),
+  );
   const [progress, setProgress] = useState({
     type: 'reply',
     happenedAt: clockValue(),
@@ -178,6 +215,22 @@ export function ValidationWorkspace({
         .includes(query.toLocaleLowerCase('tr')),
   );
   const dirty = form && JSON.stringify(form) !== JSON.stringify(saved);
+  const messageDirty = ['recipient', 'subject', 'body'].some(
+    (key) => (message[key] || '') !== (savedMessage[key] || ''),
+  );
+  const unsaved = Boolean(
+    dirty ||
+    messageDirty ||
+    progress.note ||
+    progress.evidenceUrl ||
+    file ||
+    message.proof ||
+    message.messageUrl ||
+    message.confirmed,
+  );
+  useEffect(() => {
+    onDirtyChange?.(unsaved);
+  }, [unsaved, onDirtyChange]);
   const locked = saved && ['waiting', 'completed'].includes(saved.status);
   const issues = form
     ? readyProblems({ ...form, checks: form.checks || {} })
@@ -275,6 +328,31 @@ export function ValidationWorkspace({
         : 'İnceleme dosyası kaydedildi.',
     );
   }
+  function saveDraft(stage = 'draft') {
+    run(
+      async () => {
+        await api(`/validation/${saved.id}/draft`, {
+          ...message,
+          version: saved.version,
+          edit: true,
+          stage,
+        });
+        const row = await load(saved.id);
+        const latest = row.events.find((event) => event.type === 'draft');
+        setMessage((m) => ({
+          ...m,
+          recipient: latest.recipient,
+          subject: latest.subject,
+          body: latest.body,
+        }));
+        setSavedMessage(latest);
+        if (stage === 'approval') setSection('approval');
+      },
+      stage === 'approval'
+        ? 'Taslak gönderim öncesi kontrole alındı. Henüz ileti gönderilmedi.'
+        : 'Düzenlediğiniz taslak kaydedildi.',
+    );
+  }
   function mutate(action, data, notice) {
     run(async () => {
       await api(`/validation/${saved.id}/${action}`, {
@@ -289,20 +367,24 @@ export function ValidationWorkspace({
         evidenceUrl: '',
         confirmed: false,
       }));
-      if (action === 'sent')
+      if (action === 'sent') {
+        setSavedMessage(message);
         setMessage((m) => ({
           ...m,
           confirmed: false,
           proof: '',
           messageUrl: '',
         }));
+      }
     }, notice);
   }
   const pane = saved && (
     <nav className="case-sections" aria-label="Dosya bölümleri">
       {[
         ['review', 'İnceleme', ClipboardCheck],
-        ['messages', 'Yazışma ve sonuç', Mail],
+        ['draft', 'Taslak', Mail],
+        ['approval', 'Gönderim öncesi kontrol', ClipboardCheck],
+        ['results', 'Sonuç', ClipboardCheck],
         ['evidence', 'Kanıt ve geçmiş', History],
       ].map(([key, label, Icon]) => (
         <button
@@ -333,17 +415,18 @@ export function ValidationWorkspace({
             disabled={busy}
             onClick={() => {
               if (
-                !dirty ||
+                !unsaved ||
                 window.confirm(
                   'Kaydedilmemiş alan değişiklikleri bırakılacak. Listeye dönülsün mü?',
                 )
               ) {
                 setForm(null);
                 setSaved(null);
+                onClose?.();
               }
             }}
           >
-            Listeye dön
+            {onClose ? 'Kapat' : 'Listeye dön'}
           </button>
         </div>
         {saved && (
@@ -516,8 +599,8 @@ export function ValidationWorkspace({
             </form>
             {locked && (
               <p className="notice">
-                Gönderilen dosyanın içeriği korunur. Düzeltme için “Yazışma ve
-                sonuç” bölümünden gerekçeyle yeniden incelemeye alın.
+                Gönderilen dosyanın içeriği korunur. Düzeltme için “Sonuç”
+                bölümünden gerekçeyle yeniden incelemeye alın.
               </p>
             )}
             {form.sourceRecordId && (
@@ -581,323 +664,419 @@ export function ValidationWorkspace({
             )}
           </section>
         )}
-        {section === 'messages' && saved && (
-          <>
-            <section className="panel">
-              <h2>
-                <Mail size={21} />
-                Yazışma hazırlığı ve gönderim kaydı
-              </h2>
-              <p>
-                REFİKA metni hazırlar. İletiyi kendi e-posta veya mesajlaşma
-                uygulamanızdan gönderdikten sonra gerçek gönderimi burada
-                kaydedin. Önerilen alıcıyı göndermeden önce kontrol edin.
-              </p>
-              <div className="form-grid">
-                <Field label="Yazışma amacı">
-                  <select
-                    disabled={busy}
-                    value={message.purpose}
-                    onChange={(e) =>
-                      setMessage({
-                        purpose: e.target.value,
-                        channel: 'email',
-                        happenedAt: clockValue(),
-                        confirmed: false,
-                      })
-                    }
-                  >
-                    <option value="request">Merkeze talep</option>
-                    <option value="information">
-                      İlgili kişiye bilgilendirme / düzeltme
-                    </option>
-                  </select>
-                </Field>
-                <div className="actions">
-                  <button
-                    disabled={
-                      busy ||
-                      (message.purpose === 'request' &&
-                        (saved.status !== 'ready' || saved.sourceChanged))
-                    }
-                    onClick={() =>
-                      run(async () => {
-                        const draft = await api(
-                          `/validation/${saved.id}/draft`,
-                          { purpose: message.purpose, version: saved.version },
-                        );
-                        await load(saved.id);
-                        setMessage((m) => ({
-                          ...m,
-                          recipient: draft.recipient,
-                          subject: draft.subject,
-                          body: draft.body,
-                          confirmed: false,
-                        }));
-                      }, 'Taslak kaydedildi. Henüz gönderilmedi.')
-                    }
-                  >
-                    Taslak hazırla
-                  </button>
-                </div>
-              </div>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  mutate(
-                    'sent',
-                    {
-                      ...message,
-                      happenedAt: new Date(message.happenedAt).toISOString(),
-                    },
-                    'Gerçek gönderim ve gönderilen metin kaydedildi.',
-                  );
-                }}
-              >
-                <fieldset disabled={busy} className="case-fields">
+        {['messages', 'draft', 'approval', 'results'].includes(section) &&
+          saved && (
+            <>
+              {section !== 'results' && (
+                <section className="panel">
+                  <h2>
+                    <Mail size={21} />
+                    {section === 'draft'
+                      ? 'Merkez listesi ve e-posta taslağı'
+                      : 'Gönderim öncesi kontrol'}
+                  </h2>
+                  <p>
+                    REFİKA metni hazırlar. İletiyi kendi e-posta veya mesajlaşma
+                    uygulamanızdan gönderdikten sonra gerçek gönderimi burada
+                    kaydedin. Önerilen alıcıyı göndermeden önce kontrol edin.
+                  </p>
                   <div className="form-grid">
-                    <Field label="Kanal">
+                    <Field label="Yazışma amacı">
                       <select
-                        value={message.channel}
+                        disabled={busy}
+                        value={message.purpose}
                         onChange={(e) =>
-                          setMessage({ ...message, channel: e.target.value })
-                        }
-                      >
-                        <option value="email">E-posta</option>
-                        <option value="whatsapp">WhatsApp</option>
-                        <option value="other">Diğer</option>
-                      </select>
-                    </Field>
-                    <Field label="Alıcı">
-                      <input
-                        required
-                        value={message.recipient || ''}
-                        type={message.channel === 'email' ? 'email' : 'text'}
-                        onChange={(e) =>
-                          setMessage({ ...message, recipient: e.target.value })
-                        }
-                      />
-                    </Field>
-                    <Field label="Konu" wide>
-                      <input
-                        required
-                        value={message.subject || ''}
-                        onChange={(e) =>
-                          setMessage({ ...message, subject: e.target.value })
-                        }
-                      />
-                    </Field>
-                    <Field label="Gönderilen / gönderilecek metin" wide>
-                      <textarea
-                        required
-                        rows={12}
-                        value={message.body || ''}
-                        onChange={(e) =>
-                          setMessage({ ...message, body: e.target.value })
-                        }
-                      />
-                    </Field>
-                    <Field label="Gerçek gönderim zamanı (bu bilgisayarın saati)">
-                      <input
-                        required
-                        type="datetime-local"
-                        value={message.happenedAt}
-                        onChange={(e) =>
-                          setMessage({ ...message, happenedAt: e.target.value })
-                        }
-                      />
-                    </Field>
-                    <Field label="Gönderilen ileti bağlantısı (varsa)">
-                      <input
-                        type="url"
-                        value={message.messageUrl || ''}
-                        onChange={(e) =>
-                          setMessage({ ...message, messageUrl: e.target.value })
-                        }
-                      />
-                    </Field>
-                    <Field
-                      label="Gönderim dayanağı: ileti no, kayıt veya eklenen kanıt dosyasının adı"
-                      wide
-                    >
-                      <textarea
-                        rows={2}
-                        value={message.proof || ''}
-                        onChange={(e) =>
-                          setMessage({ ...message, proof: e.target.value })
-                        }
-                      />
-                    </Field>
-                  </div>
-                  <label className="check">
-                    <input
-                      type="checkbox"
-                      checked={message.confirmed}
-                      onChange={(e) =>
-                        setMessage({ ...message, confirmed: e.target.checked })
-                      }
-                    />
-                    Bu iletiyi belirtilen alıcıya, belirtilen zamanda gerçekten
-                    gönderdim; metni ve dayanağı kontrol ettim.
-                  </label>
-                  <div className="actions">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        run(
-                          () =>
-                            navigator.clipboard.writeText(
-                              `${message.subject || ''}\n\n${message.body || ''}`,
-                            ),
-                          'Metin panoya kopyalandı.',
-                        )
-                      }
-                      disabled={!message.body}
-                    >
-                      Metni kopyala
-                    </button>
-                    <button
-                      className="primary"
-                      disabled={
-                        !message.confirmed ||
-                        (message.purpose === 'request' &&
-                          (saved.status !== 'ready' || saved.sourceChanged))
-                      }
-                    >
-                      Gönderimi kaydet
-                    </button>
-                  </div>
-                </fieldset>
-              </form>
-            </section>
-            <section className="panel">
-              <h2>Yanıt, sonuç ve yeniden inceleme</h2>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  mutate(
-                    'progress',
-                    {
-                      ...progress,
-                      happenedAt: new Date(progress.happenedAt).toISOString(),
-                    },
-                    'Takip işlemi geçmişe kaydedildi.',
-                  );
-                }}
-              >
-                <fieldset disabled={busy} className="case-fields">
-                  <div className="form-grid">
-                    <Field label="İşlem">
-                      <select
-                        value={progress.type}
-                        onChange={(e) =>
-                          setProgress({
-                            ...progress,
-                            type: e.target.value,
+                          setMessage({
+                            purpose: e.target.value,
+                            channel: 'email',
+                            happenedAt: clockValue(),
                             confirmed: false,
                           })
                         }
                       >
-                        <option value="reply">Yanıt / takip notu ekle</option>
-                        {saved.status === 'waiting' && (
-                          <option value="result">Gerçek sonucu kaydet</option>
-                        )}
-                        {saved.status !== 'review' && (
-                          <option value="reopen">
-                            Gerekçeyle yeniden incelemeye al
-                          </option>
-                        )}
+                        <option value="request">Merkeze talep</option>
+                        <option value="information">
+                          İlgili kişiye bilgilendirme / düzeltme
+                        </option>
                       </select>
                     </Field>
-                    <Field label="Gerçekleşme zamanı">
-                      <input
-                        required
-                        type="datetime-local"
-                        value={progress.happenedAt}
-                        onChange={(e) =>
-                          setProgress({
-                            ...progress,
-                            happenedAt: e.target.value,
-                          })
+                    <div className="actions">
+                      <button
+                        disabled={
+                          busy ||
+                          (message.purpose === 'request' &&
+                            (saved.status !== 'ready' || saved.sourceChanged))
                         }
-                      />
-                    </Field>
-                    {progress.type === 'result' && (
-                      <Field label="Sonuç türü">
-                        <select
-                          value={progress.outcome}
-                          onChange={(e) =>
-                            setProgress({
-                              ...progress,
-                              outcome: e.target.value,
-                            })
+                        onClick={() =>
+                          run(async () => {
+                            const draft = await api(
+                              `/validation/${saved.id}/draft`,
+                              {
+                                purpose: message.purpose,
+                                version: saved.version,
+                              },
+                            );
+                            await load(saved.id);
+                            setSavedMessage(draft);
+                            setMessage((m) => ({
+                              ...m,
+                              recipient: draft.recipient,
+                              subject: draft.subject,
+                              body: draft.body,
+                              confirmed: false,
+                            }));
+                          }, 'Taslak kaydedildi. Henüz gönderilmedi.')
+                        }
+                      >
+                        Taslak hazırla
+                      </button>
+                    </div>
+                  </div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (section === 'draft') {
+                        saveDraft();
+                        return;
+                      }
+                      mutate(
+                        'sent',
+                        {
+                          ...message,
+                          happenedAt: new Date(
+                            message.happenedAt,
+                          ).toISOString(),
+                        },
+                        'Gerçek gönderim ve gönderilen metin kaydedildi.',
+                      );
+                    }}
+                  >
+                    <fieldset disabled={busy} className="case-fields">
+                      <div className="form-grid">
+                        <Field label="Kanal">
+                          <select
+                            value={message.channel}
+                            onChange={(e) =>
+                              setMessage({
+                                ...message,
+                                channel: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="email">E-posta</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="other">Diğer</option>
+                          </select>
+                        </Field>
+                        <Field label="Alıcı">
+                          <input
+                            required
+                            value={message.recipient || ''}
+                            type={
+                              message.channel === 'email' ? 'email' : 'text'
+                            }
+                            onChange={(e) =>
+                              setMessage({
+                                ...message,
+                                recipient: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                        <Field label="Konu" wide>
+                          <input
+                            required
+                            value={message.subject || ''}
+                            onChange={(e) =>
+                              setMessage({
+                                ...message,
+                                subject: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                        <Field label="Gönderilen / gönderilecek metin" wide>
+                          <textarea
+                            required
+                            rows={12}
+                            value={message.body || ''}
+                            onChange={(e) =>
+                              setMessage({ ...message, body: e.target.value })
+                            }
+                          />
+                        </Field>
+                        <Field
+                          hidden={section === 'draft'}
+                          label="Gerçek gönderim zamanı (bu bilgisayarın saati)"
+                        >
+                          <input
+                            required
+                            type="datetime-local"
+                            value={message.happenedAt}
+                            onChange={(e) =>
+                              setMessage({
+                                ...message,
+                                happenedAt: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                        <Field
+                          hidden={section === 'draft'}
+                          label="Gönderilen ileti bağlantısı (varsa)"
+                        >
+                          <input
+                            type="url"
+                            value={message.messageUrl || ''}
+                            onChange={(e) =>
+                              setMessage({
+                                ...message,
+                                messageUrl: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                        <Field
+                          label="Gönderim dayanağı: ileti no, kayıt veya eklenen kanıt dosyasının adı"
+                          hidden={section === 'draft'}
+                          wide
+                        >
+                          <textarea
+                            rows={2}
+                            value={message.proof || ''}
+                            onChange={(e) =>
+                              setMessage({ ...message, proof: e.target.value })
+                            }
+                          />
+                        </Field>
+                      </div>
+                      {section !== 'draft' && (
+                        <label className="check">
+                          <input
+                            type="checkbox"
+                            checked={message.confirmed}
+                            onChange={(e) =>
+                              setMessage({
+                                ...message,
+                                confirmed: e.target.checked,
+                              })
+                            }
+                          />
+                          Bu iletiyi belirtilen alıcıya, belirtilen zamanda
+                          gerçekten gönderdim; metni ve dayanağı kontrol ettim.
+                        </label>
+                      )}
+                      <div className="actions">
+                        <button
+                          type="button"
+                          disabled={!message.body}
+                          onClick={() => {
+                            const url = URL.createObjectURL(
+                              new Blob(
+                                [
+                                  `Alıcı: ${message.recipient || ''}\nKonu: ${message.subject || ''}\n\n${message.body || ''}`,
+                                ],
+                                { type: 'text/plain;charset=utf-8' },
+                              ),
+                            );
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'REFIKA-eposta-taslagi.txt';
+                            link.click();
+                            setTimeout(() => URL.revokeObjectURL(url), 1000);
+                          }}
+                        >
+                          Taslağı indir
+                        </button>
+                        {section === 'draft' ? (
+                          <>
+                            <button disabled={!message.body}>
+                              Taslağı kaydet
+                            </button>
+                            <button
+                              type="button"
+                              className="primary"
+                              disabled={
+                                !message.body ||
+                                saved.status !== 'ready' ||
+                                message.purpose !== 'request'
+                              }
+                              onClick={() => saveDraft('approval')}
+                            >
+                              Onaya sun
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                run(
+                                  () =>
+                                    navigator.clipboard.writeText(
+                                      `${message.subject || ''}\n\n${message.body || ''}`,
+                                    ),
+                                  'Metin panoya kopyalandı.',
+                                )
+                              }
+                              disabled={!message.body}
+                            >
+                              Metni kopyala
+                            </button>
+                            <button
+                              className="primary"
+                              disabled={
+                                !message.confirmed ||
+                                (message.purpose === 'request' &&
+                                  (saved.status !== 'ready' ||
+                                    saved.sourceChanged))
+                              }
+                            >
+                              Gönderimi kaydet
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </fieldset>
+                  </form>
+                </section>
+              )}
+              {['messages', 'results'].includes(section) && (
+                <section className="panel">
+                  <h2>Yanıt, sonuç ve yeniden inceleme</h2>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      mutate(
+                        'progress',
+                        {
+                          ...progress,
+                          happenedAt: new Date(
+                            progress.happenedAt,
+                          ).toISOString(),
+                        },
+                        'Takip işlemi geçmişe kaydedildi.',
+                      );
+                    }}
+                  >
+                    <fieldset disabled={busy} className="case-fields">
+                      <div className="form-grid">
+                        <Field label="İşlem">
+                          <select
+                            value={progress.type}
+                            onChange={(e) =>
+                              setProgress({
+                                ...progress,
+                                type: e.target.value,
+                                confirmed: false,
+                              })
+                            }
+                          >
+                            <option value="reply">
+                              Yanıt / takip notu ekle
+                            </option>
+                            {saved.status === 'waiting' && (
+                              <option value="result">
+                                Gerçek sonucu kaydet
+                              </option>
+                            )}
+                            {saved.status !== 'review' && (
+                              <option value="reopen">
+                                Gerekçeyle yeniden incelemeye al
+                              </option>
+                            )}
+                          </select>
+                        </Field>
+                        <Field label="Gerçekleşme zamanı">
+                          <input
+                            required
+                            type="datetime-local"
+                            value={progress.happenedAt}
+                            onChange={(e) =>
+                              setProgress({
+                                ...progress,
+                                happenedAt: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                        {progress.type === 'result' && (
+                          <Field label="Sonuç türü">
+                            <select
+                              value={progress.outcome}
+                              onChange={(e) =>
+                                setProgress({
+                                  ...progress,
+                                  outcome: e.target.value,
+                                })
+                              }
+                            >
+                              {Object.entries(outcomes).map(([v, label]) => (
+                                <option key={v} value={v}>
+                                  {label}
+                                </option>
+                              ))}
+                            </select>
+                          </Field>
+                        )}
+                        <Field
+                          label="Yanıt / sonuç / yeniden inceleme gerekçesi"
+                          wide
+                        >
+                          <textarea
+                            required
+                            rows={3}
+                            value={progress.note}
+                            onChange={(e) =>
+                              setProgress({ ...progress, note: e.target.value })
+                            }
+                          />
+                        </Field>
+                        <Field label="Yanıt veya kanıt bağlantısı (varsa)" wide>
+                          <input
+                            type="url"
+                            value={progress.evidenceUrl || ''}
+                            onChange={(e) =>
+                              setProgress({
+                                ...progress,
+                                evidenceUrl: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                      </div>
+                      {progress.type === 'result' && (
+                        <label className="check">
+                          <input
+                            type="checkbox"
+                            checked={progress.confirmed}
+                            onChange={(e) =>
+                              setProgress({
+                                ...progress,
+                                confirmed: e.target.checked,
+                              })
+                            }
+                          />
+                          Sonucu gelen yanıt veya platformdaki durum üzerinden
+                          doğruladım.
+                        </label>
+                      )}
+                      <div className="actions">
+                        <button
+                          className="primary"
+                          disabled={
+                            progress.type === 'result' && !progress.confirmed
                           }
                         >
-                          {Object.entries(outcomes).map(([v, label]) => (
-                            <option key={v} value={v}>
-                              {label}
-                            </option>
-                          ))}
-                        </select>
-                      </Field>
-                    )}
-                    <Field
-                      label="Yanıt / sonuç / yeniden inceleme gerekçesi"
-                      wide
-                    >
-                      <textarea
-                        required
-                        rows={3}
-                        value={progress.note}
-                        onChange={(e) =>
-                          setProgress({ ...progress, note: e.target.value })
-                        }
-                      />
-                    </Field>
-                    <Field label="Yanıt veya kanıt bağlantısı (varsa)" wide>
-                      <input
-                        type="url"
-                        value={progress.evidenceUrl || ''}
-                        onChange={(e) =>
-                          setProgress({
-                            ...progress,
-                            evidenceUrl: e.target.value,
-                          })
-                        }
-                      />
-                    </Field>
-                  </div>
-                  {progress.type === 'result' && (
-                    <label className="check">
-                      <input
-                        type="checkbox"
-                        checked={progress.confirmed}
-                        onChange={(e) =>
-                          setProgress({
-                            ...progress,
-                            confirmed: e.target.checked,
-                          })
-                        }
-                      />
-                      Sonucu gelen yanıt veya platformdaki durum üzerinden
-                      doğruladım.
-                    </label>
-                  )}
-                  <div className="actions">
-                    <button
-                      className="primary"
-                      disabled={
-                        progress.type === 'result' && !progress.confirmed
-                      }
-                    >
-                      Takip işlemini kaydet
-                    </button>
-                  </div>
-                </fieldset>
-              </form>
-            </section>
-          </>
-        )}
+                          Takip işlemini kaydet
+                        </button>
+                      </div>
+                    </fieldset>
+                  </form>
+                </section>
+              )}
+            </>
+          )}
         {section === 'evidence' && saved && (
           <section className="panel">
             <h2>

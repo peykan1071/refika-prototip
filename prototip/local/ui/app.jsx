@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import './style.css';
 import './demo-theme.css';
-import { ValidationWorkspace } from './validation-workspace.jsx';
+import { ClassicValidation } from './classic-validation.jsx';
 import {
   DemoShell,
   DemoDashboard,
@@ -1134,6 +1134,7 @@ function SettingsPanel({ state, run, busy }) {
 function App() {
   const [state, setState] = useState(null),
     [view, setView] = useState('home'),
+    [viewOptions, setViewOptions] = useState({}),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [notice, setNotice] = useState('');
@@ -1168,8 +1169,9 @@ function App() {
       setBusy(false);
     }
   }
-  function go(next) {
+  function go(next, options = {}) {
     setView(next);
+    setViewOptions(options);
     setError('');
     setNotice('');
     window.scrollTo({ top: 0 });
@@ -1221,13 +1223,15 @@ function App() {
         {view === 'import' && (
           <ImportWorkspace state={state} run={run} busy={busy} />
         )}
-        {(view === 'records' || view === 'results') && (
-          <ValidationWorkspace
+        {['records', 'drafts', 'approval', 'results'].includes(view) && (
+          <ClassicValidation
             key={view}
             state={state}
             run={run}
             busy={busy}
-            results={view === 'results'}
+            screen={view}
+            initialFilter={viewOptions.filter || 'all'}
+            go={go}
             api={api}
             fileData={fileData}
           />

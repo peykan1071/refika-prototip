@@ -1,4 +1,4 @@
-# REFİKA 0.3.0 · Yerel uygulama
+# REFİKA 0.3.1 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -9,7 +9,7 @@ Görsel referans mevcut REFİKA demosudur: `app/page.jsx` ve `app/globals.css`. 
 1. Dağıtım ZIP'ini bir klasöre çıkarın. `REFIKA.exe` ile yanındaki dosya ve klasörleri birlikte tutun.
 2. `REFIKA.exe` dosyasını açın. İl, koordinatör adı ve eğitim yılını seçin. Bu adım bir kurum hesabı veya giriş yetkisi oluşturmaz; bilgisayardaki çalışma alanını tanımlar.
 3. **Veri aktar** bölümünden boş şablonu indirin. ESEP/NSO listenizi veya faaliyet planınızı Excel/CSV biçiminde seçin. Kaynak sütunlarını eşleştirin, önizlemeyi kontrol edin, ardından içeri alın.
-4. **Kayıt ve Validasyon → Kaynak kayıtları** bölümünden ilgili kayda talep dosyası açın veya **Yeni talep dosyası** ile elle başlayın. Talebe özel kontrolleri ve dayanakları kaydedin; yazışma ve gerçek sonucu aynı dosyada izleyin.
+4. **Kayıt ve Validasyon** tablosunda **İncele** ile ilgili kaydı açın veya **Yeni talep oluştur** ile elle başlayın. Talebe özel kontrolleri ve dayanakları kaydedin. **Listeyi ve e-postayı hazırla → Taslaklar → Onaya sun → Onay Merkezi** adımlarını izleyin; gerçekleşen gönderimden sonra **Sonuç Takibi** bölümünü kullanın.
 5. **Faaliyet Planı** bölümünde faaliyeti planlayın. Gerçekleştiğinde tarih, katılım, sonuç ve kanıt notunu doldurun. Kaydettiğiniz faaliyete kanıt dosyası ekleyebilirsiniz.
 6. **Raporlar ve Yazışmalar** bölümünde tarih aralığını seçin. Excel/metin çıktısı alın veya yazdırma penceresinden PDF kaydedin.
 7. **Ayarlar ve yedek** bölümünden düzenli şifreli yedek indirin. Parolanızı saklayın; unutulan parola kurtarılamaz.
@@ -28,10 +28,11 @@ Bir çalışma alanı bu sürümde bir il ve bir eğitim yılı içindir. İl/y�
 ## Validasyon ve yazışma akışı
 
 - Talep türleri: yeni kişi hesabı, organizasyon değişikliği, yeni okul hesabı, okul hesabı birleştirme, genel destek. Kişi hesabı birleştirme işlemi tanımlanmaz.
-- Dört çalışma listesi bulunur. İncelemedeki bütün türler **İnceleme Bekleyenler** listesinde yer alır; hazır, gönderilmiş ve sonuçlanmış dosyalar türlerine ait listede görünür. Durum filtresi ve arama ile daraltılabilir. Excel çıktısı seçili liste/durumun tamamını içerir; metin araması dışa aktarıma uygulanmaz.
+- İlk tanıtılan demodaki kayıt tablosu ve beş adımlı şerit kullanılır; kayıt incelemesi ayrı pencerede açılır. Dört çalışma listesi tablonun filtresidir. İncelemedeki bütün türler **İnceleme Bekleyenler** listesinde yer alır; diğer dosyalar türlerine ait listede görünür. **Taslaklar** hazır talepleri, **Onay Merkezi** kontrole sunulan taslakları, **Sonuç Takibi** gönderilmiş ve sonuçlanmış talepleri gösterir. Excel çıktısı seçili ekran ve çalışma listesinin tamamını içerir; metin araması dışa aktarıma uygulanmaz.
 - **İncelemeye kaydet:** Eksik kayıt saklanabilir. **Gönderime hazır kaydet:** Talebe özel bütün kontrollerin doğrulanması, her kontrol için dayanak, inceleme tarihi ve gerekli kimlik/bağlantılar şarttır. Görünen ID ile profil ID ayrı alanlardır; bağlantı ID'den tahmin edilmez. Ad-soyad ve görev yeri doğrulaması koordinatöre aittir.
 - Kontroller 7 Ekim 2026 tarihli koordinatör işleyiş notlarının 1.3 sürümünden uyarlanmıştır. Bunlar resmî platform onayı veya otomatik uygunluk kararı değildir. Hesap hareketsizliği/silinme süresi için doğrulanmamış bir kural uygulanmaz.
 - **Taslak hazırla:** Kural tabanlı, düzenlenebilir metin üretir ve gönderilmemiş taslak olarak saklar; AI kullanmaz. Önerilen alıcı güncel işleyişe göre kullanıcı tarafından kontrol edilmelidir. E-posta/WhatsApp gönderimi bu sürümde REFİKA içinden yapılmaz.
+- **Taslağı kaydet / Onaya sun:** Düzenlenen alıcı, konu ve metin yeniden açıldığında korunur. Onaya sunulan talep **Onay Merkezi** listesine geçer; gönderilmiş sayılmaz. Talep içeriği veya kaynak kayıt değişirse güncel taslak/onay işareti düşer, eski metin geçmişte kalır. Merkez listesi toplu Excel olarak alınır; her talebin e-posta taslağı ayrı hazırlanır. Önceki demodaki çok talepli gönderim paketi henüz yerel veriyle bağlı değildir.
 - **Gönderimi kaydet:** Koordinatör gerçek gönderimi alıcı, zaman, metin, kanal ve dayanakla teyit eder. Merkez talebi “Gönderildi · sonuç bekleniyor” durumuna geçirir. İlgili kişiye düzeltme/bilgilendirme dosyanın durumunu değiştirmez. Bu kayıt e-posta sağlayıcısından teslimat doğrulaması değildir.
 - **Gerçek sonucu kaydet:** Gönderilmiş talep için yanıt/sonuç notu, gerçekleşme zamanı, sonuç türü ve kullanıcı teyidi gerekir. Sonuç zamanı gönderimden önce olamaz. **Yeniden incelemeye al** gerekçeyi geçmişe ekler ve kontrolleri sıfırlar; eski gönderim ve sonuç metinleri korunur.
 - Aynı kaynak ve talep türü için ikinci açık dosya engellenir. Kaynak ESEP satırı değiştiğinde dosyanın gönderimi durdurulur; önce incelemeye kaydedip kontrolleri yenilemek gerekir. Kaynak ile güncel form karşılaştırılabilir. Kaynak kayıt ve ona bağlı dosya özetlerde iki kez sayılmaz; aynı kaydın farklı talep türleri ayrı işlerdir. Önceki sürümden kalan kayıtlarda eski durum ve notlar korunur; “incelendi” otomatik olarak “gönderildi” sayılmaz.

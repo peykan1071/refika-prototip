@@ -134,13 +134,25 @@ export async function startLocal({
         return json(res, 200, store.validation.save(await body(req)));
       if (path === '/api/validation-export' && req.method === 'GET') {
         const group = url.searchParams.get('group'),
-          status = url.searchParams.get('status');
+          status = url.searchParams.get('status'),
+          stage = url.searchParams.get('stage');
+        if (stage && !['drafts', 'approval', 'results'].includes(stage))
+          throw new Error('Çalışma adımı geçersiz.');
         if (group && group !== 'all' && !Object.hasOwn(caseGroups, group))
           throw new Error('Çalışma listesi geçersiz.');
         if (status && status !== 'all' && !Object.hasOwn(caseStatuses, status))
           throw new Error('Durum geçersiz.');
         const rows = store.validation
           .list()
+          .filter(
+            (r) =>
+              !stage ||
+              (stage === 'results'
+                ? ['waiting', 'completed'].includes(r.status)
+                : r.status === 'ready' &&
+                  !r.sourceChanged &&
+                  (stage !== 'approval' || r.draftStage === 'approval')),
+          )
           .filter(
             (r) =>
               (!group || group === 'all' || caseGroup(r) === group) &&

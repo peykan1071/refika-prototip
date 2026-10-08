@@ -78,6 +78,63 @@ const send = (row, purpose = 'request') => ({
   proof: 'TEST-ILETI-1',
 });
 
+test('Düzenlenmiş taslak ve onay aşaması yeniden açılışta ve yedekte korunur; içerik değişince onay düşer', async (t) => {
+  const path = join(await folder(t), 'draft.sqlite');
+  let store = new Store(path);
+  try {
+    store.setup({ province: '25', operator: 'Test', year: '2026–2027' });
+    let row = store.validation.save(form());
+    const edit = {
+      version: row.version,
+      purpose: 'request',
+      edit: true,
+      stage: 'approval',
+      recipient: 'test@example.org',
+      subject: 'Özel konu',
+      body: 'Koordinatörün düzenlediği metin.',
+    };
+    store.validation.draft(row.id, edit);
+    assert.throws(
+      () => store.validation.draft(row.id, edit),
+      /başka bir pencerede/,
+    );
+    assert.equal(store.validation.get(row.id).status, 'ready');
+    assert.equal(
+      store.validation.events(row.id).some((e) => e.type === 'sent'),
+      false,
+    );
+    store.close();
+    store = new Store(path);
+    assert.equal(store.validation.detail(row.id).currentDraft.body, edit.body);
+    assert.equal(store.validation.list()[0].draftStage, 'approval');
+    const archive = store.exportArchive();
+    store.restoreArchive(archive, '25');
+    assert.equal(
+      store.validation.detail(row.id).currentDraft.subject,
+      edit.subject,
+    );
+    row = store.validation.get(row.id);
+    assert.throws(
+      () =>
+        store.validation.draft(row.id, {
+          ...edit,
+          version: row.version,
+          body: '',
+        }),
+      /gerekli/,
+    );
+    store.validation.save({ ...row, requestedAction: 'Güncellenen talep' });
+    assert.equal(store.validation.detail(row.id).currentDraft, null);
+    assert.equal(store.validation.list()[0].draftStage, '');
+    assert.equal(
+      store.validation.events(row.id).find((e) => e.type === 'draft').body,
+      edit.body,
+    );
+  } finally {
+    store.close();
+  }
+});
+
 test('Talep türüne özel eksikler gönderimi engeller; listeler talep türlerini ayırır', (t) => {
   const store = storeFor(t),
     v = store.validation;
@@ -224,6 +281,12 @@ test('Kaynak değişikliği gönderimi engeller; aynı kaynağın iki açık ayn
     0,
   );
   let row = v.save({ ...form(), sourceRecordId: source.id });
+  v.draft(row.id, {
+    version: row.version,
+    purpose: 'request',
+    stage: 'approval',
+  });
+  row = v.get(row.id);
   assert.equal(store.summary().review, 0);
   assert.equal(store.summary().ready, 1);
   assert.throws(
@@ -237,6 +300,8 @@ test('Kaynak değişikliği gönderimi engeller; aynı kaynağın iki açık ayn
     source.version,
   );
   assert.equal(v.detail(row.id).sourceChanged, true);
+  assert.equal(v.detail(row.id).currentDraft, null);
+  assert.equal(v.list()[0].draftStage, '');
   assert.throws(() => v.communicate(row.id, send(row)), /Kaynak kayıt değişti/);
   assert.throws(() => v.save({ ...row, status: 'ready' }), /Kaynak değişti/);
   row = v.save({ ...row, status: 'review' });
@@ -430,6 +495,44 @@ test('Validasyon API: oturum, işlem kaynağı, dosya indirme, filtreli Excel ve
     const detail = await (await request('/validation/' + row.id)).json();
     assert.equal(detail.status, 'waiting');
     assert.equal(detail.events.filter((e) => e.type === 'sent').length, 1);
+    const ready = await (await request('/validation', form('support'))).json();
+    const another = await (await request('/validation', form('school'))).json();
+    response = await request(`/validation/${ready.id}/draft`, {
+      version: ready.version,
+      purpose: 'request',
+      stage: 'approval',
+      edit: true,
+      recipient: 'test@example.org',
+      subject: 'Kontrol edilecek',
+      body: 'Özel metin',
+    });
+    assert.equal(response.status, 200);
+    assert.equal(
+      (await (await request('/validation/' + ready.id)).json()).currentDraft
+        .body,
+      'Özel metin',
+    );
+    for (const [stage, count] of [
+      ['drafts', 3],
+      ['approval', 2],
+      ['results', 2],
+    ]) {
+      const file = await request('/validation-export?stage=' + stage);
+      assert.equal(file.status, 200);
+      const wb = new ExcelJS.Workbook();
+      await wb.xlsx.load(Buffer.from(await file.arrayBuffer()));
+      assert.equal(wb.worksheets[0].rowCount, count, stage);
+    }
+    assert.equal(
+      (
+        await request(`/validation/${another.id}/draft`, {
+          version: another.version,
+          purpose: 'request',
+          stage: 'sent',
+        })
+      ).status,
+      400,
+    );
   } finally {
     await service.close();
   }

@@ -72,7 +72,13 @@ export class ValidationStore {
           id: row.id,
           version: row.version,
         };
-        return { ...item, sourceChanged: this.sourceChanged(item) };
+        const draft = this.currentDraft(item);
+        return {
+          ...item,
+          sourceChanged: this.sourceChanged(item),
+          draftStage: draft?.stage || (draft ? 'draft' : ''),
+          draftAt: draft?.at || '',
+        };
       });
   }
   sourceChanged(row) {
@@ -81,6 +87,17 @@ export class ValidationStore {
       fingerprint(this.store.get('records', row.sourceRecordId)) !==
         row.sourceFingerprint,
     );
+  }
+  currentDraft(row) {
+    if (row.status !== 'ready' || this.sourceChanged(row)) return null;
+    const draft = this.events(row.id).find(
+      (e) => e.type === 'draft' && e.purpose === 'request',
+    );
+    return draft?.snapshot &&
+      JSON.stringify(cleanCase(draft.snapshot)) ===
+        JSON.stringify(cleanCase(row))
+      ? draft
+      : null;
   }
   events(id) {
     return this.db
@@ -102,6 +119,7 @@ export class ValidationStore {
     if (!row) throw new Error('Dosya bulunamadı.');
     return {
       ...row,
+      currentDraft: this.currentDraft(row),
       sourceChanged: this.sourceChanged(row),
       events: this.events(id),
       files: this.files().filter((f) => f.caseId === id),
@@ -232,10 +250,23 @@ export class ValidationStore {
       provinces[Number(settings.province) - 1],
       settings.operator,
     );
+    if (input.edit === true) {
+      message.recipient = text(input.recipient, 300);
+      message.subject = text(input.subject, 500);
+      message.body = text(input.body, 16000);
+      if (!message.recipient || !message.subject || !message.body)
+        throw new Error('Alıcı, konu ve taslak metni gerekli.');
+    }
+    const stage = input.stage || 'draft';
+    if (!['draft', 'approval'].includes(stage))
+      throw new Error('Taslak aşaması geçersiz.');
+    if (stage === 'approval' && input.purpose !== 'request')
+      throw new Error('Onay Merkezi yalnız merkez talepleri içindir.');
     return this.store.transaction(() => {
       const event = this.append(id, 'draft', {
         ...message,
         purpose: input.purpose,
+        stage,
         snapshot: row,
       });
       this.put({ ...row, updatedAt: event.at });
@@ -404,7 +435,14 @@ export class ValidationStore {
   }
   archive() {
     return {
-      cases: this.list().map(({ sourceChanged: _changed, ...row }) => row),
+      cases: this.list().map(
+        ({
+          sourceChanged: _changed,
+          draftStage: _stage,
+          draftAt: _draftAt,
+          ...row
+        }) => row,
+      ),
       events: this.db
         .prepare('SELECT * FROM validation_events ORDER BY rowid')
         .all(),

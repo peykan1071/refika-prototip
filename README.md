@@ -18,7 +18,9 @@ Güncel uygulama [geliştirme dalında](https://github.com/peykan1071/refika-pro
 
 Yerel kayıt, Excel/CSV aktarımı, talep türüne göre validasyon, yazışma taslağı ve gönderim/sonuç geçmişi, faaliyet planı, kanıt ekleme, rapor üretme ve şifreli yedekleme uygulanmıştır. Windows paketini üretme araçları ve 81 il özet ekranının servis kodu mevcuttur.
 
-Validasyon dört çalışma listesinde izlenir: **Hesap Onay Validasyonları**, **İnceleme Bekleyenler**, **Okul Birleştirme** ve **Genel Destek**. Kontroller ve dayanak notları tamamlanmadan dosya gönderime hazır olmaz. Taslak hazırlamak gönderim sayılmaz; koordinatör başka uygulamadan yaptığı gönderimi tarihi, metni ve dayanağıyla kaydeder. Kişiye bilgilendirme, merkez talebinden ayrı tutulur.
+İlk tanıtılan demonun çalışma masası, kayıt tablosu, beş adımlı validasyon şeridi ve **Kayıt → Taslaklar → Onay Merkezi → Sonuç Takibi** düzeni kullanılır. Yeni kontroller ilgili kaydın inceleme penceresinde açılır. **Hesap Onay Validasyonları**, **İnceleme Bekleyenler**, **Okul Birleştirme** ve **Genel Destek** aynı tabloda filtre olarak seçilir.
+
+Kontroller ve dayanak notları tamamlanmadan dosya gönderime hazır olmaz. Düzenlenen taslak saklanır; **Onaya sun** taslağı gönderim öncesi kontrole alır. Taslak hazırlamak veya onaya sunmak gönderim sayılmaz; koordinatör başka uygulamadan yaptığı gönderimi tarihi, metni ve dayanağıyla kaydeder. Kişiye bilgilendirme, merkez talebinden ayrı tutulur. Excel listesi toplu alınır; e-posta taslağı bu sürümde her talep için ayrıdır.
 
 Canlı merkez kurulumu, kurumsal kullanıcı yetkileri, model hizmeti, güncel resmî çıktı şablonları ve saha doğrulaması tamamlanacaktır. ESEP'e otomatik giriş, veri çekme veya resmî işlem gönderme henüz yoktur. Windows paketi imzasızdır; son açılış denemesi bu bilgisayarın Uygulama Denetimi tarafından engellenmiştir. Kurum geneli dağıtım için hazır sürüm olarak sunulmaz.
 
