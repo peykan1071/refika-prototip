@@ -2,6 +2,8 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
+import { migrateValidation, ValidationStore } from './validation-store.mjs';
+import { validationWorkItems } from './validation.mjs';
 import {
   digest,
   provinceCode,
@@ -21,7 +23,14 @@ export class Store {
       CREATE TABLE IF NOT EXISTS activities(id TEXT PRIMARY KEY,body TEXT NOT NULL,version INTEGER NOT NULL);
       CREATE TABLE IF NOT EXISTS files(id TEXT PRIMARY KEY,activity_id TEXT NOT NULL REFERENCES activities(id),name TEXT NOT NULL,body BLOB NOT NULL,created_at TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS history(id INTEGER PRIMARY KEY AUTOINCREMENT,at TEXT NOT NULL,message TEXT NOT NULL);
-      PRAGMA user_version=1;`);
+      `);
+    try {
+      migrateValidation(this.db);
+    } catch (error) {
+      this.db.close();
+      throw error;
+    }
+    this.validation = new ValidationStore(this);
     if (!this.meta('installationId'))
       this.setMeta('installationId', randomUUID());
   }
@@ -126,6 +135,7 @@ export class Store {
     return {
       settings: this.meta('settings'),
       records: this.list('records'),
+      validationCases: this.validation.list(),
       activities: this.list('activities'),
       files: this.db
         .prepare(
@@ -210,11 +220,17 @@ export class Store {
     return { id };
   }
   file(id) {
-    return this.db.prepare('SELECT name,body FROM files WHERE id=?').get(id);
+    return (
+      this.db.prepare('SELECT name,body FROM files WHERE id=?').get(id) ||
+      this.db
+        .prepare('SELECT name,body FROM validation_files WHERE id=?')
+        .get(id)
+    );
   }
   summary() {
     const state = this.state(),
-      completed = state.activities.filter((a) => a.status === 'completed');
+      completed = state.activities.filter((a) => a.status === 'completed'),
+      items = validationWorkItems(state);
     return {
       province: state.settings.province,
       year: state.settings.year,
@@ -222,15 +238,20 @@ export class Store {
       planned: state.activities.length - completed.length,
       completed: completed.length,
       participations: completed.reduce((n, a) => n + a.actualParticipants, 0),
-      review: state.records.filter((r) => r.status === 'review').length,
-      ready: state.records.filter((r) => r.status === 'ready').length,
-      resolved: state.records.filter((r) => r.status === 'completed').length,
+      review: items.filter((r) => r.status === 'review').length,
+      ready: items.filter((r) => r.status === 'ready').length,
+      waiting: items.filter((r) => r.status === 'waiting').length,
+      resolved: items.filter((r) => r.status === 'completed').length,
     };
   }
   exportArchive() {
     return {
       format: 'refika-backup',
-      version: 1,
+      version: 2,
+      validation: this.validation.archive(),
+      history: this.db
+        .prepare('SELECT at,message FROM history ORDER BY id')
+        .all(),
       settings: this.meta('settings'),
       records: this.list('records'),
       activities: this.list('activities'),
@@ -243,7 +264,7 @@ export class Store {
   restoreArchive(data, confirmedProvince) {
     if (
       data?.format !== 'refika-backup' ||
-      data.version !== 1 ||
+      ![1, 2].includes(data.version) ||
       !provinceCode(data.settings?.province) ||
       confirmedProvince !== data.settings.province
     )
@@ -303,6 +324,24 @@ export class Store {
         new Map(this.list(table).map((row) => [row.id, row.version])),
       ]),
     );
+    const validation =
+      data.version === 2
+        ? data.validation
+        : { cases: [], events: [], files: [] };
+    this.validation.validateArchive(validation, data.settings, records);
+    const history = data.version === 2 ? data.history : [];
+    if (
+      !Array.isArray(history) ||
+      history.length > 500000 ||
+      history.some(
+        (h) =>
+          !h ||
+          typeof h.message !== 'string' ||
+          h.message.length > 10000 ||
+          !Number.isFinite(Date.parse(h.at)),
+      )
+    )
+      throw new Error('İşlem geçmişi geçersiz.');
     const restoreRow = (table, row) => {
       this.put(table, row.id, row);
       this.db
@@ -316,6 +355,7 @@ export class Store {
         );
     };
     this.transaction(() => {
+      this.validation.restore(validation);
       this.db.exec(
         'DELETE FROM files; DELETE FROM records; DELETE FROM activities;',
       );
@@ -332,6 +372,11 @@ export class Store {
             f.created_at,
           );
       this.setMeta('settings', data.settings);
+      this.db.exec('DELETE FROM history');
+      for (const h of history)
+        this.db
+          .prepare('INSERT INTO history(at,message) VALUES (?,?)')
+          .run(h.at, h.message);
       this.log('Şifreli yedekten çalışma alanı geri yüklendi.');
     });
   }

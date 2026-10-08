@@ -116,6 +116,12 @@ export async function startHub({
           year: snapshot.year,
           ...Object.fromEntries(fields.map((f) => [f, snapshot[f]])),
         };
+        if (
+          snapshot.waiting !== undefined &&
+          (!Number.isSafeInteger(snapshot.waiting) || snapshot.waiting < 0)
+        )
+          return json(res, 400, { error: 'Bekleyen dosya sayısı geçersiz.' });
+        clean.waiting = snapshot.waiting ?? 0;
         const old = db
             .prepare('SELECT * FROM snapshots WHERE province=? AND year=?')
             .get(province, clean.year),

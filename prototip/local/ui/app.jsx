@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import './style.css';
 import './demo-theme.css';
+import { ValidationWorkspace } from './validation-workspace.jsx';
 import {
   DemoShell,
   DemoDashboard,
@@ -531,176 +532,6 @@ function ImportWorkspace({ state, run, busy }) {
             >
               <CheckCircle2 size={17} /> Kontrol ettim, içeri al
             </button>
-          </div>
-        </section>
-      )}
-    </>
-  );
-}
-function Records({ state, run, busy, initialFilter = 'all', results = false }) {
-  const [filter, setFilter] = useState(initialFilter),
-    [query, setQuery] = useState(''),
-    [selected, setSelected] = useState(null),
-    [note, setNote] = useState('');
-  const rows = state.records.filter(
-      (r) =>
-        (filter === 'all' || r.status === filter) &&
-        `${r.name} ${r.school} ${r.accountId}`
-          .toLocaleLowerCase('tr')
-          .includes(query.toLocaleLowerCase('tr')),
-    ),
-    record = state.records.find((r) => r.id === selected);
-  return (
-    <>
-      <div className="page-heading">
-        <div>
-          <span className="eyebrow">VERİLER VE TALEPLER</span>
-          <h1>{results ? 'Sonuç Takibi' : 'Kayıt ve Validasyon'}</h1>
-          <p>İnceleme ve sonuç bilgisi aynı kayıtta saklanır.</p>
-        </div>
-        <a className="button" href="/api/export/records">
-          <Download size={17} /> İncelenenleri Excel’e al
-        </a>
-      </div>
-      <section className="panel">
-        <div className="filter-row">
-          <Field label="Kayıtlarda ara">
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Öğretmen, okul veya kimlik"
-            />
-          </Field>
-          <Field label="Durum">
-            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <option value="all">Tümü</option>
-              <option value="review">İncelenecek</option>
-              <option value="ready">İncelendi</option>
-              <option value="completed">Sonuç kaydedildi</option>
-            </select>
-          </Field>
-          <Badge>{rows.length} kayıt</Badge>
-        </div>
-        {rows.length ? (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Öğretmen</th>
-                  <th>Okul</th>
-                  <th>Kaynak durumu</th>
-                  <th>REFİKA durumu</th>
-                  <th>İşlem</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.slice(0, 500).map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      {r.name}
-                      <small>Kimlik: {r.accountId}</small>
-                    </td>
-                    <td>
-                      {r.school}
-                      <small>
-                        {r.district} · {r.schoolId}
-                      </small>
-                    </td>
-                    <td>{r.sourceStatus || 'Belirtilmedi'}</td>
-                    <td>
-                      <Badge status={r.status} />
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          setSelected(r.id);
-                          setNote(r.note || '');
-                        }}
-                      >
-                        İncele
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty title="Bu görünümde kayıt yok">
-            ESEP listenizi Veri aktar bölümünden getirebilirsiniz.
-          </Empty>
-        )}
-        {rows.length > 500 && (
-          <p>
-            İlk 500 kayıt gösteriliyor. Aramayla daraltın; Excel çıktısı tüm
-            incelenen kayıtları içerir.
-          </p>
-        )}
-      </section>
-      {record && (
-        <section className="panel">
-          <div className="section-head">
-            <h2>{record.name}</h2>
-            <button
-              aria-label="İncelemeyi kapat"
-              onClick={() => setSelected(null)}
-            >
-              <X size={18} />
-            </button>
-          </div>
-          <p>
-            {record.school} · {record.accountId}
-          </p>
-          <p className="muted">
-            Kaynak: {record.source?.name} · Satır {record.source?.line}
-          </p>
-          {record.profileUrl && (
-            <a href={record.profileUrl} target="_blank" rel="noreferrer">
-              Resmî ESEP profilini aç
-            </a>
-          )}
-          <Field label="İnceleme veya sonuç notu" wide>
-            <textarea
-              rows={4}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Neyi kontrol ettiniz? Resmî işlem sonuçlandıysa dayanağı nedir?"
-            />
-          </Field>
-          <Notice>
-            Bu düğmeler REFİKA’daki takibi günceller. ESEP’te onay, silme veya
-            gönderim yapmaz.
-          </Notice>
-          <div className="actions">
-            {[
-              ['review', 'İncelemeye al'],
-              ['ready', 'Kontrol edildi'],
-              ['completed', 'Resmî sonucu kaydet'],
-            ].map(([status, label]) => (
-              <button
-                key={status}
-                className={status === 'ready' ? 'primary' : ''}
-                disabled={
-                  busy ||
-                  !note.trim() ||
-                  (status === 'completed' && record.status !== 'ready')
-                }
-                onClick={() =>
-                  run(
-                    () =>
-                      api('/records/' + record.id, {
-                        status,
-                        note,
-                        version: record.version,
-                      }),
-                    'İnceleme kaydedildi.',
-                  )
-                }
-              >
-                {label}
-              </button>
-            ))}
           </div>
         </section>
       )}
@@ -1391,13 +1222,14 @@ function App() {
           <ImportWorkspace state={state} run={run} busy={busy} />
         )}
         {(view === 'records' || view === 'results') && (
-          <Records
+          <ValidationWorkspace
             key={view}
             state={state}
             run={run}
             busy={busy}
             results={view === 'results'}
-            initialFilter={view === 'results' ? 'ready' : 'all'}
+            api={api}
+            fileData={fileData}
           />
         )}
         {['activities', 'visits', 'events'].includes(view) && (

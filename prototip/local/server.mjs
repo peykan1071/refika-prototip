@@ -14,6 +14,13 @@ import {
 import { body, json, download, staticFile } from './http.mjs';
 import { encryptBackup, decryptBackup } from './backup.mjs';
 import { syncSummary, syncStatus } from './sync.mjs';
+import {
+  caseExportHeaders,
+  caseExportRow,
+  caseGroup,
+  caseGroups,
+  caseStatuses,
+} from './validation.mjs';
 
 export async function startLocal({
   dataDir,
@@ -123,6 +130,103 @@ export async function startLocal({
       }
       if (path === '/api/activities' && req.method === 'POST')
         return json(res, 200, store.saveActivity(await body(req)));
+      if (path === '/api/validation' && req.method === 'POST')
+        return json(res, 200, store.validation.save(await body(req)));
+      if (path === '/api/validation-export' && req.method === 'GET') {
+        const group = url.searchParams.get('group'),
+          status = url.searchParams.get('status');
+        if (group && group !== 'all' && !Object.hasOwn(caseGroups, group))
+          throw new Error('Çalışma listesi geçersiz.');
+        if (status && status !== 'all' && !Object.hasOwn(caseStatuses, status))
+          throw new Error('Durum geçersiz.');
+        const rows = store.validation
+          .list()
+          .filter(
+            (r) =>
+              (!group || group === 'all' || caseGroup(r) === group) &&
+              (!status || status === 'all' || r.status === status),
+          );
+        return download(
+          res,
+          `REFIKA-validasyon-${group || 'all'}.xlsx`,
+          await workbookBuffer(caseExportHeaders, rows.map(caseExportRow)),
+        );
+      }
+      const validationRoute = path.match(
+        /^\/api\/validation\/([^/]+)(?:\/(draft|sent|progress|files|history-export))?$/,
+      );
+      if (validationRoute) {
+        const [, id, action] = validationRoute;
+        if (!action && req.method === 'GET')
+          return json(res, 200, store.validation.detail(id));
+        if (action === 'history-export' && req.method === 'GET') {
+          const detail = store.validation.detail(id);
+          return download(
+            res,
+            'REFIKA-yazisma-gecmisi.xlsx',
+            await workbookBuffer(
+              [
+                'Dosya',
+                'İşlem',
+                'Kaydetme zamanı',
+                'Gerçekleşme zamanı',
+                'Koordinatör',
+                'Amaç',
+                'Kanal',
+                'Alıcı',
+                'Konu',
+                'Metin / not',
+                'Gönderim dayanağı',
+                'Bağlantı',
+                'Sonuç türü',
+              ],
+              detail.events.map((e) => [
+                detail.title,
+                e.type,
+                e.at,
+                e.happenedAt || '',
+                e.operator,
+                e.purpose || '',
+                e.channel || '',
+                e.recipient || '',
+                e.subject || '',
+                e.body || e.note || '',
+                e.proof || '',
+                e.messageUrl || e.evidenceUrl || '',
+                e.outcome || '',
+              ]),
+            ),
+          );
+        }
+        if (req.method === 'POST') {
+          const input = await body(
+            req,
+            action === 'files' ? 15 * 1024 * 1024 : 1024 * 1024,
+          );
+          if (action === 'files') {
+            if (typeof input.data !== 'string')
+              throw new Error('Dosya okunamadı.');
+            return json(
+              res,
+              200,
+              store.validation.addFile(
+                id,
+                input,
+                Buffer.from(input.data, 'base64'),
+              ),
+            );
+          }
+          if (['draft', 'sent', 'progress'].includes(action))
+            return json(
+              res,
+              200,
+              store.validation[action === 'sent' ? 'communicate' : action](
+                id,
+                input,
+              ),
+            );
+        }
+      }
       if (path.startsWith('/api/records/') && req.method === 'POST')
         return json(
           res,

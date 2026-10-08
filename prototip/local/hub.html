@@ -105,6 +105,7 @@
                 <th>Toplam katılım</th>
                 <th>İncelenecek</th>
                 <th>Hazır</th>
+                <th>Gönderildi / bekliyor</th>
                 <th>Sonuçlanan</th>
                 <th>Son aktarım</th>
               </tr>
@@ -138,6 +139,7 @@
                 row?.participations ?? '—',
                 row?.review ?? '—',
                 row?.ready ?? '—',
+                row?.waiting ?? '—',
                 row?.resolved ?? '—',
                 row
                   ? new Date(row.receivedAt).toLocaleString('tr-TR')

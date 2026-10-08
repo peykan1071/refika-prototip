@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { validationWorkItems } from '../validation.mjs';
 import {
   House,
   CalendarDays,
@@ -199,8 +200,9 @@ export function DemoDashboard({ state, go }) {
     .filter((a) => a.status === 'planned')
     .sort((a, b) => a.startDate.localeCompare(b.startDate));
   const completed = state.activities.filter((a) => a.status === 'completed');
-  const review = state.records.filter((r) => r.status === 'review');
-  const ready = state.records.filter((r) => r.status === 'ready');
+  const workItems = validationWorkItems(state);
+  const review = workItems.filter((r) => r.status === 'review');
+  const waiting = workItems.filter((r) => r.status === 'waiting');
   const metrics = [
     [
       planned.filter((a) => a.startDate <= today && a.endDate >= today).length,
@@ -222,7 +224,7 @@ export function DemoDashboard({ state, go }) {
       'events',
     ],
     [review.length, 'Validasyon incelemesi', ClipboardCheck, 'records'],
-    [ready.length, 'Sonucu beklenen kayıt', ListChecks, 'results'],
+    [waiting.length, 'Sonucu beklenen dosya', ListChecks, 'results'],
     [completed.length, 'Tamamlanan faaliyet', FileText, 'reports'],
     [
       completed.reduce((sum, a) => sum + a.actualParticipants, 0),
@@ -419,7 +421,7 @@ export function DemoDashboard({ state, go }) {
               <ClipboardCheck size={23} />
               Kayıt ve validasyon
             </h2>
-            <span className="badge">{state.records.length} kayıt</span>
+            <span className="badge">{workItems.length} kayıt / dosya</span>
           </div>
           {review.length ? (
             <ul className="dashboard-records">
@@ -427,7 +429,7 @@ export function DemoDashboard({ state, go }) {
                 <li key={r.id}>
                   <Users size={18} />
                   <div>
-                    <strong>{r.name}</strong>
+                    <strong>{r.title || r.name}</strong>
                     <small>{r.school}</small>
                   </div>
                   <button className="text-button" onClick={() => go('records')}>

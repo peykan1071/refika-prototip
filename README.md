@@ -16,7 +16,9 @@ REFİKA, 81 il koordinatörünün kayıt inceleme, faaliyet planlama, sonuç tak
 
 Güncel uygulama [geliştirme dalında](https://github.com/peykan1071/refika-prototip/tree/codex/refika-calisan-pilot) bulunur; ana dala aktarımı [#1 numaralı geliştirme kaydında](https://github.com/peykan1071/refika-prototip/pull/1) izlenir.
 
-Yerel kayıt, Excel/CSV aktarımı, kayıt inceleme, faaliyet planı ve sonuç girişi, kanıt ekleme, rapor üretme ve şifreli yedekleme uygulanmıştır. Windows paketini üretme araçları ve 81 il özet ekranının servis kodu mevcuttur.
+Yerel kayıt, Excel/CSV aktarımı, talep türüne göre validasyon, yazışma taslağı ve gönderim/sonuç geçmişi, faaliyet planı, kanıt ekleme, rapor üretme ve şifreli yedekleme uygulanmıştır. Windows paketini üretme araçları ve 81 il özet ekranının servis kodu mevcuttur.
+
+Validasyon dört çalışma listesinde izlenir: **Hesap Onay Validasyonları**, **İnceleme Bekleyenler**, **Okul Birleştirme** ve **Genel Destek**. Kontroller ve dayanak notları tamamlanmadan dosya gönderime hazır olmaz. Taslak hazırlamak gönderim sayılmaz; koordinatör başka uygulamadan yaptığı gönderimi tarihi, metni ve dayanağıyla kaydeder. Kişiye bilgilendirme, merkez talebinden ayrı tutulur.
 
 Canlı merkez kurulumu, kurumsal kullanıcı yetkileri, model hizmeti, güncel resmî çıktı şablonları ve saha doğrulaması tamamlanacaktır. ESEP'e otomatik giriş, veri çekme veya resmî işlem gönderme henüz yoktur. Windows paketi imzasızdır; son açılış denemesi bu bilgisayarın Uygulama Denetimi tarafından engellenmiştir. Kurum geneli dağıtım için hazır sürüm olarak sunulmaz.
 
