@@ -1,4 +1,4 @@
-# REFİKA 0.3.1 · Yerel uygulama
+# REFİKA 0.4.0 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -10,19 +10,31 @@ Görsel referans mevcut REFİKA demosudur: `app/page.jsx` ve `app/globals.css`. 
 2. `REFIKA.exe` dosyasını açın. İl, koordinatör adı ve eğitim yılını seçin. Bu adım bir kurum hesabı veya giriş yetkisi oluşturmaz; bilgisayardaki çalışma alanını tanımlar.
 3. **Veri aktar** bölümünden boş şablonu indirin. ESEP/NSO listenizi veya faaliyet planınızı Excel/CSV biçiminde seçin. Kaynak sütunlarını eşleştirin, önizlemeyi kontrol edin, ardından içeri alın.
 4. **Kayıt ve Validasyon** tablosunda **İncele** ile ilgili kaydı açın veya **Yeni talep oluştur** ile elle başlayın. Talebe özel kontrolleri ve dayanakları kaydedin. **Listeyi ve e-postayı hazırla → Taslaklar → Onaya sun → Onay Merkezi** adımlarını izleyin; gerçekleşen gönderimden sonra **Sonuç Takibi** bölümünü kullanın.
-5. **Faaliyet Planı** bölümünde faaliyeti planlayın. Gerçekleştiğinde tarih, katılım, sonuç ve kanıt notunu doldurun. Kaydettiğiniz faaliyete kanıt dosyası ekleyebilirsiniz.
+5. **Faaliyet Planı → Plan ekle** ile aylık planınızı alın. Bir maddedeki **Faaliyet kaydı oluştur** düğmesiyle somut çalışmayı planlayın. Gerçekleştiğinde tarih, katılım, sonuç ve kanıt notunu doldurun. Kaydettiğiniz faaliyete kanıt dosyası ekleyebilirsiniz.
 6. **Raporlar ve Yazışmalar** bölümünde tarih aralığını seçin. Excel/metin çıktısı alın veya yazdırma penceresinden PDF kaydedin.
 7. **Ayarlar ve yedek** bölümünden düzenli şifreli yedek indirin. Parolanızı saklayın; unutulan parola kurtarılamaz.
 
 Bir çalışma alanı bu sürümde bir il ve bir eğitim yılı içindir. İl/yıl değiştirme, çok cihazlı düzenleme ve önceki tarayıcı demosundan otomatik veri taşıma yoktur. Örnek kişisel kayıtlar pakete dahil edilmez.
 
+## YEĞİTEK düzeninde aylık plan
+
+1. **Faaliyet Planı → Plan ekle** bölümünde başlık ve plan yılını girin. YEĞİTEK bağlantısını kaynak olarak ekleyebilirsiniz; bağlantıdan otomatik giriş veya canlı eşitleme yapılmaz.
+2. YEĞİTEK’teki **Faaliyet Planı** alanının tamamını kopyalayıp plan metni alanına yapıştırın. Alternatif olarak Word (.docx), HTML veya metin (.txt) dosyanızı seçin. Dosya sınırı 5 MB’dir. **İlerleme Durumu** metnini ayrı alana yapıştırın.
+3. **Planı önizle** ile aylık maddeleri inceleyin. Ay/yıl başlığı altındaki **Çalışma günleri | Ana faaliyet / uygulama | Beklenen çıktı | Validasyon / uygulama notu** tabloları ayrılır. Takvim hücreleri faaliyet sayılmaz. Farklı biçimler tam metin olarak korunur; **Aylık maddeleri incele / düzenle** alanından ay, tarih ifadesi ve çalışma bilgilerini elle ekleyebilirsiniz.
+4. **Kontrol ettim, planı kaydet** ile yerel veri tabanına alın. Her kaynak yılı için bir plan tutulur; aynı yılın aktarımı mevcut planı günceller, aynı içerik ikinci kopya oluşturmaz. Başlıklar, aylık maddeler ve ilerleme notları **Planı güncelle** ile düzenlenebilir.
+5. Aylık kartlardan **Faaliyet kaydı oluştur** seçin. Bir madde birden fazla çalışmayı kapsayabilir; her somut çalışma için ayrı kayıt açın. Kaynak gün ifadesi korunur; kesin başlangıç/bitiş ve türü koordinatör belirler. Planın güncellenmesi daha önce açılmış faaliyetlerin tarihini, sonucunu veya kanıtını değiştirmez.
+
+Plan maddeleri gerçekleşmiş faaliyet veya katılımcı sayılmaz. Kaynak ilerleme notu otomatik tamamlama değildir. Genel esaslar ve tam plan metni kaynak bölümünde korunur. Aylık planı almak için model hizmeti gerekmez; gelecekte etkinlik hazırlığında kullanılmak üzere kaynak metin, ilerleme ve yapılandırılmış maddeler ayrı saklanır. **Plan verisini indir** bu alanları JSON dosyası olarak verir; bu dosya şifreli yedeğin yerine geçmez.
+
+Şifreli yedek biçimi 3, aylık planları ve faaliyetlerle bağlantılarını da kapsar. Önceki biçim 1 ve 2 yedekleri okunur; yeni yedekler eski uygulama sürümünde açılmaz. Kişisel plan içerikleri dağıtım paketine veya GitHub'a eklenmez.
+
 ## Aktarım kuralları
 
 - ESEP listesi: il, öğretmen kimliği, öğretmen adı, okul kimliği ve okul adı zorunludur. Aynı öğretmenin farklı okul üyelikleri ayrı kayıtlardır. Aynı kimlik çifti yeniden yüklenince çoğalmaz.
-- Faaliyet planı: faaliyet adı, amaç, tür ve tarihler gereklidir. Düzenli tekrar aktarımlarında sabit bir faaliyet kodu kullanın. Kod verilmezse başlık/tarih eşleşmesi kullanılır; başlık veya tarih değişince yeni kayıt oluşabilir.
+- **Veri aktar** bölümündeki Excel/CSV faaliyet listesi: faaliyet adı, amaç, tür ve tarihler gereklidir. Bu akış somut faaliyet kayıtları oluşturur; aylık kaynak planı için **Faaliyet Planı → Plan ekle** kullanılır. Düzenli Excel tekrarlarında sabit faaliyet kodu kullanın; kod yoksa başlık/tarih değişince yeni kayıt oluşabilir.
 - Geçersiz tarih, yanlış il, eksik alan ve aynı dosyada yinelenen kimlikler önizlemede ayrılır. Geçerli satırları ayrıca alma seçeneği açıkça onaylanır.
 - İncelenmiş bir kaynağın içeriği değişirse kayıt yeniden incelemeye döner. Sonuçlandırılmış kayıtlar aktarım sırasında değiştirilmez. Önizlemeden sonra veri değişmişse yeniden inceleme gerekir.
-- Excel/CSV ve Word dosyaları en fazla 5 MB; kanıt dosyaları 10 MB olabilir. Word metni otomatik onay değildir: model önerisi yine önizlemeden geçer. PDF plan okuma bu sürümde yoktur.
+- Excel/CSV ve Word dosyaları en fazla 5 MB; kanıt dosyaları 10 MB olabilir. **Veri aktar** içindeki isteğe bağlı AI çıkarımı da önizlemeden geçer. Aylık plan yüklemesi AI gerektirmez. PDF plan okuma bu sürümde yoktur.
 - ESEP'e otomatik giriş, veri çekme, hesap/üyelik değişikliği veya resmî gönderim yapılmaz. Çıktılar REFİKA şablonudur; güncel resmî şablona birebir uyum ayrıca doğrulanmalıdır.
 
 ## Validasyon ve yazışma akışı

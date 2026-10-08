@@ -17,6 +17,7 @@ import {
 import './style.css';
 import './demo-theme.css';
 import { ClassicValidation } from './classic-validation.jsx';
+import { PlanWorkspace } from './plan-workspace.jsx';
 import {
   DemoShell,
   DemoDashboard,
@@ -557,7 +558,8 @@ const blankActivity = () => ({
 });
 function Activities({ state, run, busy, scope = 'all' }) {
   const [draft, setDraft] = useState(null),
-    [query, setQuery] = useState('');
+    [query, setQuery] = useState(''),
+    [tab, setTab] = useState('plan');
   const scopeKinds =
     scope === 'visits'
       ? ['Okul ziyareti']
@@ -598,241 +600,321 @@ function Activities({ state, run, busy, scope = 'all' }) {
                 ? 'Eğitim ve Etkinlikler'
                 : 'İl Koordinatörü Faaliyet Planı'}
           </h1>
-          <p>Faaliyetin planı ve gerçekleşen sonucu aynı kayıtta.</p>
+          <p>
+            {scope === 'all'
+              ? 'Aylık planınızı izleyin, çalışmaların sonuçlarını faaliyet kayıtlarında tutun.'
+              : 'Faaliyetin planı ve gerçekleşen sonucu aynı kayıtta.'}
+          </p>
         </div>
-        <button className="primary" onClick={() => setDraft(newActivity())}>
+        <button
+          className="primary"
+          onClick={() => {
+            setTab('records');
+            setDraft(newActivity());
+          }}
+        >
           <Plus size={17} /> Yeni faaliyet
         </button>
       </div>
-      {draft && (
-        <section className="panel">
-          <div className="section-head">
-            <h2>{draft.id ? 'Faaliyet kaydı' : 'Yeni faaliyet'}</h2>
-            <button
-              aria-label="Faaliyet formunu kapat"
-              onClick={() => setDraft(null)}
-            >
-              <X size={18} />
-            </button>
-          </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              run(
-                async () => setDraft(await api('/activities', draft)),
-                'Faaliyet kalıcı olarak kaydedildi.',
-              );
-            }}
+      {scope === 'all' && (
+        <div className="plan-tabs" aria-label="Plan ve faaliyet görünümü">
+          <button aria-pressed={tab === 'plan'} onClick={() => setTab('plan')}>
+            Faaliyet planım
+          </button>
+          <button
+            aria-pressed={tab === 'records'}
+            onClick={() => setTab('records')}
           >
-            <div className="form-grid">
-              {field('title', 'Faaliyet adı', 'text', true)}
-              <Field label="Tür">
-                <select
-                  value={draft.kind}
-                  onChange={(e) => setDraft({ ...draft, kind: e.target.value })}
-                >
-                  {(scopeKinds || kinds).map((k) => (
-                    <option key={k}>{k}</option>
-                  ))}
-                </select>
-              </Field>
-              {field('startDate', 'Planlanan başlangıç', 'date', true)}
-              {field('endDate', 'Planlanan bitiş', 'date', true)}
-              {field('audience', 'Hedef kitle')}
-              {field('responsible', 'Sorumlu')}
-              {field('planCode', 'Faaliyet kodu (isteğe bağlı)')}
-              {field('plannedParticipants', 'Planlanan katılım', 'number')}
-              <Field label="Amaç" wide>
-                <textarea
-                  required
-                  rows={2}
-                  value={draft.purpose}
-                  onChange={(e) =>
-                    setDraft({ ...draft, purpose: e.target.value })
-                  }
-                />
-              </Field>
-              <Field label="Beklenen çıktı" wide>
-                <textarea
-                  rows={2}
-                  value={draft.expectedOutput}
-                  onChange={(e) =>
-                    setDraft({ ...draft, expectedOutput: e.target.value })
-                  }
-                />
-              </Field>
-            </div>
-            <h3>Gerçekleşme ve sonuç</h3>
-            <div className="form-grid">
-              <Field label="Durum">
-                <select
-                  value={draft.status}
-                  onChange={(e) =>
-                    setDraft({ ...draft, status: e.target.value })
-                  }
-                >
-                  <option value="planned">Planlandı / devam ediyor</option>
-                  <option value="completed">Tamamlandı</option>
-                </select>
-              </Field>
-              {field(
-                'actualDate',
-                'Gerçekleşme tarihi',
-                'date',
-                draft.status === 'completed',
-              )}
-              {field(
-                'actualParticipants',
-                'Gerçekleşen katılım',
-                'number',
-                draft.status === 'completed',
-              )}
-              <Field label="Kanıt bağlantısı / belge notu">
-                <input
-                  required={draft.status === 'completed'}
-                  value={draft.evidence}
-                  onChange={(e) =>
-                    setDraft({ ...draft, evidence: e.target.value })
-                  }
-                />
-              </Field>
-              <Field label="Gerçekleşen sonuç" wide>
-                <textarea
-                  required={draft.status === 'completed'}
-                  rows={3}
-                  value={draft.result}
-                  onChange={(e) =>
-                    setDraft({ ...draft, result: e.target.value })
-                  }
-                />
-              </Field>
-            </div>
-            <div className="actions">
-              <p className="muted">
-                Tamamlanan faaliyet, gerçekleşme tarihiyle dönem raporuna
-                alınır.
-              </p>
-              <button className="primary" disabled={busy}>
-                <CheckCircle2 size={17} /> Faaliyeti kaydet
-              </button>
-            </div>
-          </form>
-          {draft.id && (
-            <div className="attachments">
-              <h3>Kanıt dosyaları</h3>
-              <p className="muted">
-                Dosyanın kendisi bu bilgisayarda saklanır ve şifreli yedeğe
-                dahil edilir.
-              </p>
-              <label className="field">
-                <span>Kanıt dosyası ekle · en fazla 10 MB</span>
-                <input
-                  type="file"
-                  accept=".pdf,.docx,.xlsx,.csv,.txt,.png,.jpg,.jpeg"
-                  disabled={busy}
-                  onChange={(e) => {
-                    const selected = e.target.files[0];
-                    if (selected)
-                      run(
-                        async () =>
-                          api('/files', {
-                            ...(await fileData(selected, 10)),
-                            activityId: draft.id,
-                          }),
-                        'Kanıt dosyası kaydedildi.',
-                      );
-                    e.target.value = '';
-                  }}
-                />
-              </label>
-              <ul className="file-list">
-                {state.files
-                  .filter((f) => f.activityId === draft.id)
-                  .map((f) => (
-                    <li key={f.id}>
-                      <File size={17} />
-                      <a href={'/api/files/' + f.id}>{f.name}</a>
-                      <small>{Math.ceil(f.size / 1024)} KB</small>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
-        </section>
-      )}
-      <section className="panel">
-        <div className="section-head">
-          <h2>Faaliyet takvimi</h2>
-          <input
-            aria-label="Faaliyette ara"
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Faaliyet ara…"
-          />
+            Faaliyet kayıtlarım ({state.activities.length})
+          </button>
         </div>
-        {visible.length ? (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Planlanan tarih</th>
-                  <th>Faaliyet</th>
-                  <th>Durum</th>
-                  <th>Katılım</th>
-                  <th>İşlem</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visible.map((a) => (
-                  <tr key={a.id}>
-                    <td>
-                      {formatDate(a.startDate)}
-                      <small>
-                        {a.endDate !== a.startDate ? formatDate(a.endDate) : ''}
-                      </small>
-                    </td>
-                    <td>
-                      {a.title}
-                      <small>
-                        {a.kind} · {a.audience}
-                      </small>
-                    </td>
-                    <td>
-                      <Badge status={a.status} />
-                    </td>
-                    <td>
-                      {a.status === 'completed' ? a.actualParticipants : '—'}
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          setDraft({ ...a });
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
-                      >
-                        Düzenle / sonuç gir
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty
-            title="İlk çalışmanızı planlayın"
-            action={
-              <button onClick={() => setDraft(newActivity())}>
-                Faaliyet ekle
-              </button>
-            }
-          >
-            Excel planını içeri alabilir veya bu ekrandan bir çalışma
-            oluşturabilirsiniz.
-          </Empty>
-        )}
-      </section>
+      )}
+      {scope === 'all' && tab === 'plan' && (
+        <PlanWorkspace
+          state={state}
+          run={run}
+          busy={busy}
+          api={api}
+          fileData={fileData}
+          onActivity={(plan, item, existing) => {
+            setDraft(
+              existing
+                ? { ...existing }
+                : {
+                    ...newActivity(),
+                    kind: 'Diğer',
+                    startDate: '',
+                    endDate: '',
+                    title: item.title,
+                    purpose: item.description,
+                    expectedOutput: item.expectedOutput,
+                    planId: plan.id,
+                    planItemId: item.id,
+                    planVersion: plan.version,
+                    planSource: {
+                      dateLabel: item.dateLabel,
+                      implementationNote: item.implementationNote,
+                    },
+                  },
+            );
+            setTab('records');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      )}
+      {(scope !== 'all' || tab === 'records') && (
+        <>
+          {draft && (
+            <section className="panel">
+              <div className="section-head">
+                <h2>{draft.id ? 'Faaliyet kaydı' : 'Yeni faaliyet'}</h2>
+                <button
+                  aria-label="Faaliyet formunu kapat"
+                  onClick={() => setDraft(null)}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              {draft.planSource && (
+                <div className="notice">
+                  <b>
+                    Kaynak plandaki çalışma günleri:{' '}
+                    {draft.planSource.dateLabel}
+                  </b>
+                  <p>{draft.planSource.implementationNote}</p>
+                  <p>
+                    Bu kayıt için faaliyet türünü ve kesin tarihleri belirleyin.
+                    Birden fazla çalışma içeren plan maddesinden ayrı faaliyet
+                    kayıtları oluşturabilirsiniz.
+                  </p>
+                </div>
+              )}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  run(
+                    async () => setDraft(await api('/activities', draft)),
+                    'Faaliyet kalıcı olarak kaydedildi.',
+                  );
+                }}
+              >
+                <div className="form-grid">
+                  {field('title', 'Faaliyet adı', 'text', true)}
+                  <Field label="Tür">
+                    <select
+                      value={draft.kind}
+                      onChange={(e) =>
+                        setDraft({ ...draft, kind: e.target.value })
+                      }
+                    >
+                      {(scopeKinds || kinds).map((k) => (
+                        <option key={k}>{k}</option>
+                      ))}
+                    </select>
+                  </Field>
+                  {field('startDate', 'Planlanan başlangıç', 'date', true)}
+                  {field('endDate', 'Planlanan bitiş', 'date', true)}
+                  {field('audience', 'Hedef kitle')}
+                  {field('responsible', 'Sorumlu')}
+                  {field('planCode', 'Faaliyet kodu (isteğe bağlı)')}
+                  {field('plannedParticipants', 'Planlanan katılım', 'number')}
+                  <Field label="Amaç" wide>
+                    <textarea
+                      required
+                      rows={2}
+                      value={draft.purpose}
+                      onChange={(e) =>
+                        setDraft({ ...draft, purpose: e.target.value })
+                      }
+                    />
+                  </Field>
+                  <Field label="Beklenen çıktı" wide>
+                    <textarea
+                      rows={2}
+                      value={draft.expectedOutput}
+                      onChange={(e) =>
+                        setDraft({ ...draft, expectedOutput: e.target.value })
+                      }
+                    />
+                  </Field>
+                </div>
+                <h3>Gerçekleşme ve sonuç</h3>
+                <div className="form-grid">
+                  <Field label="Durum">
+                    <select
+                      value={draft.status}
+                      onChange={(e) =>
+                        setDraft({ ...draft, status: e.target.value })
+                      }
+                    >
+                      <option value="planned">Planlandı / devam ediyor</option>
+                      <option value="completed">Tamamlandı</option>
+                    </select>
+                  </Field>
+                  {field(
+                    'actualDate',
+                    'Gerçekleşme tarihi',
+                    'date',
+                    draft.status === 'completed',
+                  )}
+                  {field(
+                    'actualParticipants',
+                    'Gerçekleşen katılım',
+                    'number',
+                    draft.status === 'completed',
+                  )}
+                  <Field label="Kanıt bağlantısı / belge notu">
+                    <input
+                      required={draft.status === 'completed'}
+                      value={draft.evidence}
+                      onChange={(e) =>
+                        setDraft({ ...draft, evidence: e.target.value })
+                      }
+                    />
+                  </Field>
+                  <Field label="Gerçekleşen sonuç" wide>
+                    <textarea
+                      required={draft.status === 'completed'}
+                      rows={3}
+                      value={draft.result}
+                      onChange={(e) =>
+                        setDraft({ ...draft, result: e.target.value })
+                      }
+                    />
+                  </Field>
+                </div>
+                <div className="actions">
+                  <p className="muted">
+                    Tamamlanan faaliyet, gerçekleşme tarihiyle dönem raporuna
+                    alınır.
+                  </p>
+                  <button className="primary" disabled={busy}>
+                    <CheckCircle2 size={17} /> Faaliyeti kaydet
+                  </button>
+                </div>
+              </form>
+              {draft.id && (
+                <div className="attachments">
+                  <h3>Kanıt dosyaları</h3>
+                  <p className="muted">
+                    Dosyanın kendisi bu bilgisayarda saklanır ve şifreli yedeğe
+                    dahil edilir.
+                  </p>
+                  <label className="field">
+                    <span>Kanıt dosyası ekle · en fazla 10 MB</span>
+                    <input
+                      type="file"
+                      accept=".pdf,.docx,.xlsx,.csv,.txt,.png,.jpg,.jpeg"
+                      disabled={busy}
+                      onChange={(e) => {
+                        const selected = e.target.files[0];
+                        if (selected)
+                          run(
+                            async () =>
+                              api('/files', {
+                                ...(await fileData(selected, 10)),
+                                activityId: draft.id,
+                              }),
+                            'Kanıt dosyası kaydedildi.',
+                          );
+                        e.target.value = '';
+                      }}
+                    />
+                  </label>
+                  <ul className="file-list">
+                    {state.files
+                      .filter((f) => f.activityId === draft.id)
+                      .map((f) => (
+                        <li key={f.id}>
+                          <File size={17} />
+                          <a href={'/api/files/' + f.id}>{f.name}</a>
+                          <small>{Math.ceil(f.size / 1024)} KB</small>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </section>
+          )}
+          <section className="panel">
+            <div className="section-head">
+              <h2>Faaliyet takvimi</h2>
+              <input
+                aria-label="Faaliyette ara"
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Faaliyet ara…"
+              />
+            </div>
+            {visible.length ? (
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Planlanan tarih</th>
+                      <th>Faaliyet</th>
+                      <th>Durum</th>
+                      <th>Katılım</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visible.map((a) => (
+                      <tr key={a.id}>
+                        <td>
+                          {formatDate(a.startDate)}
+                          <small>
+                            {a.endDate !== a.startDate
+                              ? formatDate(a.endDate)
+                              : ''}
+                          </small>
+                        </td>
+                        <td>
+                          {a.title}
+                          <small>
+                            {a.kind} · {a.audience}
+                          </small>
+                        </td>
+                        <td>
+                          <Badge status={a.status} />
+                        </td>
+                        <td>
+                          {a.status === 'completed'
+                            ? a.actualParticipants
+                            : '—'}
+                        </td>
+                        <td>
+                          <button
+                            onClick={() => {
+                              setDraft({ ...a });
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                          >
+                            Düzenle / sonuç gir
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <Empty
+                title="İlk çalışmanızı planlayın"
+                action={
+                  <button onClick={() => setDraft(newActivity())}>
+                    Faaliyet ekle
+                  </button>
+                }
+              >
+                Excel planını içeri alabilir veya bu ekrandan bir çalışma
+                oluşturabilirsiniz.
+              </Empty>
+            )}
+          </section>
+        </>
+      )}
     </>
   );
 }

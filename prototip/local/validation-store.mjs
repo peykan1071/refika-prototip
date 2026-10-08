@@ -39,13 +39,14 @@ function validFile(name, bytes) {
 
 export function migrateValidation(db) {
   const version = db.prepare('PRAGMA user_version').get().user_version;
-  if (version > 2)
+  if (version > 3)
     throw new Error('Bu veri tabanı daha yeni bir REFİKA sürümüne ait.');
   db.exec(`BEGIN IMMEDIATE;
     CREATE TABLE IF NOT EXISTS validation_cases(id TEXT PRIMARY KEY, body TEXT NOT NULL, version INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS validation_events(id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES validation_cases(id), body TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS validation_files(id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES validation_cases(id), name TEXT NOT NULL, body BLOB NOT NULL, created_at TEXT NOT NULL);
-    PRAGMA user_version=2;
+    CREATE TABLE IF NOT EXISTS plans(id TEXT PRIMARY KEY, body TEXT NOT NULL, version INTEGER NOT NULL);
+    PRAGMA user_version=3;
     COMMIT;`);
 }
 

@@ -14,6 +14,7 @@ import {
 import { body, json, download, staticFile } from './http.mjs';
 import { encryptBackup, decryptBackup } from './backup.mjs';
 import { syncSummary, syncStatus } from './sync.mjs';
+import { previewPlan, commitPlan } from './plans.mjs';
 import {
   caseExportHeaders,
   caseExportRow,
@@ -82,6 +83,36 @@ export async function startLocal({
       }
       if (!store.meta('settings'))
         return json(res, 409, { error: 'Önce il çalışma alanını kurun.' });
+      if (path === '/api/plans/preview' && req.method === 'POST')
+        return json(res, 200, await previewPlan(store, await body(req)));
+      if (path === '/api/plans/commit' && req.method === 'POST') {
+        const input = await body(req);
+        const preview = await previewPlan(store, input);
+        return json(res, 200, commitPlan(store, preview, input.token));
+      }
+      const planExport = path.match(/^\/api\/plans\/([a-f0-9]+)\/export$/);
+      if (planExport && req.method === 'GET') {
+        const plan = store.get('plans', planExport[1]);
+        if (!plan) throw new Error('Plan bulunamadı.');
+        return download(
+          res,
+          `REFIKA-faaliyet-plani-${plan.year}.json`,
+          Buffer.from(
+            JSON.stringify(
+              {
+                format: 'refika-plan-context',
+                version: 1,
+                purpose:
+                  'Plan ve kaynak ilerleme notları; gerçekleşme kanıtı değildir.',
+                plan,
+              },
+              null,
+              2,
+            ),
+          ),
+          'application/json; charset=utf-8',
+        );
+      }
       if (path === '/api/import/preview' && req.method === 'POST') {
         const result = await previewImport(store, await body(req));
         return json(res, 200, result);

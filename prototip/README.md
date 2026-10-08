@@ -23,7 +23,7 @@ Node.js 22.13+ gerekir. Tarayıcıda `http://127.0.0.1:4317` açılır; kayıtla
 1. İl, koordinatör adı ve eğitim yılıyla çalışma alanını oluşturun.
 2. **Veri aktar** bölümünde ESEP/NSO listesini veya faaliyet planını seçin. Sütunları eşleştirip kontrol sonuçlarını inceleyin ve uygun kayıtları içeri alın.
 3. **Kayıt ve Validasyon** bölümünde kayıtları dayanak notlarıyla inceleyin; resmî sonucu işlem gerçekten sonuçlandığında girin.
-4. **Faaliyet Planı**, **Okul Ziyaretleri** veya **Eğitim ve Etkinlikler** üzerinden çalışmayı planlayın; gerçekleşen tarih, katılım, sonuç ve kanıtı aynı kayda ekleyin.
+4. **Faaliyet Planı → Plan ekle** ile YEĞİTEK düzenindeki planı yapıştırın veya Word/HTML/metin dosyasından alın; ilerleme notlarını ayrı saklayın. Aylık kartlardan faaliyet oluşturun. **Faaliyet kayıtlarım**, **Okul Ziyaretleri** veya **Eğitim ve Etkinlikler** üzerinden gerçekleşen tarih, katılım, sonuç ve kanıtı kaydedin.
 5. **Raporlar ve Yazışmalar** bölümünden tarih aralığına göre çıktı alın.
 6. **Ayarlar ve yedek** bölümünden şifreli yedek oluşturun. Merkez bağlantısı kurulduğunda il özetinin paylaşımını buradan açın.
 

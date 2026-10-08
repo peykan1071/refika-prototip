@@ -24,7 +24,7 @@ export function decodeFile(input) {
   return { name, buffer };
 }
 // Check expanded ZIP size before handing OOXML to a document parser.
-function checkOfficeZip(buffer) {
+export function checkOfficeZip(buffer) {
   let eocd = -1;
   for (
     let i = buffer.length - 22;

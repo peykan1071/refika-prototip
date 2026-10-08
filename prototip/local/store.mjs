@@ -4,6 +4,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { migrateValidation, ValidationStore } from './validation-store.mjs';
 import { validationWorkItems } from './validation.mjs';
+import { cleanPlan } from './plans.mjs';
 import {
   digest,
   provinceCode,
@@ -66,7 +67,7 @@ export class Store {
     this.setMeta('revision', (this.meta('revision') || 0) + 1);
   }
   list(table) {
-    if (!['records', 'activities'].includes(table))
+    if (!['records', 'activities', 'plans'].includes(table))
       throw new Error('Geçersiz tablo.');
     return this.db
       .prepare(`SELECT id,body,version FROM ${table} ORDER BY rowid DESC`)
@@ -78,7 +79,7 @@ export class Store {
       }));
   }
   get(table, id) {
-    if (!['records', 'activities'].includes(table))
+    if (!['records', 'activities', 'plans'].includes(table))
       throw new Error('Geçersiz tablo.');
     const row = this.db
       .prepare(`SELECT body,version FROM ${table} WHERE id=?`)
@@ -88,7 +89,7 @@ export class Store {
       : undefined;
   }
   put(table, id, body, expectedVersion) {
-    if (!['records', 'activities'].includes(table))
+    if (!['records', 'activities', 'plans'].includes(table))
       throw new Error('Geçersiz tablo.');
     const existing = this.db
       .prepare(`SELECT version FROM ${table} WHERE id=?`)
@@ -136,6 +137,7 @@ export class Store {
       settings: this.meta('settings'),
       records: this.list('records'),
       validationCases: this.validation.list(),
+      plans: this.list('plans'),
       activities: this.list('activities'),
       files: this.db
         .prepare(
@@ -158,6 +160,24 @@ export class Store {
     if (input.id && !existing) throw new Error('Faaliyet bulunamadı.');
     if (existing && input.version === undefined)
       throw new Error('Güncel kayıt sürümü gerekli.');
+    let planSource = existing?.planSource;
+    if (!existing && (input.planId || input.planItemId)) {
+      const plan = this.get('plans', input.planId);
+      const item = plan?.items.find((i) => i.id === input.planItemId);
+      if (!item)
+        throw new Error('Plan maddesi değişmiş. Güncel planı yeniden açın.');
+      if (input.planVersion !== plan.version)
+        throw new Error('Plan güncellenmiş. Güncel planı yeniden açın.');
+      planSource = {
+        planId: plan.id,
+        planItemId: item.id,
+        planVersion: plan.version,
+        title: item.title,
+        month: item.month,
+        dateLabel: item.dateLabel,
+        implementationNote: item.implementationNote,
+      };
+    }
     return this.transaction(() => {
       const saved = this.put(
         'activities',
@@ -165,6 +185,7 @@ export class Store {
         {
           ...values,
           source: existing?.source,
+          planSource,
           createdAt: existing?.createdAt || new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -247,7 +268,8 @@ export class Store {
   exportArchive() {
     return {
       format: 'refika-backup',
-      version: 2,
+      version: 3,
+      plans: this.list('plans'),
       validation: this.validation.archive(),
       history: this.db
         .prepare('SELECT at,message FROM history ORDER BY id')
@@ -264,7 +286,7 @@ export class Store {
   restoreArchive(data, confirmedProvince) {
     if (
       data?.format !== 'refika-backup' ||
-      ![1, 2].includes(data.version) ||
+      ![1, 2, 3].includes(data.version) ||
       !provinceCode(data.settings?.province) ||
       confirmedProvince !== data.settings.province
     )
@@ -318,18 +340,36 @@ export class Store {
       )
     )
       throw new Error('Yedekte geçersiz kanıt var.');
+    const plans = data.version >= 3 ? data.plans : [];
+    if (!Array.isArray(plans) || plans.length > 100)
+      throw new Error('Yedekteki faaliyet planları geçersiz.');
+    const planIds = new Set();
+    for (const plan of plans) {
+      const cleaned = cleanPlan(plan, data.settings);
+      if (
+        plan.id !== digest([confirmedProvince, cleaned.year]).slice(0, 32) ||
+        planIds.has(plan.id) ||
+        plan.province !== confirmedProvince ||
+        plan.sourceHash !== digest(cleaned) ||
+        JSON.stringify(cleaned.items) !== JSON.stringify(plan.items)
+      )
+        throw new Error(
+          'Yedekte geçersiz, yinelenen veya farklı ile ait plan var.',
+        );
+      planIds.add(plan.id);
+    }
     const versions = Object.fromEntries(
-      ['records', 'activities'].map((table) => [
+      ['records', 'activities', 'plans'].map((table) => [
         table,
         new Map(this.list(table).map((row) => [row.id, row.version])),
       ]),
     );
     const validation =
-      data.version === 2
+      data.version >= 2
         ? data.validation
         : { cases: [], events: [], files: [] };
     this.validation.validateArchive(validation, data.settings, records);
-    const history = data.version === 2 ? data.history : [];
+    const history = data.version >= 2 ? data.history : [];
     if (
       !Array.isArray(history) ||
       history.length > 500000 ||
@@ -357,10 +397,11 @@ export class Store {
     this.transaction(() => {
       this.validation.restore(validation);
       this.db.exec(
-        'DELETE FROM files; DELETE FROM records; DELETE FROM activities;',
+        'DELETE FROM files; DELETE FROM records; DELETE FROM activities; DELETE FROM plans;',
       );
       for (const r of data.records) restoreRow('records', r);
       for (const a of data.activities) restoreRow('activities', a);
+      for (const p of plans) restoreRow('plans', p);
       for (const f of data.files)
         this.db
           .prepare('INSERT INTO files VALUES (?,?,?,?,?)')

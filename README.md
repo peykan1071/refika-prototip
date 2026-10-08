@@ -9,6 +9,7 @@ REFİKA, 81 il koordinatörünün kayıt inceleme, faaliyet planlama, sonuç tak
 - **İl çalışma alanı:** Öğretmen ve okul kayıtları, faaliyetler ve kanıt dosyaları yerel veri tabanında saklanır. İnternet bağlantısı olmadan yerel çalışma sürdürülebilir.
 - **Ortak merkez:** İl ve eğitim yılı bazında faaliyet, katılım ve kayıt durum sayıları paylaşılır. Öğretmen adları, e-posta adresleri ve kanıt dosyaları bu özete dahil edilmez.
 - **Veri aktarımı:** ESEP/NSO listeleri ve faaliyet planları dosyadan alınır; sütun eşleştirme, eksik alan, yanlış il ve tekrar kontrollerinden sonra kaydedilir.
+- **Aylık faaliyet planı:** YEĞİTEK’teki yıl, plan metni ve ilerleme durumu düzeni kullanılır. Plan yapıştırılarak veya Word/HTML/metin dosyasından önizlemeyle alınır; aylık maddeler eski demodaki kartlarda gösterilir. Kaynak plan, faaliyet kaydı ve gerçekleşme ayrı tutulur.
 - **Yapay zekâ desteği:** Word faaliyet planlarını alanlara ayırmak için isteğe bağlı model bağlantısı bulunur. Öneriler kaydedilmeden önce koordinatör tarafından incelenir.
 - **Görsel kimlik:** Onaylanan REFİKA logosu, görselleri, lacivert–sarı renkleri ve mevcut ekran düzeni geliştirmede korunur.
 
