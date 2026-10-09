@@ -250,7 +250,7 @@ export const caseExportHeaders = [
   'İlçe',
   'E-posta',
   'Kurum e-postası',
-  'Mevcut durum',
+  'Açıklama',
   'Talep edilen işlem',
   'İnceleme tarihi',
   'Dayanak',

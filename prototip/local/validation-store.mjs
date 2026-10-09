@@ -10,6 +10,7 @@ import {
 } from './validation.mjs';
 import { text, provinces } from './domain.mjs';
 import { cleanEsepCheck } from './esep-check.mjs';
+import { validateBatchMetadata } from './validation-batches.mjs';
 
 const fingerprint = (r) =>
   r
@@ -29,7 +30,7 @@ const fingerprint = (r) =>
 const fileName = (name) => text(name, 200).replace(/[\\/\r\n]/g, '_');
 function validFile(name, bytes) {
   if (
-    !/\.(pdf|docx|xlsx|csv|txt|png|jpe?g)$/i.test(name) ||
+    !/\.(pdf|docx|xlsx|csv|tsv|txt|png|jpe?g)$/i.test(name) ||
     !bytes.length ||
     bytes.length > 10 * 1024 * 1024
   )
@@ -425,6 +426,7 @@ export class ValidationStore {
       updatedAt: at,
       result: old?.result || '',
       resolvedAt: old?.resolvedAt || '',
+      ...(old?.batch ? { batch: old.batch } : {}),
       ...(old?.esepCheck &&
       [
         'accountId',
@@ -698,6 +700,7 @@ export class ValidationStore {
     const resultNumbers = new Set();
     for (const row of data.cases) {
       cleanCase(row);
+      if (row.batch) validateBatchMetadata(row.batch);
       if (row.esepCheck) cleanEsepCheck(row.esepCheck, row);
       if (
         !Number.isSafeInteger(row.version) ||

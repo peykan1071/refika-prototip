@@ -6,6 +6,7 @@ const name = (row) => (row.name || row.school || row.title || '').trim();
 const addedAt = (row) => Date.parse(row.recordedAt || row.createdAt || '') || 0;
 
 export function sortTableRows(rows, order = 'added') {
+  if (order === 'source') return [...rows];
   return [...rows].sort((a, b) => {
     const byName = alphabet.compare(name(a), name(b));
     const byDate = addedAt(b) - addedAt(a);

@@ -17,6 +17,21 @@ import { syncSummary, syncStatus } from './sync.mjs';
 import { previewPlan, commitPlan } from './plans.mjs';
 import { reportText } from './reports.mjs';
 import {
+  previewValidationBatch,
+  commitValidationBatch,
+  validationBatches,
+  updateValidationBatch,
+  approvedAccounts,
+  validationBatchTemplate,
+  saveBatchDraft,
+} from './validation-batches.mjs';
+import {
+  batchExportHeaders,
+  batchExportRow,
+  mailGroup,
+  mailGroups,
+} from './validation-batch-content.mjs';
+import {
   validationPeriodSummary,
   validationPeriodWorkbook,
 } from './validation-periods.mjs';
@@ -165,6 +180,78 @@ export async function startLocal({
       }
       if (path === '/api/activities' && req.method === 'POST')
         return json(res, 200, store.saveActivity(await body(req)));
+      if (path === '/api/validation-batches/template' && req.method === 'GET')
+        return download(
+          res,
+          'REFIKA-validasyon-listesi.xlsx',
+          await validationBatchTemplate(),
+        );
+      if (path === '/api/validation-batches/preview' && req.method === 'POST')
+        return json(
+          res,
+          200,
+          await previewValidationBatch(store, await body(req)),
+        );
+      if (path === '/api/validation-batches/commit' && req.method === 'POST') {
+        const input = await body(req),
+          preview = await previewValidationBatch(store, input);
+        return json(res, 200, commitValidationBatch(store, preview, input));
+      }
+      if (
+        path === '/api/validation-batches/preview-export' &&
+        req.method === 'POST'
+      ) {
+        const input = await body(req),
+          preview = await previewValidationBatch(store, input);
+        if (input.token !== preview.token)
+          throw new Error('Önizleme değişti; yeniden önizleyin.');
+        const rows = preview.items
+          .filter((r) => r.action === 'new')
+          .map((r) => r.values);
+        return json(res, 200, {
+          data: (
+            await workbookBuffer(batchExportHeaders, rows.map(batchExportRow))
+          ).toString('base64'),
+        });
+      }
+      if (path === '/api/validation-batches' && req.method === 'GET')
+        return json(res, 200, validationBatches(store));
+      const batchRoute = path.match(
+        /^\/api\/validation-batches\/(batch-[a-f0-9]{64})\/(sent|result|export|draft)$/,
+      );
+      if (batchRoute) {
+        const [, id, action] = batchRoute;
+        if (req.method === 'POST' && action === 'draft')
+          return json(res, 200, saveBatchDraft(store, id, await body(req)));
+        if (req.method === 'POST' && action !== 'export')
+          return json(
+            res,
+            200,
+            updateValidationBatch(store, id, action, await body(req)),
+          );
+        if (req.method === 'GET' && action === 'export') {
+          const batch = validationBatches(store).find((b) => b.id === id);
+          if (!batch) throw new Error('Excel listesi bulunamadı.');
+          const group = url.searchParams.get('group');
+          if (group && !Object.hasOwn(mailGroups, group))
+            throw new Error('E-posta grubu geçersiz.');
+          const rows = group
+            ? batch.rows.filter(
+                (r) =>
+                  mailGroup(r) === group &&
+                  !r.holdReason &&
+                  !Object.values(r.checks).some((c) => c.status === 'fail'),
+              )
+            : batch.rows;
+          return download(
+            res,
+            `REFIKA-${group || 'validasyon'}-listesi.xlsx`,
+            await workbookBuffer(batchExportHeaders, rows.map(batchExportRow)),
+          );
+        }
+      }
+      if (path === '/api/validation-accounts' && req.method === 'GET')
+        return json(res, 200, approvedAccounts(store));
       if (path === '/api/validation' && req.method === 'POST')
         return json(res, 200, store.validation.save(await body(req)));
       if (path === '/api/validation-history' && req.method === 'POST')

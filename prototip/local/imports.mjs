@@ -74,19 +74,33 @@ export async function readInput(input) {
       throw new Error(
         'Çalışma sayfası bulunamadı veya 10.000 satır / 100 sütun sınırını aşıyor.',
       );
-    const rows = [];
+    const rows = [],
+      hyperlinks = [];
     sheet.eachRow((row) => {
-      const values = [];
+      const values = [],
+        links = [];
       for (let i = 1; i <= sheet.columnCount; i++) {
         const c = row.getCell(i);
+        links.push(
+          typeof c.value?.hyperlink === 'string' ? c.value.hyperlink : '',
+        );
         values.push(
           c.value instanceof Date ? c.value.toISOString().slice(0, 10) : c.text,
         );
       }
-      if (values.some((v) => v.trim())) rows.push(values);
+      if (values.some((v) => v.trim())) {
+        rows.push(values);
+        hyperlinks.push(links);
+      }
     });
     if (rows.length < 2) throw new Error('Başlık ve veri satırı gerekli.');
-    return { headers: rows[0], rows: rows.slice(1), sheets, sheet: sheet.name };
+    return {
+      headers: rows[0],
+      rows: rows.slice(1),
+      hyperlinks: hyperlinks.slice(1),
+      sheets,
+      sheet: sheet.name,
+    };
   }
   if (extension === 'docx') {
     checkOfficeZip(buffer);

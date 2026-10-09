@@ -1,0 +1,40 @@
+.batch-import details,
+.batch-detail .tabs {
+  margin: 16px 0;
+}
+.batch-import .actions,
+.batch-detail .actions {
+  flex-wrap: wrap;
+}
+.batch-import .check-line,
+.batch-detail .check-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+.batch-detail fieldset {
+  border: 0;
+  padding: 0;
+  margin-top: 20px;
+}
+.batch-manual {
+  border-top: 1px solid #dbe3ef;
+  padding-top: 16px;
+}
+.batch-mail {
+  border: 1px solid #dbe3ef;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.batch-mail summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.batch-mail .form-grid {
+  margin-top: 16px;
+}
+.batch-mail textarea {
+  width: 100%;
+}

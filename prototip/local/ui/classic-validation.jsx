@@ -23,6 +23,10 @@ import { ValidationWorkspace, sourceCase } from './validation-workspace.jsx';
 import { ValidationPeriods } from './validation-periods.jsx';
 import { EsepLinks, EsepStatus } from './esep-status.jsx';
 import {
+  ValidationBatchesWorkspace,
+  ApprovedAccounts,
+} from './validation-batches.jsx';
+import {
   useTablePage,
   TablePagination,
   TableOrder,
@@ -107,6 +111,11 @@ export function ClassicValidation({
   const [order, setOrder] = useState('added');
   const [editor, setEditor] = useState(null);
   const [workspace, setWorkspace] = useState('requests');
+  const [importSession, setImportSession] = useState(0);
+  function newExcel() {
+    setImportSession((value) => value + 1);
+    setWorkspace('import');
+  }
   const cases = state.validationCases || [];
   const items = validationWorkItems(state);
   const pending = items.filter((r) => r.status === 'review' || r.sourceChanged);
@@ -192,9 +201,59 @@ export function ClassicValidation({
           >
             Dönemlik kayıt listesi
           </button>
+          <button
+            aria-pressed={['batches', 'import'].includes(workspace)}
+            onClick={() => setWorkspace('batches')}
+          >
+            Excel listeleri ve onay maili
+          </button>
+          <button
+            aria-pressed={workspace === 'accounts'}
+            onClick={() => setWorkspace('accounts')}
+          >
+            Kişi ve okul kayıtları
+          </button>
         </nav>
       )}
-      {screen === 'records' && workspace === 'periods' ? (
+      {['drafts', 'approval'].includes(screen) && (
+        <nav className="plan-tabs" aria-label="Liste veya tekil talep">
+          <button
+            aria-pressed={workspace !== 'single'}
+            onClick={() => setWorkspace('batches')}
+          >
+            Excel listesi ve toplu e-posta
+          </button>
+          <button
+            aria-pressed={workspace === 'single'}
+            onClick={() => setWorkspace('single')}
+          >
+            Tekil talep taslakları
+          </button>
+        </nav>
+      )}
+      {(screen === 'records' && ['batches', 'import'].includes(workspace)) ||
+      (['drafts', 'approval'].includes(screen) && workspace !== 'single') ? (
+        <ValidationBatchesWorkspace
+          key={workspace + importSession}
+          state={state}
+          api={api}
+          run={run}
+          busy={busy}
+          fileData={fileData}
+          initialImport={workspace === 'import'}
+          openCase={(row) => open(row, 'results')}
+          manual={() => setEditor({})}
+        />
+      ) : screen === 'records' && workspace === 'accounts' ? (
+        <ApprovedAccounts
+          state={state}
+          api={api}
+          openCase={(id) => {
+            const row = cases.find((r) => r.id === id);
+            if (row) open(row, 'results');
+          }}
+        />
+      ) : screen === 'records' && workspace === 'periods' ? (
         <ValidationPeriods
           state={state}
           api={api}
@@ -214,14 +273,7 @@ export function ClassicValidation({
                 aria-label="Kayıt ve validasyon adımları"
               >
                 {[
-                  [
-                    Search,
-                    'Bekleyen kaydı aç',
-                    () =>
-                      document
-                        .getElementById('validation-requests')
-                        ?.scrollIntoView({ behavior: 'smooth' }),
-                  ],
+                  [Search, 'Excel’den kayıt oluştur', newExcel],
                   [
                     ExternalLink,
                     'ESEP’te kontrol et',
@@ -241,9 +293,9 @@ export function ClassicValidation({
                   [
                     ListChecks,
                     'İşlem türünü seç',
-                    () => (first ? open(first) : setEditor({})),
+                    () => (first ? open(first) : newExcel()),
                   ],
-                  [Mail, 'Liste ve e-postayı hazırla', prepare, !ready.length],
+                  [Mail, 'Liste ve e-postayı hazırla', prepare],
                 ].map(([Icon, label, action, disabled], index) => (
                   <li key={label}>
                     <button disabled={busy || disabled} onClick={action}>
@@ -286,8 +338,8 @@ export function ClassicValidation({
             <div className="classic-toolbar">
               {screen === 'records' && (
                 <>
-                  <button disabled={busy} onClick={() => setEditor({})}>
-                    Yeni talep oluştur
+                  <button disabled={busy} onClick={newExcel}>
+                    Excel’den yeni kayıt
                   </button>
                   <div className="tabs">
                     <button
@@ -468,11 +520,7 @@ export function ClassicValidation({
             <div className="actions">
               {screen === 'records' && (
                 <>
-                  <button
-                    className="primary"
-                    disabled={!ready.length}
-                    onClick={prepare}
-                  >
+                  <button className="primary" onClick={prepare}>
                     Listeyi ve e-postayı hazırla
                     <ArrowRight size={17} />
                   </button>
@@ -499,9 +547,9 @@ export function ClassicValidation({
             </div>
             {screen === 'drafts' && (
               <p className="muted">
-                Liste Excel olarak alınır; bu sürümde her talebin e-posta
-                taslağı ayrı hazırlanır ve saklanır. Taslak hazırlamak ileti
-                göndermez.
+                Burada tekil talep taslakları bulunur. Excel’den gelen toplu
+                taslakları “Excel listesi ve toplu e-posta” sekmesinden
+                açabilirsiniz.
               </p>
             )}
           </section>
