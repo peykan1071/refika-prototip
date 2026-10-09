@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Download, Copy, ExternalLink, Plus } from 'lucide-react';
 import { caseKinds, caseStatuses } from '../validation.mjs';
+import { useTablePage, TablePagination } from './table-pagination.jsx';
 import './validation-periods.css';
 
 const outcomes = {
@@ -231,6 +232,11 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
         ? r.currentStatus !== 'completed'
         : r.currentOutcome === requestStatus),
   );
+  const resultPage = useTablePage(data?.results || [], requestKey);
+  const requestPage = useTablePage(
+    shownRequests,
+    requestKey + ':' + requestStatus,
+  );
   const error = !validYear
     ? '2000–2099 arasında bir yıl girin.'
     : response?.key === requestKey
@@ -415,6 +421,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                 <table>
                   <thead>
                     <tr>
+                      <th scope="col">Sıra no</th>
                       <th>Sonuç no</th>
                       <th>Sonuç tarihi</th>
                       <th>Kişi / hesap</th>
@@ -424,9 +431,12 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.results.map((r) => (
+                    {resultPage.rows.map((r, index) => (
                       <tr key={r.id}>
-                        <td>
+                        <td className="table-row-number">
+                          {resultPage.from + index}
+                        </td>
+                        <td className="table-result-reference">
                           <strong>{r.reference}</strong>
                         </td>
                         <td>
@@ -467,9 +477,13 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                 </table>
               </div>
             )}
+            <TablePagination
+              pagination={resultPage}
+              label="Tarihli sonuç listesi"
+            />
           </section>
           <section className="panel">
-            <h3>Tarihli gönderim listesi · {data.requests.length}</h3>
+            <h3>Tarihli gönderim listesi · {shownRequests.length}</h3>
             <label>
               Gönderim durumu{' '}
               <select
@@ -494,6 +508,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                 <table>
                   <thead>
                     <tr>
+                      <th scope="col">Sıra no</th>
                       <th>Gönderim</th>
                       <th>Kişi / hesap</th>
                       <th>Okul / işlem</th>
@@ -502,8 +517,11 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {shownRequests.map((r) => (
+                    {requestPage.rows.map((r, index) => (
                       <tr key={r.id}>
+                        <td className="table-row-number">
+                          {requestPage.from + index}
+                        </td>
                         <td>
                           {date(r.date)}
                           {r.purpose === 'precheck' && (
@@ -545,6 +563,10 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                 </table>
               </div>
             )}
+            <TablePagination
+              pagination={requestPage}
+              label="Tarihli gönderim listesi"
+            />
           </section>
           <section className="panel">
             <h3>Rapora eklenecek validasyon özeti</h3>

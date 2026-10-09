@@ -21,6 +21,7 @@ import {
 } from '../validation.mjs';
 import { ValidationWorkspace, sourceCase } from './validation-workspace.jsx';
 import { ValidationPeriods } from './validation-periods.jsx';
+import { useTablePage, TablePagination } from './table-pagination.jsx';
 import './classic-workspace.css';
 
 function CaseDialog({ editor, state, api, fileData, run, busy, close }) {
@@ -121,6 +122,10 @@ export function ClassicValidation({
         .join(' ')
         .toLocaleLowerCase('tr')
         .includes(query.toLocaleLowerCase('tr')),
+  );
+  const page = useTablePage(
+    rows,
+    JSON.stringify([screen, filter, group, query, state.revision]),
   );
   const title = {
     records: 'Kayıt ve Validasyon',
@@ -366,6 +371,7 @@ export function ClassicValidation({
                 <table>
                   <thead>
                     <tr>
+                      <th scope="col">Sıra no</th>
                       <th>Kayıt</th>
                       <th>Durum</th>
                       <th>Okul / gerekli düzeltme</th>
@@ -373,8 +379,11 @@ export function ClassicValidation({
                     </tr>
                   </thead>
                   <tbody>
-                    {rows.slice(0, 500).map((r) => (
+                    {page.rows.map((r, index) => (
                       <tr key={r.id}>
+                        <td className="table-row-number">
+                          {page.from + index}
+                        </td>
                         <td>
                           <span className="record-name">
                             <Users size={16} />
@@ -441,9 +450,7 @@ export function ClassicValidation({
                 </table>
               </div>
             )}
-            {rows.length > 500 && (
-              <p>İlk 500 kayıt gösteriliyor. Aramayla daraltabilirsiniz.</p>
-            )}
+            <TablePagination pagination={page} label={title} />
             <div className="actions">
               {screen === 'records' && (
                 <>

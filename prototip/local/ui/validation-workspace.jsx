@@ -17,6 +17,7 @@ import {
   ruleVersion,
 } from '../validation.mjs';
 import './validation.css';
+import { useTablePage, TablePagination } from './table-pagination.jsx';
 
 const day = () =>
   new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' });
@@ -104,6 +105,7 @@ function SourceList({ state, create, open, busy, query }) {
       .toLocaleLowerCase('tr')
       .includes(query.toLocaleLowerCase('tr')),
   );
+  const page = useTablePage(rows, JSON.stringify([query, state.revision]));
   return (
     <section className="panel">
       <h2>Aktarılan ESEP kayıtları</h2>
@@ -122,6 +124,7 @@ function SourceList({ state, create, open, busy, query }) {
           <table>
             <thead>
               <tr>
+                <th scope="col">Sıra no</th>
                 <th>Kişi / hesap</th>
                 <th>Okul</th>
                 <th>Kaynak / önceki inceleme</th>
@@ -129,8 +132,9 @@ function SourceList({ state, create, open, busy, query }) {
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
+              {page.rows.map((r, index) => (
                 <tr key={r.id}>
+                  <td className="table-row-number">{page.from + index}</td>
                   <td>
                     <strong>{r.name}</strong>
                     <br />
@@ -170,6 +174,7 @@ function SourceList({ state, create, open, busy, query }) {
           </table>
         </div>
       )}
+      <TablePagination pagination={page} label="Aktarılan ESEP kayıtları" />
     </section>
   );
 }
@@ -213,6 +218,10 @@ export function ValidationWorkspace({
         .join(' ')
         .toLocaleLowerCase('tr')
         .includes(query.toLocaleLowerCase('tr')),
+  );
+  const page = useTablePage(
+    rows,
+    JSON.stringify([group, filter, query, state.revision]),
   );
   const dirty = form && JSON.stringify(form) !== JSON.stringify(saved);
   const messageDirty = ['recipient', 'subject', 'body'].some(
@@ -1331,6 +1340,7 @@ export function ValidationWorkspace({
               <table>
                 <thead>
                   <tr>
+                    <th scope="col">Sıra no</th>
                     <th>Dosya</th>
                     <th>Talep türü</th>
                     <th>İlgili kişi / okul</th>
@@ -1339,8 +1349,9 @@ export function ValidationWorkspace({
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((r) => (
+                  {page.rows.map((r, index) => (
                     <tr key={r.id}>
+                      <td className="table-row-number">{page.from + index}</td>
                       <td>
                         <strong>{r.title}</strong>
                         <br />
@@ -1369,6 +1380,7 @@ export function ValidationWorkspace({
               </table>
             </div>
           )}
+          <TablePagination pagination={page} label="Talep dosyaları" />
         </section>
       )}
     </>
