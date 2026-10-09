@@ -225,8 +225,8 @@ function ExcelImport({
         gerekmez. Bağlantıları korumak için .xlsx kullanın. Excel’deki “onaylı”
         yazısı tek başına onay sayılmaz.
       </p>
-      <details>
-        <summary>Hangi talep hangi adrese gider?</summary>
+      <section className="batch-routing" aria-labelledby="batch-routing-title">
+        <h3 id="batch-routing-title">Hangi talep hangi adrese gider?</h3>
         <p>
           <strong>validasyonetw@gmail.com:</strong> Kişi hesabı, yeni okul
           hesabı ve okul üyeliği onayı (organizasyon değişikliği).
@@ -239,7 +239,7 @@ function ExcelImport({
           Organizasyon değişikliği öğretmenin yeni okuldaki üyeliğidir. Okulun
           organizasyon türünü düzeltmek genel destek talebidir.
         </p>
-      </details>
+      </section>
       <CoordinatorLinks contacts={contacts} />
       <details>
         <summary>Dosya indirmeden otomatik E-Tablo eşitlemesi</summary>
@@ -528,15 +528,15 @@ function ExcelImport({
           </button>
         </>
       )}
-      <details className="batch-manual">
-        <summary>Excel dışındaki özel işlemler</summary>
+      <section className="batch-manual" aria-labelledby="batch-manual-title">
+        <h3 id="batch-manual-title">Excel dışındaki özel işlemler</h3>
         <p>
           Tek bir dosyayı ayrıntılı kaydetmek istersen mevcut formu açabilirsin.
         </p>
         <button disabled={busy} onClick={manual}>
           Ayrıntılı tekil kayıt aç
         </button>
-      </details>
+      </section>
     </section>
   );
 }
