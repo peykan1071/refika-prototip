@@ -209,7 +209,9 @@ export function DemoDashboard({ state, go }) {
   const completed = state.activities.filter((a) => a.status === 'completed');
   const workItems = validationWorkItems(state);
   const review = workItems.filter((r) => r.status === 'review');
-  const waiting = workItems.filter((r) => r.status === 'waiting');
+  const waiting = (state.validationCases || []).filter(
+    (r) => r.status === 'waiting',
+  );
   const ready = (state.validationCases || []).filter(
     (r) => r.status === 'ready' && !r.sourceChanged,
   );
@@ -236,7 +238,13 @@ export function DemoDashboard({ state, go }) {
     ],
     [review.length, 'Validasyon incelemesi', ClipboardCheck, 'records'],
     [approvals.length, 'Gönderim öncesi kontrol', ShieldCheck, 'approval'],
-    [waiting.length, 'Sonucu beklenen dosya', ListChecks, 'results'],
+    [
+      waiting.length,
+      'Sonucu beklenen dosya',
+      ListChecks,
+      'results',
+      { filter: 'waiting' },
+    ],
     [completed.length, 'Tamamlanan faaliyet', FileText, 'reports'],
   ];
   const actions = [
@@ -273,6 +281,20 @@ export function DemoDashboard({ state, go }) {
               'Kaynak bilgilerini kontrol edin ve inceleme notunuzu kaydedin.',
             target: 'records',
             button: 'Kayıtları aç',
+          },
+        ]
+      : []),
+    ...(waiting.length
+      ? [
+          {
+            id: 'waiting',
+            label: 'Sonuç takibi',
+            title: `${waiting.length} dosyanın sonucu bekleniyor`,
+            detail:
+              'Gönderilen talepleri açın, gelen yanıt ve onayları kaydedin.',
+            target: 'results',
+            options: { filter: 'waiting' },
+            button: 'Bekleyen dosyaları aç',
           },
         ]
       : []),
@@ -339,11 +361,11 @@ export function DemoDashboard({ state, go }) {
           <button onClick={() => go('reports')}>Faaliyet özetini aç</button>
         </div>
         <div className="metric-grid">
-          {metrics.map(([value, label, Icon, target]) => (
+          {metrics.map(([value, label, Icon, target, options]) => (
             <button
               className="metric-card"
               key={label}
-              onClick={() => go(target)}
+              onClick={() => go(target, options)}
             >
               <Icon aria-hidden="true" />
               <span>
@@ -357,8 +379,8 @@ export function DemoDashboard({ state, go }) {
           <div className="priority-heading">
             <h3>Öncelikli işler</h3>
             <span>
-              {review.length + planned.length + ready.length} bekleyen kayıt /
-              faaliyet
+              {review.length + planned.length + ready.length + waiting.length}{' '}
+              bekleyen kayıt / faaliyet
             </span>
           </div>
           {actions.length ? (
@@ -371,7 +393,9 @@ export function DemoDashboard({ state, go }) {
                     <strong>{a.title}</strong>
                     <p>{a.detail}</p>
                   </div>
-                  <button onClick={() => go(a.target)}>{a.button}</button>
+                  <button onClick={() => go(a.target, a.options)}>
+                    {a.button}
+                  </button>
                 </li>
               ))}
             </ul>

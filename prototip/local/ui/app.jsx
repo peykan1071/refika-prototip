@@ -1320,7 +1320,11 @@ function App() {
         )}
         {['records', 'drafts', 'approval', 'results'].includes(view) && (
           <ClassicValidation
-            key={view + (viewOptions.workspace || '')}
+            key={JSON.stringify([
+              view,
+              viewOptions.workspace,
+              viewOptions.filter,
+            ])}
             state={state}
             run={run}
             busy={busy}

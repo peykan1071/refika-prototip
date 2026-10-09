@@ -134,6 +134,7 @@ export function ClassicValidation({
   const rows = scope.filter(
     (r) =>
       (filter !== 'issues' || r.status === 'review' || r.sourceChanged) &&
+      (screen !== 'results' || filter === 'all' || r.status === filter) &&
       (group === 'all' || (r.kind ? caseGroup(r) : 'review') === group) &&
       [r.title, r.name, r.school, r.accountId, r.schoolId, r.id]
         .join(' ')
@@ -347,7 +348,11 @@ export function ClassicValidation({
                     ? 'Merkez listesi ve e-posta'
                     : screen === 'approval'
                       ? 'Gönderim öncesi kontrol'
-                      : 'Gönderilen talepler'}
+                      : filter === 'waiting'
+                        ? 'Sonucu beklenen dosyalar'
+                        : filter === 'completed'
+                          ? 'Sonuçlanan dosyalar'
+                          : 'Gönderilen talepler'}
               </h2>
               <span className="badge pilot-badge">
                 {screen === 'records'
@@ -355,6 +360,30 @@ export function ClassicValidation({
                   : `${rows.length} talep`}
               </span>
             </div>
+            {screen === 'results' && (
+              <nav className="tabs" aria-label="Sonuç durumu">
+                {[
+                  ['waiting', 'Sonucu beklenenler'],
+                  ['completed', 'Sonuçlananlar'],
+                  ['all', 'Tüm gönderilenler'],
+                ].map(([status, label]) => (
+                  <button
+                    key={status}
+                    className={filter === status ? 'selected' : ''}
+                    aria-pressed={filter === status}
+                    onClick={() => setFilter(status)}
+                  >
+                    {label} (
+                    {
+                      scope.filter(
+                        (r) => status === 'all' || r.status === status,
+                      ).length
+                    }
+                    )
+                  </button>
+                ))}
+              </nav>
+            )}
             <div className="classic-toolbar">
               {screen === 'records' && (
                 <>
@@ -415,7 +444,11 @@ export function ClassicValidation({
                   {screen === 'records'
                     ? 'Henüz kayıt yok'
                     : screen === 'results'
-                      ? 'Gönderilmiş talep yok'
+                      ? filter === 'waiting'
+                        ? 'Bu filtrelerde sonucu beklenen dosya yok'
+                        : filter === 'completed'
+                          ? 'Bu filtrelerde sonuçlanan dosya yok'
+                          : 'Bu filtrelerde gönderilmiş talep yok'
                       : screen === 'approval'
                         ? 'Kontrole sunulmuş taslak yok'
                         : 'Hazır talep bulunmuyor'}
@@ -423,28 +456,32 @@ export function ClassicValidation({
                 <p>
                   {screen === 'records'
                     ? 'ESEP listenizi aktarabilir veya yeni talep oluşturabilirsiniz.'
-                    : screen === 'approval'
-                      ? 'Taslak ekranında metni inceleyip “Onaya sun” ile buraya getirin.'
-                      : 'İncelemeyi tamamlayarak ilgili adıma geçebilirsiniz.'}
+                    : screen === 'results'
+                      ? 'Sonuç durumunu, çalışma listesini veya arama metnini değiştirebilirsiniz.'
+                      : screen === 'approval'
+                        ? 'Taslak ekranında metni inceleyip “Onaya sun” ile buraya getirin.'
+                        : 'İncelemeyi tamamlayarak ilgili adıma geçebilirsiniz.'}
                 </p>
-                <button
-                  onClick={() =>
-                    go(
-                      screen === 'records'
-                        ? 'import'
-                        : screen === 'approval'
-                          ? 'drafts'
-                          : 'records',
-                    )
-                  }
-                >
-                  {screen === 'records'
-                    ? 'Liste aktar'
-                    : screen === 'approval'
-                      ? 'Taslakları incele'
-                      : 'Kayıtları incele'}
-                  <ArrowRight size={17} />
-                </button>
+                {screen !== 'results' && (
+                  <button
+                    onClick={() =>
+                      go(
+                        screen === 'records'
+                          ? 'import'
+                          : screen === 'approval'
+                            ? 'drafts'
+                            : 'records',
+                      )
+                    }
+                  >
+                    {screen === 'records'
+                      ? 'Liste aktar'
+                      : screen === 'approval'
+                        ? 'Taslakları incele'
+                        : 'Kayıtları incele'}
+                    <ArrowRight size={17} />
+                  </button>
+                )}
               </div>
             ) : (
               <div className="table-wrap">
@@ -552,7 +589,7 @@ export function ClassicValidation({
               {screen !== 'records' && (
                 <a
                   className="button"
-                  href={`/api/validation-export?group=${group}&stage=${screen}&status=${screen === 'results' ? 'all' : 'ready'}`}
+                  href={`/api/validation-export?group=${group}&stage=${screen}&status=${screen === 'results' ? filter : 'ready'}`}
                 >
                   <Download size={17} />
                   Merkez listesini indir
