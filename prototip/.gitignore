@@ -28,6 +28,8 @@ yarn-error.log*
 
 # local environment
 .env*
+client_secret*.json
+google-connection.bin*
 
 # deployment and generated files
 .vercel
@@ -38,5 +40,11 @@ next-env.d.ts
 /work/
 
 /.sites-runtime/
+/.local-data/
+/.local-data-test/
+/.hub-data/
+/.local-package/
+/local-dist/
+/release/
 data/
 docs/

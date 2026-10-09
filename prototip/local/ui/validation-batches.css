@@ -1,0 +1,78 @@
+.batch-import details,
+.batch-detail .tabs {
+  margin: 16px 0;
+}
+.batch-import .actions,
+.batch-detail .actions {
+  flex-wrap: wrap;
+}
+.batch-import .check-line,
+.batch-detail .check-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+.batch-detail fieldset {
+  border: 0;
+  padding: 0;
+  margin-top: 20px;
+}
+.batch-manual {
+  border-top: 1px solid #dbe3ef;
+  padding-top: 16px;
+}
+.batch-routing,
+.batch-manual {
+  margin: 16px 0;
+}
+.batch-routing h3,
+.batch-manual h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+.batch-mail {
+  border: 1px solid #dbe3ef;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.batch-mail summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.batch-mail .form-grid {
+  margin-top: 16px;
+}
+.batch-mail textarea {
+  width: 100%;
+}
+.template-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.template-options .button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: normal;
+}
+.template-options span {
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+.coordinator-links {
+  margin: 20px 0;
+}
+.coordinator-links .button {
+  white-space: normal;
+}
+.batch-import .check-line input,
+.batch-detail .check-line input,
+.google-sync .check-line input {
+  width: auto;
+  flex: 0 0 auto;
+  margin: 0;
+}

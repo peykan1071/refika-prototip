@@ -1,0 +1,233 @@
+/* Layout restored from the original demo; local data and review rules stay active. */
+.validation-path {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0 0 20px;
+  padding: 1px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--border);
+}
+.validation-path li {
+  min-width: 0;
+  min-height: 108px;
+  background: white;
+}
+.validation-path button {
+  width: 100%;
+  height: 100%;
+  min-height: 108px;
+  padding: 15px;
+  border: 0;
+  border-radius: 0;
+  background: white;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-content: start;
+  align-items: center;
+  gap: 10px;
+  color: var(--navy);
+  text-align: left;
+  font: inherit;
+}
+.validation-path button:hover {
+  background: #f3f9fc;
+  box-shadow: inset 0 -3px 0 var(--amber);
+}
+.validation-path svg {
+  color: #8b5d00;
+}
+.validation-step-number {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--amber);
+  color: var(--navy);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+.validation-path b {
+  grid-column: 1/-1;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+.classic-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.classic-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.classic-list-filter {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+.classic-list-filter label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+}
+.classic-list-filter select {
+  width: auto;
+  max-width: 100%;
+}
+.classic-list-filter small {
+  color: var(--muted);
+}
+.record-name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--navy);
+  font-weight: 600;
+}
+.classic-case-dialog {
+  color: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 25px;
+  max-width: 780px;
+  width: calc(100% - 32px);
+  max-height: 90vh;
+  box-shadow: 0 20px 90px #08284f35;
+}
+.classic-case-dialog::backdrop {
+  background: #061b37a8;
+  backdrop-filter: blur(3px);
+}
+.classic-case-dialog .page-heading h1 {
+  font-size: 21px;
+}
+.classic-case-dialog .page-heading {
+  align-items: flex-start;
+}
+.classic-case-dialog .panel {
+  padding: 16px 0;
+  border: 0;
+  box-shadow: none;
+}
+.classic-case-dialog .case-sections {
+  gap: 5px;
+}
+.classic-case-dialog .case-sections button {
+  font-size: 12px;
+  padding: 8px;
+}
+.classic-case-dialog .case-status-line small {
+  overflow-wrap: anywhere;
+}
+.classic-case-dialog .form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.document-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+.document-chips button {
+  font-size: 12px;
+  min-height: 32px;
+  padding: 6px 10px;
+}
+.approval-card {
+  background: #fffefb;
+  border-color: #f5dfb4;
+}
+.approval-card h2 > svg {
+  color: #b77900;
+}
+.approval-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 17px;
+  border: 1px solid #f4dfb8;
+  border-radius: 8px;
+  padding: 22px 18px;
+}
+.approval-inner h3 {
+  margin-top: 0;
+}
+.mail-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff4dd;
+  height: 60px;
+  width: 60px;
+  flex-shrink: 0;
+}
+.card-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  margin: 12px 0 0;
+  color: #425777;
+}
+.card-note svg {
+  flex-shrink: 0;
+  width: 16px;
+}
+.classic-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.classic-bottom-grid .panel {
+  margin: 0;
+}
+@media (max-width: 1000px) {
+  .validation-path {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .classic-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 650px) {
+  .validation-path {
+    grid-template-columns: 1fr;
+  }
+  .validation-path li,
+  .validation-path button {
+    min-height: 60px;
+  }
+  .validation-path b {
+    grid-column: auto;
+  }
+  .classic-search {
+    width: 100%;
+    margin: 0;
+  }
+  .classic-list-filter label {
+    display: block;
+    width: 100%;
+  }
+  .classic-list-filter select {
+    width: 100%;
+    margin-top: 6px;
+  }
+  .classic-case-dialog {
+    padding: 16px;
+  }
+  .classic-case-dialog .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
