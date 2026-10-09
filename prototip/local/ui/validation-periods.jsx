@@ -216,6 +216,7 @@ function HistoryForm({ api, run, busy, close }) {
 export function ValidationPeriods({ state, api, run, busy, openCase }) {
   const [year, setYear] = useState(now().slice(0, 4));
   const [quarter, setQuarter] = useState('all');
+  const [requestStatus, setRequestStatus] = useState('all');
   const [response, setResponse] = useState(null),
     [copied, setCopied] = useState(false),
     [history, setHistory] = useState(false);
@@ -223,6 +224,13 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
   const requestKey = path + ':' + state.revision;
   const validYear = /^20\d{2}$/.test(year);
   const data = response?.key === requestKey ? response.data : null;
+  const shownRequests = (data?.requests || []).filter(
+    (r) =>
+      requestStatus === 'all' ||
+      (requestStatus === 'waiting'
+        ? r.currentStatus !== 'completed'
+        : r.currentOutcome === requestStatus),
+  );
   const error = !validYear
     ? '2000–2099 arasında bir yıl girin.'
     : response?.key === requestKey
@@ -339,6 +347,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                 [data.totals.validatedPeople, 'Valide edilen benzersiz hesap'],
                 [data.totals.personApprovals, 'Kişi hesabı onay işlemi'],
                 [data.totals.membershipApprovals, 'Organizasyon değişikliği'],
+                [data.pendingCount, 'Çözüm bekleyen dosya'],
                 [
                   data.totals.schoolApprovals + data.totals.mergers,
                   'Okul onayı / birleştirme',
@@ -406,6 +415,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                 <table>
                   <thead>
                     <tr>
+                      <th>Sonuç no</th>
                       <th>Sonuç tarihi</th>
                       <th>Kişi / hesap</th>
                       <th>Okul / işlem</th>
@@ -416,6 +426,9 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                   <tbody>
                     {data.results.map((r) => (
                       <tr key={r.id}>
+                        <td>
+                          <strong>{r.reference}</strong>
+                        </td>
                         <td>
                           {date(r.date)}
                           <small>
@@ -457,12 +470,25 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
           </section>
           <section className="panel">
             <h3>Tarihli gönderim listesi · {data.requests.length}</h3>
+            <label>
+              Gönderim durumu{' '}
+              <select
+                value={requestStatus}
+                onChange={(e) => setRequestStatus(e.target.value)}
+              >
+                <option value="all">Tüm kayıtlar</option>
+                <option value="waiting">Çözüm bekleyenler</option>
+                <option value="approved">Olumlu sonuçlananlar</option>
+                <option value="rejected">Reddedilenler</option>
+                <option value="other">Diğer sonuçlar</option>
+              </select>
+            </label>
             <p className="muted">
               Gönderilmiş talep onay sayılmaz. Durum sütunu dosyanın bugünkü
               durumudur.
             </p>
-            {!data.requests.length ? (
-              <p>Seçilen dönemde kayıtlı gönderim yok.</p>
+            {!shownRequests.length ? (
+              <p>Seçilen dönem ve durum için kayıt yok.</p>
             ) : (
               <div className="table-wrap">
                 <table>
@@ -476,9 +502,14 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.requests.map((r) => (
+                    {shownRequests.map((r) => (
                       <tr key={r.id}>
-                        <td>{date(r.date)}</td>
+                        <td>
+                          {date(r.date)}
+                          {r.purpose === 'precheck' && (
+                            <small>Ön inceleme yazışması</small>
+                          )}
+                        </td>
                         <td>
                           {r.name || r.title}
                           <small>{r.accountId}</small>
@@ -487,7 +518,23 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                           {r.school}
                           <small>{caseKinds[r.kind]}</small>
                         </td>
-                        <td>{caseStatuses[r.currentStatus]}</td>
+                        <td>
+                          {r.currentStatus === 'completed'
+                            ? outcomes[r.currentOutcome] ||
+                              caseStatuses.completed
+                            : r.lastReply
+                              ? 'Yanıt alındı · çözüm bekliyor'
+                              : caseStatuses[r.currentStatus]}
+                          {r.lastReply && (
+                            <details>
+                              <summary>
+                                Son yanıt · {date(r.lastReply.date)}
+                              </summary>
+                              <p>{r.lastReply.note}</p>
+                              {source(r.lastReply.messageUrl)}
+                            </details>
+                          )}
+                        </td>
                         <td>
                           {source(r.messageUrl)}
                           {open(r)}

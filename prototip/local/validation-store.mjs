@@ -57,6 +57,31 @@ export class ValidationStore {
   constructor(store) {
     this.store = store;
     this.db = store.db;
+    this.store.transaction(() => this.numberResults());
+  }
+  numberResults() {
+    const rows = this.db
+      .prepare('SELECT id,body FROM validation_events ORDER BY rowid')
+      .all()
+      .map((r) => ({ ...r, event: JSON.parse(r.body) }))
+      .filter((r) => r.event.type === 'result');
+    let sequence = rows.reduce(
+      (n, r) => Math.max(n, r.event.resultNumber || 0),
+      this.store.meta('validationResultSequence') || 0,
+    );
+    rows.sort((a, b) =>
+      (a.event.happenedAt || a.event.at).localeCompare(
+        b.event.happenedAt || b.event.at,
+      ),
+    );
+    for (const row of rows)
+      if (!row.event.resultNumber) {
+        row.event.resultNumber = ++sequence;
+        this.db
+          .prepare('UPDATE validation_events SET body=? WHERE id=?')
+          .run(JSON.stringify(row.event), row.id);
+      }
+    this.store.setMeta('validationResultSequence', sequence);
   }
   get(id) {
     const row = this.db
@@ -157,6 +182,11 @@ export class ValidationStore {
       operator: this.store.meta('settings').operator,
       ...data,
     };
+    if (type === 'result') {
+      event.resultNumber =
+        (this.store.meta('validationResultSequence') || 0) + 1;
+      this.store.setMeta('validationResultSequence', event.resultNumber);
+    }
     this.db
       .prepare('INSERT INTO validation_events VALUES (?,?,?)')
       .run(event.id, id, JSON.stringify(event));
@@ -200,6 +230,32 @@ export class ValidationStore {
     const note = text(input.note, 4000);
     if (!note)
       throw new Error('Kaynağın kapsamını ve eşleştirme dayanağını yazın.');
+    const purpose = input.purpose || 'request';
+    if (!['request', 'precheck'].includes(purpose))
+      throw new Error('Geçmiş talep aşaması geçersiz.');
+    if (purpose === 'precheck' && values.kind !== 'support')
+      throw new Error(
+        'Ön inceleme yazışması destek dosyası olarak kaydedilmeli.',
+      );
+    if (
+      input.correspondence !== undefined &&
+      (!Array.isArray(input.correspondence) ||
+        input.correspondence.length > 100)
+    )
+      throw new Error('Geçmiş yazışma listesi geçersiz.');
+    const correspondence = (input.correspondence || []).map((item) => {
+      if (!['sent', 'reply'].includes(item.type))
+        throw new Error('Geçmiş yazışma türü geçersiz.');
+      const event = {
+        type: item.type,
+        happenedAt: timestamp(item.happenedAt),
+        messageUrl: safeLink(item.messageUrl),
+        note: text(item.note, 4000),
+      };
+      if (!event.messageUrl || !event.note || event.happenedAt < happenedAt)
+        throw new Error('Yazışmanın tarihi, kaynağı ve açıklaması gerekli.');
+      return event;
+    });
     let result;
     if (input.result) {
       const r = input.result;
@@ -259,7 +315,7 @@ export class ValidationStore {
       };
       const saved = this.put(row, 0);
       this.append(id, 'sent', {
-        purpose: 'request',
+        purpose,
         channel: 'email',
         happenedAt,
         messageUrl,
@@ -270,6 +326,13 @@ export class ValidationStore {
         snapshot: row,
         historical: true,
       });
+      for (const event of correspondence)
+        this.append(id, event.type, {
+          ...event,
+          purpose: 'followup',
+          historical: true,
+          snapshot: row,
+        });
       if (result)
         this.append(id, 'result', {
           ...result,
@@ -479,7 +542,10 @@ export class ValidationStore {
       )
         throw new Error('Sonuç tarihi dayanağı geçersiz.');
       const sent = this.events(id).find(
-        (e) => e.type === 'sent' && e.purpose === 'request',
+        (e) =>
+          e.type === 'sent' &&
+          (e.purpose === 'request' ||
+            (e.purpose === 'precheck' && row.kind === 'support')),
       );
       if (!sent || Date.parse(happenedAt) < Date.parse(sent.happenedAt))
         throw new Error('Sonuç zamanı talep gönderiminden önce olamaz.');
@@ -588,6 +654,7 @@ export class ValidationStore {
     const ids = new Set(),
       eventIds = new Set(),
       fileIds = new Set();
+    const resultNumbers = new Set();
     for (const row of data.cases) {
       cleanCase(row);
       if (
@@ -623,6 +690,16 @@ export class ValidationStore {
       )
         throw new Error('Yazışma geçmişi geçersiz.');
       const body = JSON.parse(e.body);
+      if (body.resultNumber !== undefined) {
+        if (
+          body.type !== 'result' ||
+          !Number.isSafeInteger(body.resultNumber) ||
+          body.resultNumber < 1 ||
+          resultNumbers.has(body.resultNumber)
+        )
+          throw new Error('Sonuç sıra numarası geçersiz veya yinelenmiş.');
+        resultNumbers.add(body.resultNumber);
+      }
       if (!body || body.id !== e.id || typeof body.operator !== 'string')
         throw new Error('Geçmiş kimliği geçersiz.');
       timestamp(body.at);
@@ -684,6 +761,7 @@ export class ValidationStore {
       this.db
         .prepare('INSERT INTO validation_events VALUES (?,?,?)')
         .run(e.id, e.case_id, e.body);
+    this.numberResults();
     for (const f of data.files)
       this.db
         .prepare('INSERT INTO validation_files VALUES (?,?,?,?,?)')

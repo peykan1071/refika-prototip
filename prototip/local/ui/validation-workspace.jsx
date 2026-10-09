@@ -1167,13 +1167,18 @@ export function ValidationWorkspace({
               {saved.events.map((event) => (
                 <li key={event.id}>
                   <div className="section-head">
-                    <strong>{labels[event.type]}</strong>
+                    <strong>
+                      {event.resultNumber
+                        ? `SON-${String(event.resultNumber).padStart(6, '0')} · `
+                        : ''}
+                      {labels[event.type]}
+                    </strong>
                     <time>{dateLabel(event.happenedAt || event.at)}</time>
                   </div>
                   <p>
                     {event.operator}
                     {event.purpose &&
-                      ` · ${event.purpose === 'request' ? 'Merkeze talep' : 'Kişiye bilgilendirme'}`}
+                      ` · ${event.purpose === 'request' ? 'Merkeze talep' : event.purpose === 'followup' ? 'İlgili yazışma / takip' : event.purpose === 'precheck' ? 'Ön inceleme / kişiye yazışma' : 'Kişiye bilgilendirme'}`}
                     {event.outcome && ` · ${outcomes[event.outcome]}`}
                   </p>
                   {event.subject && <strong>{event.subject}</strong>}

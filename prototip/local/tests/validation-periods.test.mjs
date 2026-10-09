@@ -118,6 +118,96 @@ void test('Geçmiş kayıt tekrar aktarılmaz; onay ve kaynak zorunlu, kontrolle
     /yeniden incelemeye/,
   );
 });
+void test('Sonuç numarası filtre, tekrar aktarım ve yedek dönüşünde korunur; eski kayıtlar numaralanır', (t) => {
+  const s = setup(t);
+  s.validation.importHistory(history());
+  const first = validationPeriodSummary(s, 2026).results[0];
+  assert.equal(first.reference, 'SON-000001');
+  s.validation.importHistory(history());
+  assert.equal(
+    validationPeriodSummary(s, 2026, 1).results[0].reference,
+    first.reference,
+  );
+  const archive = s.exportArchive();
+  const restored = new Store(':memory:');
+  t.after(() => restored.close());
+  restored.restoreArchive(archive, '25');
+  assert.equal(
+    validationPeriodSummary(restored, 2026).results[0].reference,
+    first.reference,
+  );
+  const raw = restored.db
+    .prepare('SELECT id,body FROM validation_events WHERE id=?')
+    .get(first.id);
+  const event = JSON.parse(raw.body);
+  delete event.resultNumber;
+  restored.db
+    .prepare('UPDATE validation_events SET body=? WHERE id=?')
+    .run(JSON.stringify(event), raw.id);
+  restored.validation.numberResults();
+  assert.equal(
+    validationPeriodSummary(restored, 2026).results[0].reference,
+    'SON-000002',
+  );
+  restored.validation.importHistory(history({ accountId: 'TEST-43' }));
+  assert.equal(
+    new Set(
+      validationPeriodSummary(restored, 2026).results.map((r) => r.reference),
+    ).size,
+    2,
+  );
+});
+void test('Takip yazışmaları yeni talep sayılmaz; son yanıt ve bekleyen durum korunur', (t) => {
+  const s = setup(t);
+  s.validation.importHistory(
+    history({
+      correspondence: [
+        {
+          type: 'sent',
+          happenedAt: '2026-01-05T10:00:00+03:00',
+          messageUrl: 'https://example.org/followup',
+          note: 'Aynı talep tekrar gönderildi.',
+        },
+        {
+          type: 'reply',
+          happenedAt: '2026-01-05T11:00:00+03:00',
+          messageUrl: 'https://example.org/reply',
+          note: 'Ek bilgi istendi.',
+        },
+      ],
+    }),
+  );
+  s.validation.importHistory(
+    history({
+      accountId: 'TEST-PENDING',
+      result: undefined,
+      correspondence: [
+        {
+          type: 'reply',
+          happenedAt: '2026-01-05T11:00:00+03:00',
+          messageUrl: 'https://example.org/pending',
+          note: 'Düzeltme bekleniyor.',
+        },
+      ],
+    }),
+  );
+  const data = validationPeriodSummary(s, 2026);
+  assert.equal(data.requests.length, 2);
+  assert.equal(data.pendingCount, 1);
+  assert.equal(data.totals.validatedPeople, 1);
+  assert.match(
+    data.requests.find((r) => r.accountId === 'TEST-PENDING').lastReply.note,
+    /Düzeltme/,
+  );
+  const archive = s.exportArchive();
+  const restored = new Store(':memory:');
+  t.after(() => restored.close());
+  restored.restoreArchive(archive, '25');
+  assert.deepEqual(
+    validationPeriodSummary(restored, 2026).requests,
+    data.requests,
+  );
+});
 void test('Eski sonuç kimliği yeniden açılan dosya değişse de korunur; yeni sonuç tarihi eklenir', (t) => {
   const s = setup(t);
   let row = s.validation.importHistory(history());
@@ -167,6 +257,55 @@ void test('Bekleyen geçmiş talebe normal sonuç eklenir ve mükerrer sonuç en
       }),
     /teyidi/,
   );
+});
+void test('Ön inceleme desteği sonuçlandırılır; geçersiz yazışma ve yinelenen sonuç numarası reddedilir', (t) => {
+  const s = setup(t);
+  assert.throws(
+    () => s.validation.importHistory(history({ purpose: 'precheck' })),
+    /destek/,
+  );
+  assert.throws(
+    () =>
+      s.validation.importHistory(
+        history({
+          correspondence: [
+            {
+              type: 'reply',
+              happenedAt: '2026-01-01T00:00:00Z',
+              messageUrl: 'https://example.org/early',
+              note: 'Önceki yanıt',
+            },
+          ],
+        }),
+      ),
+    /tarihi/,
+  );
+  assert.equal(s.validation.list().length, 0);
+  const row = s.validation.importHistory(
+    history({ kind: 'support', purpose: 'precheck', result: undefined }),
+  );
+  s.validation.progress(row.id, {
+    version: row.version,
+    type: 'result',
+    happenedAt: '2026-01-06T09:00:00Z',
+    outcome: 'approved',
+    note: 'Görev yeri teyidi tamamlandı.',
+    confirmed: true,
+  });
+  s.validation.importHistory(history({ accountId: 'TEST-43' }));
+  const data = validationPeriodSummary(s, 2026);
+  assert.equal(data.pendingCount, 0);
+  assert.equal(data.totals.support, 1);
+  assert.equal(data.totals.validatedPeople, 1);
+  const archive = s.exportArchive();
+  const results = archive.validation.events.filter(
+    (e) => JSON.parse(e.body).type === 'result',
+  );
+  const duplicate = JSON.parse(results[1].body);
+  duplicate.resultNumber = JSON.parse(results[0].body).resultNumber;
+  results[1].body = JSON.stringify(duplicate);
+  assert.throws(() => s.restoreArchive(archive, '25'), /sıra numarası/);
+  assert.deepEqual(validationPeriodSummary(s, 2026).results, data.results);
 });
 void test('Tarihli kayıtlar yedekten döner; Excel ayrı sonuç ve gönderim sayfalarını içerir', async (t) => {
   const s = setup(t);

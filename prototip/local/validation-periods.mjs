@@ -6,6 +6,8 @@ export const outcomeLabels = {
   rejected: 'Reddedildi',
   other: 'Diğer sonuç',
 };
+export const resultReference = (number) =>
+  number ? `SON-${String(number).padStart(6, '0')}` : '';
 export const periodLabels = [
   'Ocak–Mart',
   'Nisan–Haziran',
@@ -98,6 +100,7 @@ export function validationPeriodText(data) {
     `${t.validatedPeople} kişi hesabı olumlu sonuçlandı (benzersiz ESEP hesabı); ${t.personApprovals} kişi hesabı onay işlemi kaydedildi. ` +
     `Organizasyon değişikliği: ${t.membershipApprovals}; yeni okul hesabı: ${t.schoolApprovals}; okul birleştirme: ${t.mergers}; genel destek: ${t.support} olumlu sonuç. ` +
     `Reddedilen: ${t.rejected}; diğer sonuç: ${t.other}. Toplam ${t.results} sonuç kaydı. ` +
+    `${data.pendingCount} dosyanın güncel durumu çözüm bekliyor. ` +
     `Sayımlar sonuç tarihine göredir; gerçekleşme tarihi bilinmiyorsa onay bildirimi tarihi kullanılır. İnceleme ve gönderim onay sayılmaz.` +
     (t.unidentifiedPeople
       ? ` Kimliği eksik ${t.unidentifiedPeople} kişi hesabı sonucu benzersiz hesap sayısına dahil edilmedi.`
@@ -119,6 +122,7 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
   const records = store.list('records');
   const caseMap = new Map(cases.map((r) => [r.id, r]));
   const latestSnapshot = new Map();
+  const latestReply = new Map();
   const results = [];
   const requests = [];
   // Insertion order retains the identity at the operation, even if a reopened case changes later.
@@ -126,8 +130,17 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
     .prepare('SELECT case_id,body FROM validation_events ORDER BY rowid')
     .all()) {
     const event = JSON.parse(raw.body);
+    if (
+      event.type === 'reply' &&
+      (!latestReply.has(raw.case_id) ||
+        event.happenedAt > latestReply.get(raw.case_id).happenedAt)
+    )
+      latestReply.set(raw.case_id, event);
     if (event.snapshot) latestSnapshot.set(raw.case_id, event.snapshot);
-    if (event.type === 'sent' && event.purpose === 'request') {
+    if (
+      event.type === 'sent' &&
+      ['request', 'precheck'].includes(event.purpose)
+    ) {
       const current = caseMap.get(raw.case_id);
       const snapshot = event.snapshot || latestSnapshot.get(raw.case_id) || {};
       if (current && validationDate(event.happenedAt))
@@ -145,6 +158,8 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
           note: event.proof || '',
           currentStatus: current.status,
           historical: Boolean(event.historical),
+          purpose: event.purpose,
+          currentOutcome: current.outcome || '',
         });
     }
     if (event.type !== 'result' || !Object.hasOwn(outcomeLabels, event.outcome))
@@ -156,6 +171,8 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
     const row = snapshot || {};
     results.push({
       id: event.id,
+      resultNumber: event.resultNumber,
+      reference: resultReference(event.resultNumber),
       caseId: raw.case_id,
       date,
       happenedAt: event.happenedAt,
@@ -208,6 +225,17 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
     })),
   ];
   const annual = validationPeriod(year);
+  for (const request of requests) {
+    const reply = latestReply.get(request.caseId);
+    request.lastReply = reply
+      ? {
+          date: validationDate(reply.happenedAt),
+          note: reply.note || '',
+          messageUrl: reply.messageUrl || reply.evidenceUrl || '',
+        }
+      : null;
+  }
+  const selectedRequests = requests.filter((r) => within(r.date, period));
   const totals = totalFor(results, openings, period);
   const asOf = validationDate(new Date().toISOString());
   const data = {
@@ -215,6 +243,11 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
     totals,
     asOf,
     generatedAt: new Date().toISOString(),
+    pendingCount: new Set(
+      selectedRequests
+        .filter((r) => r.currentStatus !== 'completed')
+        .map((r) => r.caseId),
+    ).size,
     coverage:
       period.from > asOf ? 'future' : period.to >= asOf ? 'ongoing' : 'ended',
     quarters: [1, 2, 3, 4].map((q) =>
@@ -325,7 +358,7 @@ export async function validationPeriodWorkbook(data) {
       'Tarih dayanağı',
     ],
     data.results.map((r) => [
-      r.id,
+      r.reference,
       r.caseId,
       r.date,
       r.happenedAt,
@@ -358,6 +391,9 @@ export async function validationPeriodWorkbook(data) {
       'Güncel durum',
       'Kaynak',
       'Dayanak',
+      'Güncel sonuç',
+      'Son yanıt tarihi',
+      'Son yanıt',
     ],
     data.requests.map((r) => [
       r.caseId,
@@ -369,6 +405,9 @@ export async function validationPeriodWorkbook(data) {
       caseStatuses[r.currentStatus],
       r.messageUrl,
       r.note,
+      outcomeLabels[r.currentOutcome] || '',
+      r.lastReply?.date || '',
+      r.lastReply?.note || '',
     ]),
   );
   sheet(

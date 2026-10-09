@@ -251,6 +251,7 @@ export async function startLocal({
                 'Gönderim dayanağı',
                 'Bağlantı',
                 'Sonuç türü',
+                'Sonuç sıra no',
               ],
               detail.events.map((e) => [
                 detail.title,
@@ -266,6 +267,9 @@ export async function startLocal({
                 e.proof || '',
                 e.messageUrl || e.evidenceUrl || '',
                 e.outcome || '',
+                e.resultNumber
+                  ? `SON-${String(e.resultNumber).padStart(6, '0')}`
+                  : '',
               ]),
             ),
           );
