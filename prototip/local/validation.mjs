@@ -142,6 +142,8 @@ export function cleanCase(input) {
     'holdReason',
     'retainedProfile',
     'relatedProfiles',
+    'mergeSchool',
+    'mergeSchoolId',
     'sourceRecordId',
   ])
     row[key] = value(
@@ -156,7 +158,12 @@ export function cleanCase(input) {
         ? 6000
         : 300,
     );
-  for (const key of ['profileUrl', 'schoolUrl', 'evidenceUrl'])
+  for (const key of [
+    'profileUrl',
+    'schoolUrl',
+    'mergeSchoolUrl',
+    'evidenceUrl',
+  ])
     row[key] = safeLink(input[key]);
   for (const key of ['email', 'schoolEmail'])
     if (row[key] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row[key]))
@@ -223,7 +230,7 @@ export function caseDraft(row, purpose, provinceName, operator) {
   return {
     recipient: information
       ? row.email
-      : row.kind === 'support'
+      : ['support', 'merger'].includes(row.kind)
         ? 'tretwinning@gmail.com'
         : 'validasyonetw@gmail.com',
     subject: information

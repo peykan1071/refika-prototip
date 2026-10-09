@@ -4,9 +4,11 @@ import {
   batchFields,
   batchMailDrafts,
   defaultAction,
+  validationTemplates,
 } from './validation-batch-content.mjs';
+import { validationTemplateWorkbook } from './validation-excel.mjs';
 export { batchFields } from './validation-batch-content.mjs';
-import { readInput, decodeFile, workbookBuffer } from './imports.mjs';
+import { readInput, decodeFile } from './imports.mjs';
 import {
   caseKinds,
   cleanCase,
@@ -32,9 +34,23 @@ const aliases = {
     'öğretmen kimliği',
     'etwinner id',
     'user id',
+    'öğretmen id',
   ],
-  school: ['okul', 'kurum adı', 'school name'],
-  schoolId: ['okul kimliği', 'kurum id', 'school id'],
+  school: [
+    'okul',
+    'kurum adı',
+    'school name',
+    'korunacak okul',
+    'talep edilen okul',
+    'doğrulanacak okulun adı',
+  ],
+  schoolId: [
+    'okul kimliği',
+    'kurum id',
+    'school id',
+    'korunacak okul id',
+    'talep edilen okul id',
+  ],
   profileUrl: [
     'profil bağlantısı',
     'kişi bağlantısı',
@@ -43,11 +59,25 @@ const aliases = {
   ],
   schoolUrl: ['okul bağlantısı', 'okul linki', 'school url'],
   email: ['email', 'eposta'],
-  reason: ['not', 'talep notu', 'mevcut durum', 'sorun açıklaması'],
+  reason: [
+    'not',
+    'talep notu',
+    'mevcut durum',
+    'sorun açıklaması',
+    'açıklamalar',
+    'kontrol sonucu / gerekçe',
+  ],
   requestedAction: ['istenen işlem'],
 };
 const identity = (row) =>
-  JSON.stringify([row.kind, row.accountId || '', row.schoolId || '']);
+  JSON.stringify([
+    row.kind,
+    row.accountId || '',
+    row.schoolId || '',
+    ...(row.kind === 'merger'
+      ? [row.mergeSchoolId || row.relatedProfiles || '']
+      : []),
+  ]);
 function kindValue(value, fallback) {
   if (!value) return fallback;
   const n = normalize(value);
@@ -59,10 +89,12 @@ function kindValue(value, fallback) {
     {
       kisi: 'person',
       kisionayi: 'person',
+      yenikisihesabi: 'person',
       okul: 'school',
       okulonayi: 'school',
       uyelik: 'membership',
       organizasyon: 'membership',
+      organizasyondegisikligi: 'membership',
       birlestirme: 'merger',
       destek: 'support',
     }[n] || ''
@@ -105,7 +137,10 @@ export async function previewValidationBatch(store, input) {
   if (!settings) throw new Error('Önce il çalışma alanını oluşturun.');
   if (!/\.(xlsx|csv|tsv)$/i.test(input.name || ''))
     throw new Error('Validasyon için Excel (.xlsx) veya CSV/TSV seçin.');
-  const parsed = await readInput(input);
+  const parsed = await readInput({
+    ...input,
+    preferredSheet: 'Gönderilecek Talepler',
+  });
   if (
     !parsed.headers?.length ||
     !parsed.rows?.length ||
@@ -113,7 +148,10 @@ export async function previewValidationBatch(store, input) {
     parsed.headers.length > 100
   )
     throw new Error('Başlık ve en fazla 10.000 veri satırı gerekli.');
-  const defaultKind = input.defaultKind || 'person';
+  const templateKind = Object.entries(validationTemplates).find(
+    ([, value]) => value.sheet === parsed.sheet,
+  )?.[0];
+  const defaultKind = input.defaultKind || templateKind || 'person';
   if (!Object.hasOwn(caseKinds, defaultKind))
     throw new Error('Listenin işlem türünü seçin.');
   const mapping =
@@ -121,11 +159,16 @@ export async function previewValidationBatch(store, input) {
     Object.fromEntries(
       batchFields.map(([key, label]) => [
         key,
-        parsed.headers.findIndex((h) =>
-          [key, label, ...(aliases[key] || [])].some(
-            (v) => normalize(v) === normalize(h),
-          ),
-        ),
+        [
+          key,
+          label,
+          ...(aliases[key] || []).filter((v) => v !== 'mevcut durum'),
+          ...(key === 'reason' ? ['mevcut durum'] : []),
+        ]
+          .map((v) =>
+            parsed.headers.findIndex((h) => normalize(v) === normalize(h)),
+          )
+          .find((index) => index >= 0) ?? -1,
       ]),
     );
   for (const [key] of batchFields)
@@ -156,9 +199,19 @@ export async function previewValidationBatch(store, input) {
         ]),
       );
       const kind = kindValue(mapped.kind, defaultKind);
-      for (const key of ['profileUrl', 'schoolUrl']) {
-        const link = parsed.hyperlinks?.[index]?.[mapping[key]];
-        if (link) mapped[key] = link;
+      for (const [key, label] of [
+        ['profileUrl', 'name'],
+        ['schoolUrl', 'school'],
+        ['mergeSchoolUrl', 'mergeSchool'],
+      ]) {
+        const explicit =
+          parsed.hyperlinks?.[index]?.[mapping[key]] || mapped[key];
+        const embedded = parsed.hyperlinks?.[index]?.[mapping[label]];
+        if (explicit && embedded && explicit !== embedded)
+          throw new Error(
+            'İsimdeki bağlantı ile ayrı bağlantı sütunu uyuşmuyor; doğru profili kontrol edin.',
+          );
+        mapped[key] = explicit || embedded || '';
       }
       if (!kind) throw new Error('İşlem türü tanınmadı.');
       if (
@@ -180,6 +233,19 @@ export async function previewValidationBatch(store, input) {
         );
       if (kind === 'support' && !mapped.accountId && !mapped.schoolId)
         throw new Error('Destek kaydı için kişi veya okul ID gerekli.');
+      if (
+        kind === 'merger' &&
+        (mapped.mergeSchool || mapped.mergeSchoolId || mapped.mergeSchoolUrl)
+      ) {
+        if (!mapped.mergeSchool || !mapped.mergeSchoolId)
+          throw new Error('Birleştirilecek okul adı ve ID birlikte gerekli.');
+        if (mapped.mergeSchoolId === mapped.schoolId)
+          throw new Error(
+            'Korunacak okul ile birleştirilecek okul aynı ID olamaz.',
+          );
+        mapped.retainedProfile ||= mapped.schoolId;
+        mapped.relatedProfiles ||= `${mapped.mergeSchool} · ID: ${mapped.mergeSchoolId}${mapped.mergeSchoolUrl ? ' · ' + mapped.mergeSchoolUrl : ''}`;
+      }
       const values = cleanCase(
         enrichLinks(
           {
@@ -251,6 +317,7 @@ export async function previewValidationBatch(store, input) {
     sourceName: text(input.name, 200),
     sourceHash,
     mapping,
+    defaultKind,
     headers: parsed.headers,
     sheets: parsed.sheets,
     sheet: parsed.sheet,
@@ -268,12 +335,22 @@ function automaticDrafts(store, rows, at = new Date().toISOString()) {
   return batchMailDrafts(rows, {
     provinceName: provinces[Number(settings.province) - 1],
     operator: settings.operator,
+    sender: settings.contacts?.email || '',
     date: new Date(at).toLocaleDateString('tr-TR', {
       timeZone: 'Europe/Istanbul',
     }),
   });
 }
-const draftRowsKey = (rows) => digest(rows.map((r) => cleanCase(r)));
+const draftRowsKey = (rows) =>
+  digest(
+    rows.map((r) => {
+      const value = cleanCase(r);
+      for (const key of ['mergeSchool', 'mergeSchoolId', 'mergeSchoolUrl'])
+        if (!value[key]) delete value[key];
+      return value;
+    }),
+  );
+const routingVersion = '2026-10-09/2';
 function draftsForBatch(store, batch) {
   const rowsKey = draftRowsKey(batch.rows);
   const events = store.validation.events(batch.rows[0].id);
@@ -285,7 +362,10 @@ function draftsForBatch(store, batch) {
     const content =
       saved?.rowsKey === rowsKey
         ? {
-            recipient: saved.recipient,
+            recipient:
+              saved.routingVersion === routingVersion
+                ? saved.recipient
+                : draft.recipient,
             subject: saved.subject,
             body: saved.body,
           }
@@ -293,7 +373,13 @@ function draftsForBatch(store, batch) {
     return {
       ...draft,
       ...content,
-      token: digest([rowsKey, saved?.id || '', draft.group]),
+      token: digest([
+        rowsKey,
+        saved?.id || '',
+        draft.group,
+        routingVersion,
+        draft.sender,
+      ]),
       regenerated: Boolean(saved && saved.rowsKey !== rowsKey),
     };
   });
@@ -318,6 +404,7 @@ export function saveBatchDraft(store, batchId, input) {
       purpose: 'batch',
       batchId,
       group: input.group,
+      routingVersion,
       rowsKey: draftRowsKey(batch.rows),
       recipient,
       subject,
@@ -388,6 +475,7 @@ export function commitValidationBatch(store, preview, input) {
         purpose: 'batch',
         batchId: preview.batchId,
         group: draft.group,
+        routingVersion,
         rowsKey: draftRowsKey(created),
         recipient: draft.recipient,
         subject: draft.subject,
@@ -589,9 +677,6 @@ export function approvedAccounts(store) {
     .filter((r) => r.outcome === 'approved')
     .sort((a, b) => b.approvedAt.localeCompare(a.approvedAt));
 }
-export function validationBatchTemplate() {
-  return workbookBuffer(
-    batchFields.map(([, label]) => label),
-    [],
-  );
+export function validationBatchTemplate(kind = 'person') {
+  return validationTemplateWorkbook(kind);
 }

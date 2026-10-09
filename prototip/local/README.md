@@ -1,4 +1,4 @@
-# REFİKA 0.6.5 · Yerel uygulama
+# REFİKA 0.6.6 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -18,13 +18,21 @@ Bir çalışma alanı bu sürümde bir il ve bir eğitim yılı içindir. İl/y�
 
 ## Excel listesi, merkez açıklamaları ve toplu mail
 
-1. **Excel’den yeni kayıt** bölümündeki boş Excel’i indirin veya kendi listenizi seçin. İlk satır başlık olmalı. İşlem türü, ad soyad/kişi ID, okul adı/okul ID, gerçek profil bağlantıları, **Açıklama** ve **Talep edilen işlem** alanları okunur. Aynı ID için bilinen tek profil bağlantısı varsa tamamlanır; bağlantı ID’den uydurulmaz. Sütunlar otomatik tanınmazsa eşleştirin.
+1. **Excel’den yeni kayıt** bölümünde **Hesap onayı (5 sütun)**, **Okul hesabı onayı (3 sütun)**, **Okul birleştirme (5 sütun)** veya **Organizasyon değişikliği (5 sütun)** şablonunu seçin. Her şablonda açıklama bulunur. Kişi ve okul adlarını ESEP’ten bağlantılarıyla yapıştırın; ayrı bağlantı sütunu gerekmez. Yerleşik köprüler ve Google E-Tablodan gelen iki sabit metinli `HYPERLINK` formülleri okunur; hesaplanan formüller çalıştırılmaz. `.xlsx` bağlantıları korur, CSV taşımaz. Görünen ID ile profil adresi ayrı tutulur; bağlantı ID’den uydurulmaz. Eski uzun dosyalar ve elle sütun eşleştirme desteklenir. Karma çıktıda talep türleri ayrı çalışma sayfalarına ayrılır.
 2. Yeni, mevcut, tekrarlanan ve hatalı satırlar önizlemede ayrılır. Eksik açıklama açıkça belirtilir; belirtilmeyen işlem türüne göre taslak ifade hazırlanır. **Kaydetmeden Excel önizlemesini indir** yalnız dosya üretir. **Kayıtları topluca oluştur** yeni kayıtları ve kaynak Excel’i saklar; kontrol yapılmış veya onay gelmiş saymaz.
 3. **Taslaklar → Excel listesi ve toplu e-posta** bölümünde listenizi açın. Hesap onayı, okul birleştirme ve genel destek için ayrı alıcı, konu, metin ve Excel eki hazırlanır. Her satırın açıklaması ve talep edilen işlemi Excel’de bulunur; mailde ilk 30 satır ayrıntılı verilir, devamı eke yönlendirilir. Bekleme gerekçesi veya başarısız kontrolü bulunan satırlar mailden ve grup ekinden çıkarılır. Eksik kontroller gönderimden önce tamamlanmalıdır. Mail düzenlenip saklanabilir; satırlar değişirse taslak yeniden oluşturulur. Metni indirmek göndermek değildir.
 4. Excel ve maili gerçekten gönderdikten sonra ilgili satırları seçin; tarih ve mail metni/bağlantısıyla **Gönderimi kaydet** işlemini yapın. Bu işlem gerçekleşen gönderimin kaydıdır; teknik kontrolleri otomatik olumluya çevirmez.
 5. Yanıt geldiğinde **Onay / sonuç mailini işle** ile yalnız mailin kapsadığı satırları seçin, sonucu ve tarihi kaydedin. İstisna tutulanlar bekler. Onaylanan kişi, okul ve üyelikler **Kişi ve okul kayıtları** sekmesine yansır; kalıcı sonuç numaraları ve dört dönem sayıları güncellenir. Excel’de yazan “Onaylandı” tek başına sonuç oluşturmaz.
 
 Aynı işlem türü ve kişi/okul ID çifti yeniden yüklenirse ikinci dosya oluşturulmaz. Yeni bir işlem döngüsü gerekiyorsa mevcut kaydı inceleyip yeniden açın. Mail okuma veya gönderme otomatik değildir. Liste, kaynak dosya, taslak düzenlemeleri ve sonuç geçmişi yedeğe dahildir.
+
+**Alıcı ayrımı:** Kişi hesabı, yeni okul hesabı ve öğretmenin yeni okuldaki üyelik onayı `validasyonetw@gmail.com`; okul hesabı birleştirme ve genel destek `tretwinning@gmail.com` adresine yönlendirilir. Okul adı/türü veya müdür bilgisi düzeltmesi, öğretmenin organizasyon üyeliği değişikliğinden farklı bir destek talebidir. Bu ayrım 9 Ekim 2026’da koordinatörün gönderilmiş yazışmalarından kontrol edilmiştir. Tarihsel gönderilmiş mailler değiştirilmez; taslakların alıcısı gönderim öncesinde görülebilir ve düzenlenebilir.
+
+## Ortak e-posta ve Google E-Tablo
+
+**Ayarlar ve yedek → İl koordinatörlüğü iletişim bilgileri** alanında ilin ortak e-postasını ve Google E-Tablo bağlantısını kaydedin. Bunlar okulun resmî kurum e-postasından ayrı koordinatörlük bilgileridir. Ortak adres toplu mail ekranında gönderen adres olarak gösterilir; posta hesabında oturum açmaz ve mail göndermez.
+
+**Ortak E-Tabloyu aç / düzenle** aynı Google dosyasını açar. Değişiklikleri Google’da yapın; **Dosya → İndir → Microsoft Excel (.xlsx)** ile güncel kopyayı REFİKA’ya yükleyin. Varsa **Gönderilecek Talepler** sekmesi önce seçilir; arşiv ve diğer sekmeler ayrıca seçilebilir. Güncel dosyada zaten bulunan kişi/okul ve talep türü yeniden oluşturulmaz. Mevcut dosyadaki açıklama veya sonuç bu yüklemeyle ezilmez; değişiklikler ilgili kayıtta incelenir. Sürekli otomatik okuma, Google’a yazma veya çift yönlü eşitleme henüz yoktur. Bağlantı ve e-posta yerel şifreli yedeğe dahildir; merkez özetine dahil edilmez.
 
 ## YEĞİTEK düzeninde aylık plan
 

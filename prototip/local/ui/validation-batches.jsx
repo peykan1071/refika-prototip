@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { caseKinds, caseStatuses } from '../validation.mjs';
-import { batchFields as fields } from '../validation-batch-content.mjs';
+import {
+  batchFields as fields,
+  validationTemplates,
+} from '../validation-batch-content.mjs';
+import { CoordinatorLinks } from './coordinator-contacts.jsx';
 import { EsepLinks, EsepStatus } from './esep-status.jsx';
 import {
   TableOrder,
@@ -46,6 +50,11 @@ function BatchMail({ draft, batchId, api, run, busy, readOnly = false }) {
         </p>
       )}
       <div className="form-grid">
+        {draft.sender && (
+          <p>
+            Gönderen ortak adres: <strong>{draft.sender}</strong>
+          </p>
+        )}
         {['recipient', 'subject', 'body'].map((key) => (
           <label className="field wide" key={key}>
             <span>
@@ -96,7 +105,7 @@ function BatchMail({ draft, batchId, api, run, busy, readOnly = false }) {
             downloadFile(
               `REFIKA-${draft.group}-mail.txt`,
               '\uFEFF' +
-                `Alıcı: ${form.recipient}\nKonu: ${form.subject}\n\n${form.body}`,
+                `${draft.sender ? 'Gönderen: ' + draft.sender + '\n' : ''}Alıcı: ${form.recipient}\nKonu: ${form.subject}\n\n${form.body}`,
             )
           }
         >
@@ -131,8 +140,17 @@ const importLabels = {
   invalid: 'Düzeltme gerekli',
 };
 
-function ExcelImport({ api, run, busy, fileData, onCreated, onClose, manual }) {
-  const [input, setInput] = useState({ defaultKind: 'person' }),
+function ExcelImport({
+  api,
+  run,
+  busy,
+  fileData,
+  onCreated,
+  onClose,
+  manual,
+  contacts,
+}) {
+  const [input, setInput] = useState({ defaultKind: '' }),
     [preview, setPreview] = useState(null),
     [confirmed, setConfirmed] = useState(false),
     [skipInvalid, setSkipInvalid] = useState(false),
@@ -150,7 +168,12 @@ function ExcelImport({ api, run, busy, fileData, onCreated, onClose, manual }) {
   async function inspect(source) {
     const result = await api('/validation-batches/preview', source);
     setPreview(result);
-    setInput({ ...source, mapping: result.mapping, sheet: result.sheet });
+    setInput({
+      ...source,
+      mapping: result.mapping,
+      sheet: result.sheet,
+      defaultKind: result.defaultKind,
+    });
     setStale(false);
     setConfirmed(false);
     setSkipInvalid(false);
@@ -167,18 +190,41 @@ function ExcelImport({ api, run, busy, fileData, onCreated, onClose, manual }) {
         Validasyon Excel’ini bir kez yükle; REFİKA her satır için kaydı otomatik
         oluştursun. Onay maili geldiğinde aynı listedeki sonuçları topluca işle.
       </p>
-      <div className="actions">
-        <a className="button" href="/api/validation-batches/template" download>
-          Boş validasyon Excel’i indir
-        </a>
+      <div className="template-options">
+        {Object.entries(validationTemplates).map(([kind, template]) => (
+          <a
+            key={kind}
+            className="button"
+            href={`/api/validation-batches/template?kind=${kind}`}
+            download
+          >
+            <strong>{template.label}</strong>
+            <span>{template.fields.length} sütun · Boş Excel indir</span>
+          </a>
+        ))}
       </div>
       <p className="muted">
-        İlk satır sütun başlıkları olmalı. Kişi kaydı için ad soyad ve kişi ID;
-        okul kaydı için okul adı ve okul ID yeterli. Profil bağlantılarını
-        Excel’e ekleyebilirsin; REFİKA’da aynı ID ile tek bir bağlantı varsa
-        otomatik tamamlanır. Excel’deki “onaylı” yazısı tek başına onay
-        sayılmaz.
+        Kişi ve okul adlarını ESEP’ten bağlantılarıyla yapıştırın. REFİKA
+        isimlerdeki bağlantıları okur; ayrı bağlantı sütunu doldurmanız
+        gerekmez. Bağlantıları korumak için .xlsx kullanın. Excel’deki “onaylı”
+        yazısı tek başına onay sayılmaz.
       </p>
+      <details>
+        <summary>Hangi talep hangi adrese gider?</summary>
+        <p>
+          <strong>validasyonetw@gmail.com:</strong> Kişi hesabı, yeni okul
+          hesabı ve okul üyeliği onayı (organizasyon değişikliği).
+        </p>
+        <p>
+          <strong>tretwinning@gmail.com:</strong> Okul birleştirme; okul
+          adı/türü, müdür bilgisi ve teknik sorunlar için genel destek.
+        </p>
+        <p className="muted">
+          Organizasyon değişikliği öğretmenin yeni okuldaki üyeliğidir. Okulun
+          organizasyon türünü düzeltmek genel destek talebidir.
+        </p>
+      </details>
+      <CoordinatorLinks contacts={contacts} />
       <div className="form-grid">
         <label className="field">
           <span>Excel veya CSV listesi</span>
@@ -192,7 +238,7 @@ function ExcelImport({ api, run, busy, fileData, onCreated, onClose, manual }) {
                 run(async () => {
                   const source = {
                     ...(await fileData(file)),
-                    defaultKind: input.defaultKind,
+                    defaultKind: '',
                   };
                   setInput(source);
                   setPreview(null);
@@ -202,12 +248,13 @@ function ExcelImport({ api, run, busy, fileData, onCreated, onClose, manual }) {
           />
         </label>
         <label className="field">
-          <span>İşlem türü boş satırlar için</span>
+          <span>Liste türü</span>
           <select
             value={input.defaultKind}
             disabled={busy}
             onChange={(event) => change({ defaultKind: event.target.value })}
           >
+            <option value="">Şablondan otomatik tanı</option>
             {Object.entries(caseKinds).map(([key, label]) => (
               <option key={key} value={key}>
                 {label}
@@ -232,6 +279,7 @@ function ExcelImport({ api, run, busy, fileData, onCreated, onClose, manual }) {
                           ...input,
                           sheet: e.target.value,
                           mapping: undefined,
+                          defaultKind: '',
                         }),
                       )
                     }
@@ -732,6 +780,7 @@ export function ValidationBatchesWorkspace({
         busy={busy}
         fileData={fileData}
         manual={manual}
+        contacts={state.settings.contacts}
         onClose={() => setImporting(false)}
         onCreated={(id) => {
           setSelected(id);
@@ -763,6 +812,7 @@ export function ValidationBatchesWorkspace({
         Excel’i yükle, gönderimi bir kez kaydet, gelen mailin kapsadığı
         kayıtları topluca sonuçlandır.
       </p>
+      <CoordinatorLinks contacts={state.settings.contacts} />
       {error && (
         <p role="alert" className="error">
           {error}

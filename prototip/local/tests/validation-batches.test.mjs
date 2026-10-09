@@ -285,7 +285,7 @@ void test('Excel gerçek köprü adresini okur, profil URL’sini ID’den uydur
   const template = new ExcelJS.Workbook();
   await template.xlsx.load(await validationBatchTemplate());
   assert.equal(template.worksheets[0].rowCount, 1);
-  assert.equal(template.worksheets[0].getCell('C1').text, 'Kişi ID');
+  assert.equal(template.worksheets[0].getCell('B1').text, 'Kişi ID');
 });
 void test('Excel liste API’si oturum, önizleme ve toplu işlemleri uygular', async (t) => {
   const dir = await mkdtemp(join(tmpdir(), 'refika-batch-'));
@@ -314,6 +314,21 @@ void test('Excel liste API’si oturum, önizleme ve toplu işlemleri uygular', 
     operator: 'TEST',
     year: '2026–2027',
   });
+  const settingsState = await (await request('/state')).json();
+  assert.equal(
+    (
+      await request('/settings/contacts', {
+        email: 'test@example.org',
+        sheetUrl: 'https://docs.google.com/spreadsheets/d/TEST/edit#gid=123',
+        revision: settingsState.revision,
+      })
+    ).status,
+    200,
+  );
+  assert.equal(
+    (await (await request('/state')).json()).settings.contacts.email,
+    'test@example.org',
+  );
   assert.equal(
     (await fetch(service.url + '/api/validation-batches')).status,
     401,
@@ -337,6 +352,7 @@ void test('Excel liste API’si oturum, önizleme ve toplu işlemleri uygular', 
       await request('/validation-batches/preview', input)
     ).json();
   const before = (await (await request('/validation-batches')).json()).length;
+  assert.equal(preview.drafts[0].sender, 'test@example.org');
   const exported = await (
     await request('/validation-batches/preview-export', {
       ...input,
@@ -345,12 +361,12 @@ void test('Excel liste API’si oturum, önizleme ve toplu işlemleri uygular', 
   ).json();
   const book = new ExcelJS.Workbook();
   await book.xlsx.load(Buffer.from(exported.data, 'base64'));
-  assert.equal(book.worksheets[0].getCell('K1').text, 'Açıklama');
-  assert.equal(book.worksheets[0].getCell('L1').text, 'Talep edilen işlem');
+  assert.equal(book.worksheets[0].getCell('F1').text, 'Açıklama');
+  assert.equal(book.worksheets[0].getCell('G1').text, 'Talep edilen işlem');
   assert.ok(
-    book.worksheets[0].getCell('K2').text.includes('Açıklama belirtilmedi'),
+    book.worksheets[0].getCell('F2').text.includes('Açıklama belirtilmedi'),
   );
-  assert.ok(book.worksheets[0].getCell('L2').text.includes('eTwinning'));
+  assert.ok(book.worksheets[0].getCell('G2').text.includes('eTwinning'));
   assert.equal(
     (await (await request('/validation-batches')).json()).length,
     before,

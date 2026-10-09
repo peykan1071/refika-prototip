@@ -1,4 +1,4 @@
-import { caseKinds, caseStatuses, readyProblems } from './validation.mjs';
+import { caseKinds, readyProblems } from './validation.mjs';
 
 export const batchFields = [
   ['kind', 'İşlem türü'],
@@ -15,12 +15,53 @@ export const batchFields = [
   ['province', 'İl'],
   ['retainedProfile', 'Korunacak profil'],
   ['relatedProfiles', 'Birleştirilecek profiller'],
+  ['mergeSchool', 'Birleştirilecek okul'],
+  ['mergeSchoolId', 'Birleştirilecek okul ID'],
+  ['mergeSchoolUrl', 'Birleştirilecek okul bağlantısı'],
   ['evidenceUrl', 'Kanıt bağlantısı'],
   ['holdReason', 'Bekleme gerekçesi'],
 ];
+export const validationTemplates = {
+  person: {
+    label: 'Hesap onayı',
+    sheet: 'Hesap onayı',
+    file: 'hesap-onayi',
+    fields: ['name', 'accountId', 'school', 'schoolId', 'reason'],
+  },
+  school: {
+    label: 'Okul hesabı onayı',
+    sheet: 'Okul hesabı onayı',
+    file: 'okul-hesabi-onayi',
+    fields: ['school', 'schoolId', 'reason'],
+  },
+  merger: {
+    label: 'Okul birleştirme',
+    sheet: 'Okul birleştirme',
+    file: 'okul-birlestirme',
+    fields: ['school', 'schoolId', 'mergeSchool', 'mergeSchoolId', 'reason'],
+  },
+  membership: {
+    label: 'Organizasyon değişikliği',
+    sheet: 'Organizasyon değişikliği',
+    file: 'organizasyon-degisikligi',
+    fields: ['name', 'accountId', 'school', 'schoolId', 'reason'],
+  },
+};
+export function templateFields(kind) {
+  const keys = validationTemplates[kind]?.fields;
+  if (!keys) throw new Error('Excel şablon türünü seçin.');
+  return keys.map((key) => [
+    key,
+    kind === 'merger' && key === 'school'
+      ? 'Korunacak okul'
+      : kind === 'merger' && key === 'schoolId'
+        ? 'Korunacak okul ID'
+        : batchFields.find(([field]) => field === key)[1],
+  ]);
+}
 export const mailGroups = {
   accounts: ['Hesap Onay Validasyonları', 'validasyonetw@gmail.com'],
-  merger: ['Okul Hesabı Birleştirme Validasyonları', 'validasyonetw@gmail.com'],
+  merger: ['Okul Hesabı Birleştirme Talepleri', 'tretwinning@gmail.com'],
   support: ['eTwinningTR Genel Destek Talepleri', 'tretwinning@gmail.com'],
 };
 export function mailGroup(row) {
@@ -44,24 +85,10 @@ export function defaultAction(row) {
       'Açıklamadaki sorunun incelenmesi ve çözümü hakkında bilgi verilmesi.',
   }[row.kind];
 }
-export const batchExportFields = batchFields.filter(
-  ([key]) => key !== 'province',
-);
-export const batchExportHeaders = [
-  'Sıra no',
-  ...batchExportFields.map(([, label]) => label),
-  'Süreç durumu',
-];
-export function batchExportRow(row, index) {
-  return [
-    index + 1,
-    ...batchExportFields.map(([key]) =>
-      key === 'kind' ? caseKinds[row.kind] : row[key] || '',
-    ),
-    caseStatuses[row.status] || 'Kaydedilmemiş önizleme',
-  ];
-}
-export function batchMailDrafts(rows, { provinceName, operator, date }) {
+export function batchMailDrafts(
+  rows,
+  { provinceName, operator, date, sender = '' },
+) {
   return Object.entries(mailGroups).flatMap(([group, [label, recipient]]) => {
     const candidates = rows.filter((r) => mailGroup(r) === group);
     if (!candidates.length) return [];
@@ -97,6 +124,7 @@ export function batchMailDrafts(rows, { provinceName, operator, date }) {
         group,
         label,
         recipient,
+        sender,
         count: included.length,
         excluded,
         unverified,

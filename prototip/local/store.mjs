@@ -6,6 +6,7 @@ import { migrateValidation, ValidationStore } from './validation-store.mjs';
 import { validationWorkItems } from './validation.mjs';
 import { cleanPlan } from './plans.mjs';
 import { ReportStore } from './reports.mjs';
+import { cleanCoordinatorContacts } from './coordinator-contacts.mjs';
 import {
   digest,
   provinceCode,
@@ -132,6 +133,22 @@ export class Store {
     this.transaction(() => {
       this.setMeta('settings', { province, operator, year });
       this.log('İl çalışma alanı oluşturuldu.');
+    });
+  }
+  saveContacts(input) {
+    const contacts = cleanCoordinatorContacts(input);
+    return this.transaction(() => {
+      const settings = this.meta('settings');
+      if (!settings) throw new Error('Önce il çalışma alanını oluşturun.');
+      if (input.revision !== (this.meta('revision') || 0))
+        throw new Error(
+          'Çalışma alanı değişti. Sayfayı yenileyip yeniden kaydedin.',
+        );
+      this.setMeta('settings', { ...settings, contacts });
+      this.log(
+        'İl koordinatörlüğünün ortak e-posta ve E-Tablo bilgileri kaydedildi.',
+      );
+      return contacts;
     });
   }
   state() {
@@ -302,6 +319,8 @@ export class Store {
         Number(data.settings.year.slice(0, 4)) + 1
     )
       throw new Error('Yedekte çalışma alanı bilgileri geçersiz.');
+    if (data.settings.contacts)
+      cleanCoordinatorContacts(data.settings.contacts);
     if (
       this.meta('settings')?.province &&
       this.meta('settings').province !== confirmedProvince

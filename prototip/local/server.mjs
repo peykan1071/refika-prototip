@@ -26,11 +26,11 @@ import {
   saveBatchDraft,
 } from './validation-batches.mjs';
 import {
-  batchExportHeaders,
-  batchExportRow,
+  validationTemplates,
   mailGroup,
   mailGroups,
 } from './validation-batch-content.mjs';
+import { validationBatchWorkbook } from './validation-excel.mjs';
 import {
   validationPeriodSummary,
   validationPeriodWorkbook,
@@ -102,6 +102,8 @@ export async function startLocal({
       }
       if (!store.meta('settings'))
         return json(res, 409, { error: 'Önce il çalışma alanını kurun.' });
+      if (path === '/api/settings/contacts' && req.method === 'POST')
+        return json(res, 200, store.saveContacts(await body(req)));
       if (path === '/api/plans/preview' && req.method === 'POST')
         return json(res, 200, await previewPlan(store, await body(req)));
       if (path === '/api/plans/commit' && req.method === 'POST') {
@@ -180,12 +182,14 @@ export async function startLocal({
       }
       if (path === '/api/activities' && req.method === 'POST')
         return json(res, 200, store.saveActivity(await body(req)));
-      if (path === '/api/validation-batches/template' && req.method === 'GET')
+      if (path === '/api/validation-batches/template' && req.method === 'GET') {
+        const kind = url.searchParams.get('kind') || 'person';
         return download(
           res,
-          'REFIKA-validasyon-listesi.xlsx',
-          await validationBatchTemplate(),
+          `REFIKA-${validationTemplates[kind]?.file || 'validasyon'}.xlsx`,
+          await validationBatchTemplate(kind),
         );
+      }
       if (path === '/api/validation-batches/preview' && req.method === 'POST')
         return json(
           res,
@@ -209,9 +213,7 @@ export async function startLocal({
           .filter((r) => r.action === 'new')
           .map((r) => r.values);
         return json(res, 200, {
-          data: (
-            await workbookBuffer(batchExportHeaders, rows.map(batchExportRow))
-          ).toString('base64'),
+          data: (await validationBatchWorkbook(rows)).toString('base64'),
         });
       }
       if (path === '/api/validation-batches' && req.method === 'GET')
@@ -246,7 +248,7 @@ export async function startLocal({
           return download(
             res,
             `REFIKA-${group || 'validasyon'}-listesi.xlsx`,
-            await workbookBuffer(batchExportHeaders, rows.map(batchExportRow)),
+            await validationBatchWorkbook(rows),
           );
         }
       }

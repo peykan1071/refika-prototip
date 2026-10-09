@@ -57,6 +57,19 @@ export function checkOfficeZip(buffer) {
       buffer.readUInt16LE(offset + 32);
   }
 }
+// Read literal links exported by Google Sheets without executing Excel formulas.
+function literalHyperlink(formula) {
+  if (typeof formula !== 'string') return null;
+  const match = formula.match(
+    /^=?\s*HYPERLINK\(\s*"((?:[^"]|"")*)"\s*[,;]\s*"((?:[^"]|"")*)"\s*\)\s*$/i,
+  );
+  return match
+    ? {
+        hyperlink: match[1].replaceAll('""', '"'),
+        text: match[2].replaceAll('""', '"'),
+      }
+    : null;
+}
 export async function readInput(input) {
   const { name, buffer } = decodeFile(input),
     extension = name.toLowerCase().split('.').pop();
@@ -69,7 +82,11 @@ export async function readInput(input) {
     const sheets = workbook.worksheets.map((s) => s.name),
       sheet = input.sheet
         ? workbook.getWorksheet(input.sheet)
-        : workbook.worksheets[0];
+        : workbook.getWorksheet(input.preferredSheet || '') ||
+          workbook.worksheets.find(
+            (s) => s.state !== 'hidden' && s.state !== 'veryHidden',
+          ) ||
+          workbook.worksheets[0];
     if (!sheet || sheet.rowCount > 10001 || sheet.columnCount > 100)
       throw new Error(
         'Çalışma sayfası bulunamadı veya 10.000 satır / 100 sütun sınırını aşıyor.',
@@ -81,11 +98,16 @@ export async function readInput(input) {
         links = [];
       for (let i = 1; i <= sheet.columnCount; i++) {
         const c = row.getCell(i);
+        const link = literalHyperlink(c.value?.formula);
         links.push(
-          typeof c.value?.hyperlink === 'string' ? c.value.hyperlink : '',
+          typeof c.value?.hyperlink === 'string'
+            ? c.value.hyperlink
+            : link?.hyperlink || '',
         );
         values.push(
-          c.value instanceof Date ? c.value.toISOString().slice(0, 10) : c.text,
+          c.value instanceof Date
+            ? c.value.toISOString().slice(0, 10)
+            : (link?.text ?? c.text),
         );
       }
       if (values.some((v) => v.trim())) {

@@ -19,6 +19,7 @@ import './demo-theme.css';
 import { ClassicValidation } from './classic-validation.jsx';
 import { PlanWorkspace } from './plan-workspace.jsx';
 import { ReportWorkspace } from './report-workspace.jsx';
+import { CoordinatorSettings } from './coordinator-contacts.jsx';
 import {
   DemoShell,
   DemoDashboard,
@@ -1024,6 +1025,13 @@ function SettingsPanel({ state, run, busy }) {
         </div>
       </div>
       <div className="settings-grid">
+        <CoordinatorSettings
+          key={JSON.stringify(state.settings.contacts || {})}
+          state={state}
+          api={api}
+          run={run}
+          busy={busy}
+        />
         <section className="panel">
           <h2>
             <Cloud size={22} /> Merkeze özet paylaşımı
