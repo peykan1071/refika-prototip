@@ -331,7 +331,7 @@ test('Yeni dosyalar, gerçek gönderimler ve kanıtlar şifreli yedekte korunur;
     encryptBackup(store.exportArchive(), 'Test-parolası-2026'),
     'Test-parolası-2026',
   );
-  assert.equal(archive.version, 4);
+  assert.equal(archive.version, 5);
   const events = v.events(row.id);
   store.restoreArchive(archive, '25');
   assert.equal(v.get(row.id).status, 'waiting');
@@ -404,12 +404,12 @@ test('Sürüm 1 veri tabanı kayıpsız yükselir, yeniden açılır; gelecek s�
   store = new Store(path);
   assert.equal(store.get('records', 'SOURCE').name, 'Korunan kayıt');
   assert.equal(store.validation.get(row.id).title, row.title);
-  store.db.exec('PRAGMA user_version=5');
+  store.db.exec('PRAGMA user_version=6');
   store.close();
   assert.throws(() => new Store(path), /daha yeni/);
   // Explicitly close the rejected database in the Store constructor.
   const db = new DatabaseSync(path);
-  assert.equal(db.prepare('PRAGMA user_version').get().user_version, 5);
+  assert.equal(db.prepare('PRAGMA user_version').get().user_version, 6);
   db.close();
 });
 test('Validasyon API: oturum, işlem kaynağı, dosya indirme, filtreli Excel ve gönderim ayrımı', async (t) => {

@@ -238,7 +238,7 @@ test('Rapor, sürüm geçmişi ve gerçek ek dosyası şifreli yedekten geri gel
   });
   assert.equal(withFile.attachments.length, 1);
   const archive = store.exportArchive();
-  assert.equal(archive.version, 4);
+  assert.equal(archive.version, 5);
   const decrypted = decryptBackup(
     encryptBackup(archive, 'test-parolasi-12345'),
     'test-parolasi-12345',

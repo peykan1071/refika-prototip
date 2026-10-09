@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { validationWorkItems } from '../validation.mjs';
+import { InventoryReminder } from './inventory.jsx';
 import {
   House,
   CalendarDays,
@@ -322,6 +323,10 @@ export function DemoDashboard({ state, go }) {
         </div>
         <span className="badge pilot-badge">YEREL ÇALIŞMA ALANI</span>
       </div>
+      <InventoryReminder
+        reminders={state.inventoryReminders}
+        open={() => go('records', { workspace: 'inventory' })}
+      />
       <section
         className="coordinator-dashboard"
         aria-labelledby="daily-work-title"

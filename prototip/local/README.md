@@ -1,4 +1,4 @@
-# REFİKA 0.6.7 · Yerel uygulama
+# REFİKA 0.6.8 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -22,7 +22,19 @@ Bir çalışma alanı bu sürümde bir il ve bir eğitim yılı içindir. İl/y�
 2. Dolu dosyayı seçip **İleri → Önizlemeyi aç** düğmesine basın. Yeni, mevcut, tekrarlanan ve hatalı satırlar ayrılır. Boş şablonda başlıkların altını doldurup Excel’de kaydetmeniz istenir; çok sekmeli dosyada doğru çalışma sayfası seçilebilir. Dosya hatası yükleme alanında gösterilir. Eksik açıklama açıkça belirtilir; belirtilmeyen işlem türüne göre taslak ifade hazırlanır. **Kaydetmeden Excel önizlemesini indir** yalnız dosya üretir. Önizlemeyi kontrol edip **Kayıtları oluştur → Mail taslağına geç** düğmesine basınca yeni kayıtlar ve kaynak Excel saklanır. Bu işlem kontrol yapılmış veya onay gelmiş saymaz. Mevcut satırlar için **Mevcut kaydı aç** kullanılabilir.
 3. **Taslaklar → Excel listesi ve toplu e-posta** bölümünde listenizi açın. Hesap onayı, okul birleştirme ve genel destek için ayrı alıcı, konu, metin ve Excel eki hazırlanır. Her satırın açıklaması ve talep edilen işlemi Excel’de bulunur; mailde ilk 30 satır ayrıntılı verilir, devamı eke yönlendirilir. Bekleme gerekçesi veya başarısız kontrolü bulunan satırlar mailden ve grup ekinden çıkarılır. Eksik kontroller gönderimden önce tamamlanmalıdır. Mail düzenlenip saklanabilir; satırlar değişirse taslak yeniden oluşturulur. Metni indirmek göndermek değildir.
 4. Excel ve maili gerçekten gönderdikten sonra ilgili satırları seçin; tarih ve mail metni/bağlantısıyla **Gönderimi kaydet** işlemini yapın. Bu işlem gerçekleşen gönderimin kaydıdır; teknik kontrolleri otomatik olumluya çevirmez.
-5. Yanıt geldiğinde **Onay / sonuç mailini işle** ile yalnız mailin kapsadığı satırları seçin, sonucu ve tarihi kaydedin. İstisna tutulanlar bekler. Onaylanan kişi, okul ve üyelikler **Kişi ve okul kayıtları** sekmesine yansır; kalıcı sonuç numaraları ve dört dönem sayıları güncellenir. Excel’de yazan “Onaylandı” tek başına sonuç oluşturmaz.
+5. Yanıt geldiğinde **Onay / sonuç mailini işle** ile yalnız mailin kapsadığı satırları seçin, sonucu ve tarihi kaydedin. İstisna tutulanlar bekler. Onaylanan kişi, okul ve üyelikler **Validasyonla onaylanan hesaplar** sekmesine yansır; kalıcı sonuç numaraları ve dört dönem sayıları güncellenir. Excel’de yazan “Onaylandı” tek başına sonuç oluşturmaz.
+
+### İl ESEP envanteri
+
+**Kayıt ve Validasyon → İl ESEP envanteri** ildeki kişi ve okul listelerini ayrı tutar. Excel/CSV dosyası seçilir, kaynak tarihi ve il doğrulanır, sütunlar önizlenir ve **Envanteri güncelle** ile alınır. İsim hücresindeki ESEP köprüsü okunur; görünen ESEP ID ile profil adresinin içindeki teknik ID birbirinin yerine kullanılmaz. Aynı kişi birden fazla okul satırında yer alıyorsa tek kişi altında birleşir; çelişen ad/durumlar düzeltilmeden aktarılmaz. Telefon, e-posta ve eşleştirilmeyen sütunlar alınmaz; ham dosya saklanmaz.
+
+Aktif/dormant durumu, onay durumu ve güncel/geçmiş il ilişkisi ayrıdır. Bir bilgi kaynakta yoksa “belirtilmemiş / kontrol edilmeli” kalır. ESEP il filtresi geçmiş okul ilişkilerini de kapsayabildiğinden il filtresindeki toplam, halen o ilde görevli kişi sayısı olarak kullanılmaz. Okul adı aynı ESEP ID ile değişirse eski/yeni ad geçmişte korunur ve kişi listesindeki okul adı güncellenir. Listeye girmeyen okul ID’leri bağlantı URL’sinden uydurulmaz.
+
+Varsayılan aktarım **kısmi liste**dir. Tam il güncellemesinde tüm sayfalar ve hesap durumları bulunmalı, ESEP toplamı dosyadaki benzersiz ID sayısıyla eşleşmelidir. Tam listede bulunmayan kayıtlar ayrıca incelenir; silinmez ve dormant sayılmaz. Eski tarihli dosya güncel verinin üzerine yazamaz. Her başarılı tam liste, kaynak tarihinden **üç takvim ayı** sonrası için uygulama içi hatırlatma üretir. Kişi ve okul yenileme tarihleri ayrıdır. Kısmi yükleme bu tarihi ertelemez. REFİKA kapalıyken işletim sistemi bildirimi gönderilmez.
+
+Onay mailiyle sonuçlandırılan kişi/okul validasyonları aynı ID ile envantere otomatik bağlanır. ESEP dosyasında henüz görülmeyenler “validasyondan geldi; ESEP listesi bekliyor” sayısında kalır; bu kayıtlar ESEP toplamını veya aktif hesap sayısını şişirmez. Üyelik onayı kişi/okul onayı yerine geçmez. Tarihsel sonuç numaraları ve dönemlik validasyon istatistikleri korunur.
+
+Bu sürüm ESEP oturumuna otomatik bağlanmaz. Hesapta toplu dışa aktarma seçeneği yoksa yetkili birimden il dosyası alınabilir veya tablo satırları Excel’e kopyalanıp **kısmi liste** olarak yüklenebilir. Tek sayfa, tam il listesi değildir. Şifreli yedek sürüm 5 envanter geçmişini kapsar; eski yedekler de okunur. Envanter kişi/okul verileri AI veya merkez hizmetine gönderilmez.
 
 Aynı işlem türü ve kişi/okul ID çifti yeniden yüklenirse ikinci dosya oluşturulmaz. Yeni bir işlem döngüsü gerekiyorsa mevcut kaydı inceleyip yeniden açın. Mail okuma veya gönderme otomatik değildir. Liste, kaynak dosya, taslak düzenlemeleri ve sonuç geçmişi yedeğe dahildir.
 

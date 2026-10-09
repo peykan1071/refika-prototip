@@ -3,6 +3,11 @@ import { randomBytes } from 'node:crypto';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { Store } from './store.mjs';
+import {
+  previewInventory,
+  commitInventory,
+  inventoryWorkbook,
+} from './inventory.mjs';
 import { aiStatus, extractPlan } from './ai.mjs';
 import { fields, provinces, reportFor, digest, text } from './domain.mjs';
 import {
@@ -310,6 +315,21 @@ export async function startLocal({
       }
       if (path === '/api/validation-accounts' && req.method === 'GET')
         return json(res, 200, approvedAccounts(store));
+      if (path === '/api/inventory' && req.method === 'GET')
+        return json(res, 200, store.inventory.view());
+      if (path === '/api/inventory/preview' && req.method === 'POST')
+        return json(res, 200, await previewInventory(store, await body(req)));
+      if (path === '/api/inventory/commit' && req.method === 'POST') {
+        const input = await body(req);
+        const preview = await previewInventory(store, input);
+        return json(res, 200, commitInventory(store, preview, input));
+      }
+      if (path === '/api/inventory/export' && req.method === 'GET')
+        return download(
+          res,
+          'REFIKA-il-envanteri.xlsx',
+          await inventoryWorkbook(store, url.searchParams.get('kind')),
+        );
       if (path === '/api/validation' && req.method === 'POST')
         return json(res, 200, store.validation.save(await body(req)));
       if (path === '/api/validation-history' && req.method === 'POST')

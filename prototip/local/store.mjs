@@ -6,6 +6,7 @@ import { migrateValidation, ValidationStore } from './validation-store.mjs';
 import { validationWorkItems } from './validation.mjs';
 import { cleanPlan } from './plans.mjs';
 import { ReportStore } from './reports.mjs';
+import { InventoryStore } from './inventory.mjs';
 import { cleanCoordinatorContacts } from './coordinator-contacts.mjs';
 import {
   digest,
@@ -35,6 +36,7 @@ export class Store {
     }
     this.validation = new ValidationStore(this);
     this.reports = new ReportStore(this);
+    this.inventory = new InventoryStore(this);
     if (!this.meta('installationId'))
       this.setMeta('installationId', randomUUID());
   }
@@ -162,6 +164,7 @@ export class Store {
   state() {
     return {
       settings: this.meta('settings'),
+      inventoryReminders: this.inventory.reminders(),
       records: this.list('records'),
       validationCases: this.validation.list(),
       plans: this.list('plans'),
@@ -296,7 +299,8 @@ export class Store {
   exportArchive() {
     return {
       format: 'refika-backup',
-      version: 4,
+      version: 5,
+      inventory: this.inventory.archive(),
       reports: this.reports.archive(),
       plans: this.list('plans'),
       validation: this.validation.archive(),
@@ -315,7 +319,7 @@ export class Store {
   restoreArchive(data, confirmedProvince) {
     if (
       data?.format !== 'refika-backup' ||
-      ![1, 2, 3, 4].includes(data.version) ||
+      ![1, 2, 3, 4, 5].includes(data.version) ||
       !provinceCode(data.settings?.province) ||
       confirmedProvince !== data.settings.province
     )
@@ -405,6 +409,8 @@ export class Store {
         ? data.reports
         : { reports: [], versions: [], files: [] };
     this.reports.validateArchive(reports, confirmedProvince);
+    const inventory = data.version >= 5 ? data.inventory : { imports: [] };
+    this.inventory.validateArchive(inventory, confirmedProvince);
     const history = data.version >= 2 ? data.history : [];
     if (
       !Array.isArray(history) ||
@@ -432,6 +438,7 @@ export class Store {
     };
     this.transaction(() => {
       this.validation.restore(validation);
+      this.inventory.restore(inventory);
       this.reports.restore(
         reports,
         new Map(

@@ -32,6 +32,7 @@ import {
   TableOrder,
 } from './table-pagination.jsx';
 import './classic-workspace.css';
+import { InventoryWorkspace } from './inventory.jsx';
 
 function CaseDialog({ editor, state, api, fileData, run, busy, close }) {
   const ref = useRef(null);
@@ -103,6 +104,7 @@ export function ClassicValidation({
   fileData,
   screen = 'records',
   initialFilter = 'all',
+  initialWorkspace = 'requests',
   go,
 }) {
   const [query, setQuery] = useState('');
@@ -110,7 +112,7 @@ export function ClassicValidation({
   const [group, setGroup] = useState('all');
   const [order, setOrder] = useState('added');
   const [editor, setEditor] = useState(null);
-  const [workspace, setWorkspace] = useState('requests');
+  const [workspace, setWorkspace] = useState(initialWorkspace);
   const [importSession, setImportSession] = useState(0);
   function newExcel() {
     setImportSession((value) => value + 1);
@@ -211,7 +213,13 @@ export function ClassicValidation({
             aria-pressed={workspace === 'accounts'}
             onClick={() => setWorkspace('accounts')}
           >
-            Kişi ve okul kayıtları
+            Validasyonla onaylanan hesaplar
+          </button>
+          <button
+            aria-pressed={workspace === 'inventory'}
+            onClick={() => setWorkspace('inventory')}
+          >
+            İl ESEP envanteri
           </button>
         </nav>
       )}
@@ -243,6 +251,18 @@ export function ClassicValidation({
           initialImport={workspace === 'import'}
           openCase={(row) => open(row, 'results')}
           manual={() => setEditor({})}
+        />
+      ) : screen === 'records' && workspace === 'inventory' ? (
+        <InventoryWorkspace
+          state={state}
+          api={api}
+          run={run}
+          busy={busy}
+          fileData={fileData}
+          openCase={(id) => {
+            const row = cases.find((r) => r.id === id);
+            if (row) open(row, 'results');
+          }}
         />
       ) : screen === 'records' && workspace === 'accounts' ? (
         <ApprovedAccounts

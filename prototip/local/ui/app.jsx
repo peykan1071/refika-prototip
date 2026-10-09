@@ -1320,12 +1320,13 @@ function App() {
         )}
         {['records', 'drafts', 'approval', 'results'].includes(view) && (
           <ClassicValidation
-            key={view}
+            key={view + (viewOptions.workspace || '')}
             state={state}
             run={run}
             busy={busy}
             screen={view}
             initialFilter={viewOptions.filter || 'all'}
+            initialWorkspace={viewOptions.workspace || 'requests'}
             go={go}
             api={api}
             fileData={fileData}
