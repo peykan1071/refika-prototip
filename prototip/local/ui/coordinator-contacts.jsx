@@ -23,7 +23,8 @@ export function CoordinatorLinks({ contacts = {} }) {
             Google E-Tabloda değişiklikleri yapıp Dosya → İndir → Microsoft
             Excel (.xlsx) ile güncel kopyayı alın. REFİKA’da yükleyip ilgili
             sekmeyi seçin. Mevcut kayıtlar tekrar eklenmez; geçmiş sonuçlar
-            değişmez. Otomatik eşitleme yoktur.
+            değişmez. Dosya indirmeden çalışmak için Google E-Tablo eşitlemesini
+            kurabilirsiniz.
           </p>
         </>
       )}

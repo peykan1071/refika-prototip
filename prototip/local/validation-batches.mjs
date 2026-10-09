@@ -69,7 +69,7 @@ const aliases = {
   ],
   requestedAction: ['istenen işlem'],
 };
-const identity = (row) =>
+export const validationIdentity = (row) =>
   JSON.stringify([
     row.kind,
     row.accountId || '',
@@ -78,6 +78,7 @@ const identity = (row) =>
       ? [row.mergeSchoolId || row.relatedProfiles || '']
       : []),
   ]);
+const identity = validationIdentity;
 function kindValue(value, fallback) {
   if (!value) return fallback;
   const n = normalize(value);
@@ -140,13 +141,9 @@ export async function previewValidationBatch(store, input) {
   const parsed = await readInput({
     ...input,
     preferredSheet: 'Gönderilecek Talepler',
+    allowEmpty: true,
   });
-  if (
-    !parsed.headers?.length ||
-    !parsed.rows?.length ||
-    parsed.rows.length > 10000 ||
-    parsed.headers.length > 100
-  )
+  if (parsed.rows.length > 10000 || parsed.headers.length > 100)
     throw new Error('Başlık ve en fazla 10.000 veri satırı gerekli.');
   const templateKind = Object.entries(validationTemplates).find(
     ([, value]) => value.sheet === parsed.sheet,
@@ -316,6 +313,7 @@ export async function previewValidationBatch(store, input) {
     title,
     sourceName: text(input.name, 200),
     sourceHash,
+    empty: items.length === 0,
     mapping,
     defaultKind,
     headers: parsed.headers,

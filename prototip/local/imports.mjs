@@ -115,9 +115,10 @@ export async function readInput(input) {
         hyperlinks.push(links);
       }
     });
-    if (rows.length < 2) throw new Error('Başlık ve veri satırı gerekli.');
+    if (rows.length < 2 && !input.allowEmpty)
+      throw new Error('Başlık ve veri satırı gerekli.');
     return {
-      headers: rows[0],
+      headers: rows[0] || [],
       rows: rows.slice(1),
       hyperlinks: hyperlinks.slice(1),
       sheets,

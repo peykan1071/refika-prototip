@@ -20,6 +20,7 @@ import { ClassicValidation } from './classic-validation.jsx';
 import { PlanWorkspace } from './plan-workspace.jsx';
 import { ReportWorkspace } from './report-workspace.jsx';
 import { CoordinatorSettings } from './coordinator-contacts.jsx';
+import { GoogleSyncPanel } from './google-sync.jsx';
 import {
   DemoShell,
   DemoDashboard,
@@ -1025,6 +1026,13 @@ function SettingsPanel({ state, run, busy }) {
         </div>
       </div>
       <div className="settings-grid">
+        <GoogleSyncPanel
+          key={state.settings.contacts?.sheetUrl || ''}
+          api={api}
+          run={run}
+          busy={busy}
+          contacts={state.settings.contacts}
+        />
         <CoordinatorSettings
           key={JSON.stringify(state.settings.contacts || {})}
           state={state}
@@ -1261,6 +1269,7 @@ function App() {
     setError('');
     setNotice('');
     window.scrollTo({ top: 0 });
+    void refresh().catch((e) => setError(e.message));
   }
   const feedback = (error || notice || busy) && (
     <div className="feedback" aria-live="polite">

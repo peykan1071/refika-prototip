@@ -31,6 +31,8 @@ import {
   mailGroups,
 } from './validation-batch-content.mjs';
 import { validationBatchWorkbook } from './validation-excel.mjs';
+import { GoogleAuth, GoogleVault } from './google-auth.mjs';
+import { GoogleSheetsClient, GoogleSync } from './google-sheets.mjs';
 import {
   validationPeriodSummary,
   validationPeriodWorkbook,
@@ -48,11 +50,20 @@ export async function startLocal({
   staticDir,
   port = 0,
   env = process.env,
+  googleProtection,
+  googleFetch = fetch,
 } = {}) {
   const store = new Store(resolve(dataDir, 'refika.sqlite')),
     session = randomBytes(32).toString('hex'),
     aiPreviews = new Map();
   let syncing = false;
+  const googleAuth = new GoogleAuth(
+    new GoogleVault(dataDir, googleProtection),
+    googleFetch,
+  );
+  await googleAuth.init();
+  const googleSheets = new GoogleSheetsClient(googleAuth, googleFetch);
+  const googleSync = new GoogleSync(store, googleSheets);
   const server = createServer(async (req, res) => {
     try {
       if (req.headers.host !== new URL(origin).host)
@@ -95,6 +106,7 @@ export async function startLocal({
           ai: aiStatus(env),
           center: syncStatus(env),
           shareSummary: store.meta('shareSummary') === true,
+          google: { ...googleAuth.status(), sync: googleSync.status() },
         });
       if (path === '/api/setup' && req.method === 'POST') {
         store.setup(await body(req));
@@ -102,6 +114,50 @@ export async function startLocal({
       }
       if (!store.meta('settings'))
         return json(res, 409, { error: 'Önce il çalışma alanını kurun.' });
+      if (path === '/api/google/status' && req.method === 'GET')
+        return json(res, 200, {
+          ...googleAuth.status(),
+          sync: googleSync.status(),
+        });
+      if (path === '/api/google/configure' && req.method === 'POST') {
+        googleSync.pause();
+        await googleAuth.configure(await body(req, 10000));
+        return json(res, 200, googleAuth.status());
+      }
+      if (path === '/api/google/connect' && req.method === 'POST')
+        return json(res, 200, await googleAuth.authorize(googleSync.fileId()));
+      if (path === '/api/google/disconnect' && req.method === 'POST') {
+        googleSync.pause();
+        await googleAuth.disconnect();
+        return json(res, 200, { ok: true });
+      }
+      if (path === '/api/google/sheets' && req.method === 'GET') {
+        const meta = await googleSheets.metadata(googleSync.fileId());
+        return json(res, 200, {
+          title: meta.properties.title,
+          sheets: meta.sheets.map((s) => s.properties),
+        });
+      }
+      if (path === '/api/google/preview' && req.method === 'POST') {
+        const input = await body(req);
+        const plan = await googleSync.inspect(
+          Number(input.sheetId),
+          input.defaultKind,
+        );
+        return json(res, 200, { token: plan.token, preview: plan.preview });
+      }
+      if (path === '/api/google/start' && req.method === 'POST')
+        return json(res, 200, await googleSync.start(await body(req)));
+      if (path === '/api/google/pause' && req.method === 'POST') {
+        googleSync.pause();
+        return json(res, 200, googleSync.status());
+      }
+      if (path === '/api/google/sync' && req.method === 'POST')
+        return json(res, 200, await googleSync.synchronize());
+      if (path === '/api/google/resolve' && req.method === 'POST')
+        return json(res, 200, googleSync.resolve(await body(req)));
+      if (path === '/api/google/push' && req.method === 'POST')
+        return json(res, 200, await googleSync.enablePush(await body(req)));
       if (path === '/api/settings/contacts' && req.method === 'POST')
         return json(res, 200, store.saveContacts(await body(req)));
       if (path === '/api/plans/preview' && req.method === 'POST')
@@ -618,13 +674,25 @@ export async function startLocal({
     }
   }, 60000);
   timer.unref();
+  const googleTimer = setInterval(() => {
+    if (
+      store.meta('googleSync')?.enabled &&
+      googleAuth.status().connected &&
+      !googleSync.busy
+    )
+      void googleSync.synchronize().catch(() => {});
+  }, 120000);
+  googleTimer.unref();
   return {
     url: origin,
     store,
     close: () =>
       new Promise((accept) => {
         clearInterval(timer);
-        server.close(() => {
+        clearInterval(googleTimer);
+        googleAuth.cancel();
+        server.close(async () => {
+          await googleSync.close();
           store.close();
           accept();
         });

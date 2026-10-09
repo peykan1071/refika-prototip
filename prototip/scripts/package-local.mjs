@@ -11,7 +11,7 @@ const paths = await packager({
   asar: true,
   overwrite: true,
   prune: false,
-  appVersion: '0.6.6',
+  appVersion: '0.6.7',
   win32metadata: {
     CompanyName: 'REFİKA',
     FileDescription: 'REFİKA İl Koordinatörü',
@@ -21,7 +21,7 @@ const paths = await packager({
 for (const path of paths) {
   await writeFile(
     resolve(path, 'BASLANGIC.txt'),
-    'REFİKA 0.6.6 — Windows pilotu\r\n\r\n1. ZIP dosyasını bir klasöre çıkarın. REFIKA.exe ve yanındaki bütün dosyalar birlikte kalmalı.\r\n2. REFIKA.exe dosyasını çift tıklayarak başlatın. İlk açılışta ilinizi, koordinatör adını ve eğitim yılını seçin.\r\n3. Veri aktar bölümünden boş şablonu indirin veya Excel/CSV listenizi seçin. Önizlemeyi kontrol edip içeri alın.\r\n4. Faaliyet Planı > Plan ekle ile aylık planı alın; maddelerden faaliyet kaydı oluşturun. Gerçekleşme bilgilerini faaliyet kaydında tamamlayın.\r\n5. Ayarlar ve yedek bölümünden şifreli yedek indirin.\r\n\r\nKayıt konumu: %APPDATA%\\REFIKA\\workspace\r\nAyrıntılı kullanım ve bağlantı kurulumu: KULLANIM.md\r\n\r\nBu dağıtım imzalanmamış pilot sürümdür. Merkez ve AI hizmetleri ayrıca yapılandırılır. ESEP üzerinde otomatik işlem yapmaz.\r\n',
+    'REFİKA 0.6.7 — Windows pilotu\r\n\r\n1. ZIP dosyasını bir klasöre çıkarın. REFIKA.exe ve yanındaki bütün dosyalar birlikte kalmalı.\r\n2. REFIKA.exe dosyasını çift tıklayarak başlatın. İlk açılışta ilinizi, koordinatör adını ve eğitim yılını seçin.\r\n3. Veri aktar bölümünden boş şablonu indirin veya Excel/CSV listenizi seçin. Önizlemeyi kontrol edip içeri alın.\r\n4. Faaliyet Planı > Plan ekle ile aylık planı alın; maddelerden faaliyet kaydı oluşturun. Gerçekleşme bilgilerini faaliyet kaydında tamamlayın.\r\n5. Ayarlar ve yedek bölümünden şifreli yedek indirin.\r\n\r\nKayıt konumu: %APPDATA%\\REFIKA\\workspace\r\nAyrıntılı kullanım ve bağlantı kurulumu: KULLANIM.md\r\n\r\nBu dağıtım imzalanmamış pilot sürümdür. Merkez ve AI hizmetleri ayrıca yapılandırılır. ESEP üzerinde otomatik işlem yapmaz.\r\n',
   );
   await copyFile(resolve('local/README.md'), resolve(path, 'KULLANIM.md'));
   console.log(path);

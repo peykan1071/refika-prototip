@@ -60,3 +60,10 @@
 .coordinator-links .button {
   white-space: normal;
 }
+.batch-import .check-line input,
+.batch-detail .check-line input,
+.google-sync .check-line input {
+  width: auto;
+  flex: 0 0 auto;
+  margin: 0;
+}

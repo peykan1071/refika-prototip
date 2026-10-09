@@ -1,0 +1,47 @@
+.google-sync {
+  min-width: 0;
+}
+.google-sync .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+.google-sync details {
+  margin: 16px 0;
+}
+.google-sync .check-line {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 16px 0;
+}
+.sync-conflict,
+.sync-results {
+  border-top: 1px solid #dbe3ef;
+  padding-top: 16px;
+}
+.google-sync td {
+  overflow-wrap: anywhere;
+}
+.import-steps {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  gap: 12px;
+  margin: 20px 0;
+}
+.import-steps li {
+  padding: 10px 14px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+}
+.import-steps [aria-current='step'] {
+  background: #fff7e1;
+  border-color: #eab642;
+  font-weight: 600;
+}
+.import-next {
+  margin: 16px 0 24px;
+}

@@ -1,4 +1,11 @@
-import { app, BrowserWindow, session, shell, dialog } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  session,
+  shell,
+  dialog,
+  safeStorage,
+} from 'electron';
 import { join } from 'node:path';
 import { startLocal } from './server.mjs';
 app.setPath(
@@ -28,6 +35,14 @@ else {
           process.env.REFIKA_DATA_DIR ||
           join(app.getPath('userData'), 'workspace'),
         staticDir: join(app.getAppPath(), 'ui'),
+        googleProtection: {
+          encrypt: (bytes) => {
+            if (!safeStorage.isEncryptionAvailable())
+              throw new Error('Güvenli anahtar saklama kullanılamıyor.');
+            return safeStorage.encryptString(bytes.toString('utf8'));
+          },
+          decrypt: (bytes) => Buffer.from(safeStorage.decryptString(bytes)),
+        },
       });
       window = new BrowserWindow({
         width: 1380,
@@ -51,7 +66,11 @@ else {
           const target = new URL(url);
           if (
             target.protocol === 'https:' &&
-            target.hostname === 'school-education.ec.europa.eu'
+            [
+              'school-education.ec.europa.eu',
+              'docs.google.com',
+              'accounts.google.com',
+            ].includes(target.hostname)
           )
             void shell.openExternal(target.href);
         } catch {}

@@ -145,6 +145,14 @@ export class Store {
           'Çalışma alanı değişti. Sayfayı yenileyip yeniden kaydedin.',
         );
       this.setMeta('settings', { ...settings, contacts });
+      if (
+        settings.contacts?.sheetUrl !== contacts.sheetUrl &&
+        this.meta('googleSync')
+      )
+        this.setMeta('googleSync', {
+          ...this.meta('googleSync'),
+          enabled: false,
+        });
       this.log(
         'İl koordinatörlüğünün ortak e-posta ve E-Tablo bilgileri kaydedildi.',
       );
@@ -455,6 +463,13 @@ export class Store {
             f.created_at,
           );
       this.setMeta('settings', data.settings);
+      if (this.meta('googleSync'))
+        this.setMeta('googleSync', {
+          ...this.meta('googleSync'),
+          enabled: false,
+          bindings: {},
+          pending: [],
+        });
       this.db.exec('DELETE FROM history');
       for (const h of history)
         this.db

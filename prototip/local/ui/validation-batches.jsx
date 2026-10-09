@@ -5,6 +5,7 @@ import {
   validationTemplates,
 } from '../validation-batch-content.mjs';
 import { CoordinatorLinks } from './coordinator-contacts.jsx';
+import { GoogleSyncPanel } from './google-sync.jsx';
 import { EsepLinks, EsepStatus } from './esep-status.jsx';
 import {
   TableOrder,
@@ -149,12 +150,14 @@ function ExcelImport({
   onClose,
   manual,
   contacts,
+  openCase,
 }) {
   const [input, setInput] = useState({ defaultKind: '' }),
     [preview, setPreview] = useState(null),
     [confirmed, setConfirmed] = useState(false),
     [skipInvalid, setSkipInvalid] = useState(false),
-    [stale, setStale] = useState(false);
+    [stale, setStale] = useState(false),
+    [fileError, setFileError] = useState('');
   const page = useTablePage(
     preview?.items || [],
     preview?.token || '',
@@ -166,17 +169,23 @@ function ExcelImport({
     setStale(true);
   }
   async function inspect(source) {
-    const result = await api('/validation-batches/preview', source);
-    setPreview(result);
-    setInput({
-      ...source,
-      mapping: result.mapping,
-      sheet: result.sheet,
-      defaultKind: result.defaultKind,
-    });
-    setStale(false);
-    setConfirmed(false);
-    setSkipInvalid(false);
+    setFileError('');
+    try {
+      const result = await api('/validation-batches/preview', source);
+      setPreview(result);
+      setInput({
+        ...source,
+        mapping: result.mapping,
+        sheet: result.sheet,
+        defaultKind: result.defaultKind,
+      });
+      setStale(false);
+      setConfirmed(false);
+      setSkipInvalid(false);
+    } catch (error) {
+      setFileError(error.message);
+      setStale(true);
+    }
   }
   return (
     <section className="panel batch-import">
@@ -190,6 +199,13 @@ function ExcelImport({
         Validasyon Excel’ini bir kez yükle; REFİKA her satır için kaydı otomatik
         oluştursun. Onay maili geldiğinde aynı listedeki sonuçları topluca işle.
       </p>
+      <ol className="import-steps" aria-label="Excel aktarım adımları">
+        <li aria-current={!preview ? 'step' : undefined}>1. Dosyayı seç</li>
+        <li aria-current={preview ? 'step' : undefined}>
+          2. Önizlemeyi kontrol et
+        </li>
+        <li>3. Kayıtları oluştur ve mail taslağına geç</li>
+      </ol>
       <div className="template-options">
         {Object.entries(validationTemplates).map(([kind, template]) => (
           <a
@@ -225,6 +241,16 @@ function ExcelImport({
         </p>
       </details>
       <CoordinatorLinks contacts={contacts} />
+      <details>
+        <summary>Dosya indirmeden otomatik E-Tablo eşitlemesi</summary>
+        <GoogleSyncPanel
+          key={contacts?.sheetUrl || ''}
+          api={api}
+          run={run}
+          busy={busy}
+          contacts={contacts}
+        />
+      </details>
       <div className="form-grid">
         <label className="field">
           <span>Excel veya CSV listesi</span>
@@ -236,13 +262,21 @@ function ExcelImport({
               const file = event.target.files[0];
               if (file)
                 run(async () => {
-                  const source = {
-                    ...(await fileData(file)),
-                    defaultKind: '',
-                  };
-                  setInput(source);
+                  setFileError('');
                   setPreview(null);
-                  await inspect(source);
+                  setInput({ defaultKind: '' });
+                  try {
+                    const source = {
+                      ...(await fileData(file)),
+                      defaultKind: '',
+                    };
+                    setInput(source);
+                    setPreview(null);
+                    setStale(false);
+                    setConfirmed(false);
+                  } catch (error) {
+                    setFileError(error.message);
+                  }
                 });
             }}
           />
@@ -263,8 +297,50 @@ function ExcelImport({
           </select>
         </label>
       </div>
+      {fileError && (
+        <p className="error" role="alert">
+          {fileError}
+        </p>
+      )}
+      <div className="actions import-next">
+        <button
+          className="primary"
+          disabled={busy || !input.data}
+          onClick={() => run(() => inspect(input))}
+        >
+          {busy
+            ? 'Dosya okunuyor…'
+            : preview
+              ? 'Önizlemeyi yenile'
+              : 'İleri → Önizlemeyi aç'}
+        </button>
+        <p className="muted">
+          {preview && !stale
+            ? 'Önizleme aşağıda. Satırları kontrol edip kayıtları oluşturun.'
+            : input.data
+              ? 'Dosya seçildi. Devam etmek için önizlemeyi açın.'
+              : 'Doldurduğunuz Excel’i seçin; ardından İleri düğmesine basın.'}
+        </p>
+      </div>
       {preview && (
         <>
+          {preview.empty && (
+            <output className="notice">
+              Bu çalışma sayfasında kayıt satırı yok. Boş şablonu indirdiyseniz
+              başlıkların altını doldurup Excel’de kaydedin ve dosyayı yeniden
+              seçin. Dolu E-Tablo dosyasında aşağıdan doğru çalışma sayfasını
+              seçebilirsiniz.
+            </output>
+          )}
+          {!preview.empty &&
+            !preview.counts.new &&
+            preview.counts.existing > 0 && (
+              <output className="notice">
+                Bu listedeki kayıtlar zaten REFİKA’da. Yeniden oluşturmak yerine
+                aşağıdaki “Mevcut kaydı aç” düğmesini kullanabilirsiniz. Yeni
+                satır eklerseniz dolu dosyayı yeniden yükleyin.
+              </output>
+            )}
           <details>
             <summary>Sütunları eşleştir / çalışma sayfasını seç</summary>
             <div className="form-grid">
@@ -321,9 +397,6 @@ function ExcelImport({
               Seçimler değişti. Kayıtları oluşturmadan önce önizlemeyi yenile.
             </p>
           )}
-          <button disabled={busy} onClick={() => run(() => inspect(input))}>
-            Önizlemeyi yenile
-          </button>
           <p>
             <strong>{preview.counts.new} yeni</strong> ·{' '}
             {preview.counts.existing} mevcut · {preview.counts.duplicate} tekrar
@@ -359,6 +432,11 @@ function ExcelImport({
                     <td>
                       <strong>{importLabels[item.action]}</strong>
                       <small>{item.message}</small>
+                      {item.caseId && openCase && (
+                        <button onClick={() => openCase(item.caseId)}>
+                          Mevcut kaydı aç
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -395,8 +473,8 @@ function ExcelImport({
                 Kaydetmeden Excel önizlemesini indir
               </button>
               <p className="muted">
-                İndirmek kayıt oluşturmaz. Aşağıdaki “Kayıtları topluca oluştur”
-                ile REFİKA’ya kaydedilir.
+                İndirmek kayıt oluşturmaz. Aşağıdaki “Kayıtları oluştur → Mail
+                taslağına geç” ile REFİKA’ya kaydedilir.
               </p>
             </>
           )}
@@ -446,7 +524,7 @@ function ExcelImport({
               }, 'Excel satırlarından kayıtlar oluşturuldu. Gönderim ve onay ayrıca işlenir.')
             }
           >
-            Kayıtları topluca oluştur
+            Kayıtları oluştur → Mail taslağına geç
           </button>
         </>
       )}
@@ -781,6 +859,7 @@ export function ValidationBatchesWorkspace({
         fileData={fileData}
         manual={manual}
         contacts={state.settings.contacts}
+        openCase={openCase}
         onClose={() => setImporting(false)}
         onCreated={(id) => {
           setSelected(id);
