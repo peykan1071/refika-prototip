@@ -17,6 +17,8 @@ import {
   ruleVersion,
 } from '../validation.mjs';
 import './validation.css';
+import { EsepLinks, EsepStatus } from './esep-status.jsx';
+import { EsepCheckForm } from './esep-check-form.jsx';
 import {
   useTablePage,
   TablePagination,
@@ -82,6 +84,7 @@ const labels = {
   result: 'Sonuç',
   reopen: 'Yeniden inceleme',
   file: 'Kanıt eklendi',
+  'esep-check': 'Güncel ESEP kontrolü',
 };
 const outcomes = {
   approved: 'Onaylandı / tamamlandı',
@@ -473,6 +476,24 @@ export function ValidationWorkspace({
           </p>
         )}
         {pane}
+        {saved && (
+          <section className="panel">
+            <EsepLinks row={saved} />
+            <EsepStatus row={saved} detailed />
+            <EsepCheckForm
+              key={saved.id + ':' + saved.version}
+              row={saved}
+              busy={busy || dirty}
+              onSave={(data) =>
+                mutate(
+                  'esep-check',
+                  data,
+                  'Güncel ESEP kontrolü ve profil bağlantıları kaydedildi.',
+                )
+              }
+            />
+          </section>
+        )}
         {section === 'review' && (
           <section className="panel">
             <form
@@ -1203,6 +1224,9 @@ export function ValidationWorkspace({
                     {event.outcome && ` · ${outcomes[event.outcome]}`}
                   </p>
                   {event.subject && <strong>{event.subject}</strong>}
+                  {event.esepCheck && (
+                    <EsepStatus row={{ esepCheck: event.esepCheck }} detailed />
+                  )}
                   {event.recipient && (
                     <p>
                       Alıcı: {event.recipient} · {event.channel || 'Taslak'}

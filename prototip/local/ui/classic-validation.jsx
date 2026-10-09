@@ -21,6 +21,7 @@ import {
 } from '../validation.mjs';
 import { ValidationWorkspace, sourceCase } from './validation-workspace.jsx';
 import { ValidationPeriods } from './validation-periods.jsx';
+import { EsepLinks, EsepStatus } from './esep-status.jsx';
 import {
   useTablePage,
   TablePagination,
@@ -398,8 +399,13 @@ export function ClassicValidation({
                           </span>
                           <small>
                             {r.kind ? caseKinds[r.kind] : 'ESEP kaynak kaydı'} ·{' '}
-                            {r.accountId || r.schoolId || r.id.slice(0, 8)}
+                            {r.accountId ||
+                              (r.esepCheck?.person.id
+                                ? 'ESEP ID ' + r.esepCheck.person.id
+                                : r.schoolId ||
+                                  r.id.replace(/^history-/, '').slice(0, 8))}
                           </small>
+                          <EsepLinks row={r} />
                         </td>
                         <td>
                           <span className={'badge ' + r.status}>
@@ -418,6 +424,7 @@ export function ClassicValidation({
                                     ? 'Önceki sonuç kaydı'
                                     : 'İnceleme bekliyor'}
                           </span>
+                          <EsepStatus row={r} />
                         </td>
                         <td>
                           {r.holdReason || r.school || r.reason || '—'}

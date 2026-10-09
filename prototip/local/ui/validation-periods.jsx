@@ -7,6 +7,7 @@ import {
   TableOrder,
 } from './table-pagination.jsx';
 import './validation-periods.css';
+import { EsepLinks, EsepStatus } from './esep-status.jsx';
 
 const outcomes = {
   approved: 'Olumlu sonuçlandı',
@@ -467,6 +468,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                               r.profileId ||
                               'Kimlik bilgisi eksik'}
                           </small>
+                          <EsepLinks row={r} />
                         </td>
                         <td>
                           {r.school || '—'}
@@ -476,6 +478,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                         </td>
                         <td>
                           {outcomes[r.outcome]}
+                          <EsepStatus row={r} />
                           <details>
                             <summary>Dayanağı göster</summary>
                             <p>{r.note}</p>
@@ -548,6 +551,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                         <td>
                           {r.name || r.title}
                           <small>{r.accountId}</small>
+                          <EsepLinks row={r} />
                         </td>
                         <td>
                           {r.school}
@@ -569,6 +573,7 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
                               {source(r.lastReply.messageUrl)}
                             </details>
                           )}
+                          <EsepStatus row={r} />
                         </td>
                         <td>
                           {source(r.messageUrl)}

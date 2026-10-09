@@ -9,6 +9,7 @@ import {
   caseStatuses,
 } from './validation.mjs';
 import { text, provinces } from './domain.mjs';
+import { cleanEsepCheck } from './esep-check.mjs';
 
 const fingerprint = (r) =>
   r
@@ -343,6 +344,35 @@ export class ValidationStore {
       return saved;
     });
   }
+  recordEsepCheck(id, input) {
+    const row = this.current(id, input.version);
+    if (input.confirmed !== true)
+      throw new Error('ESEP kaynak kontrolü teyidi gerekli.');
+    const check = cleanEsepCheck(input.check, row);
+    if (row.esepCheck?.checkedAt > check.checkedAt)
+      throw new Error('Daha eski bir kontrol güncel kaydın yerine geçemez.');
+    if (JSON.stringify(row.esepCheck) === JSON.stringify(check)) return row;
+    return this.store.transaction(() => {
+      const next = {
+        ...row,
+        profileUrl: check.person.profileUrl || row.profileUrl,
+        schoolUrl: check.school.profileUrl || row.schoolUrl,
+        esepCheck: check,
+        updatedAt: new Date().toISOString(),
+      };
+      const saved = this.put(next);
+      this.append(id, 'esep-check', {
+        happenedAt: check.checkedAt,
+        note: check.note,
+        evidenceUrl: check.person.sourceUrl || check.school.sourceUrl,
+        esepCheck: check,
+      });
+      this.store.log(
+        `${row.title}: güncel ESEP durumu ve profil bağlantıları kaydedildi.`,
+      );
+      return saved;
+    });
+  }
   save(input) {
     const settings = this.store.meta('settings');
     if (!settings) throw new Error('Önce il çalışma alanını oluşturun.');
@@ -395,6 +425,17 @@ export class ValidationStore {
       updatedAt: at,
       result: old?.result || '',
       resolvedAt: old?.resolvedAt || '',
+      ...(old?.esepCheck &&
+      [
+        'accountId',
+        'schoolId',
+        'name',
+        'school',
+        'profileUrl',
+        'schoolUrl',
+      ].every((key) => old[key] === values[key])
+        ? { esepCheck: old.esepCheck }
+        : {}),
     };
     if (row.status === 'ready') this.assertReady(row);
     return this.store.transaction(() => {
@@ -657,6 +698,7 @@ export class ValidationStore {
     const resultNumbers = new Set();
     for (const row of data.cases) {
       cleanCase(row);
+      if (row.esepCheck) cleanEsepCheck(row.esepCheck, row);
       if (
         !Number.isSafeInteger(row.version) ||
         row.version < 1 ||
@@ -690,6 +732,7 @@ export class ValidationStore {
       )
         throw new Error('Yazışma geçmişi geçersiz.');
       const body = JSON.parse(e.body);
+      if (body.esepCheck) cleanEsepCheck(body.esepCheck, {});
       if (body.resultNumber !== undefined) {
         if (
           body.type !== 'result' ||
@@ -726,6 +769,7 @@ export class ValidationStore {
           'result',
           'reopen',
           'file',
+          'esep-check',
         ].includes(body.type)
       )
         throw new Error('Geçmiş işlem türü geçersiz.');

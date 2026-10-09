@@ -225,7 +225,7 @@ export async function startLocal({
         );
       }
       const validationRoute = path.match(
-        /^\/api\/validation\/([^/]+)(?:\/(draft|sent|progress|files|history-export))?$/,
+        /^\/api\/validation\/([^/]+)(?:\/(draft|sent|progress|files|history-export|esep-check))?$/,
       );
       if (validationRoute) {
         const [, id, action] = validationRoute;
@@ -279,6 +279,8 @@ export async function startLocal({
             req,
             action === 'files' ? 15 * 1024 * 1024 : 1024 * 1024,
           );
+          if (action === 'esep-check')
+            return json(res, 200, store.validation.recordEsepCheck(id, input));
           if (action === 'files') {
             if (typeof input.data !== 'string')
               throw new Error('Dosya okunamadı.');

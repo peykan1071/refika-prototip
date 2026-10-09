@@ -154,6 +154,20 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
           title: snapshot.title || current.title,
           accountId: snapshot.accountId,
           school: snapshot.school,
+          schoolId: snapshot.schoolId,
+          profileUrl:
+            snapshot.accountId === current.accountId
+              ? current.profileUrl
+              : snapshot.profileUrl,
+          schoolUrl:
+            snapshot.schoolId === current.schoolId
+              ? current.schoolUrl
+              : snapshot.schoolUrl,
+          esepCheck:
+            snapshot.accountId === current.accountId &&
+            snapshot.schoolId === current.schoolId
+              ? current.esepCheck
+              : undefined,
           kind: snapshot.kind,
           messageUrl: event.messageUrl || '',
           note: event.proof || '',
@@ -183,7 +197,18 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
       name: row.name || '',
       accountId: row.accountId || '',
       profileId: row.profileId || '',
-      profileUrl: row.profileUrl || '',
+      profileUrl:
+        (row.accountId === current.accountId
+          ? current.profileUrl
+          : row.profileUrl) || '',
+      schoolUrl:
+        (row.schoolId === current.schoolId
+          ? current.schoolUrl
+          : row.schoolUrl) || '',
+      esepCheck:
+        row.accountId === current.accountId && row.schoolId === current.schoolId
+          ? current.esepCheck
+          : undefined,
       school: row.school || '',
       schoolId: row.schoolId || '',
       district: row.district || '',
@@ -357,6 +382,12 @@ export async function validationPeriodWorkbook(data) {
       'Kaydeden',
       'Dosyanın güncel durumu',
       'Tarih dayanağı',
+      'Okul profil bağlantısı',
+      'Güncel ESEP kontrol zamanı (UTC)',
+      'ESEP kişi durumu (kaynak metni)',
+      'ESEP okul durumu (kaynak metni)',
+      'ESEP üyelik durumu (kaynak metni)',
+      'İlişkili ESEP okul profilleri',
     ],
     data.results.map((r) => [
       r.reference,
@@ -378,6 +409,14 @@ export async function validationPeriodWorkbook(data) {
       r.operator,
       caseStatuses[r.currentStatus],
       r.dateBasis === 'notification' ? 'Onay / sonuç bildirimi' : 'Gerçekleşme',
+      r.schoolUrl || '',
+      r.esepCheck?.checkedAt || '',
+      r.esepCheck?.person.sourceLabel || '',
+      r.esepCheck?.school.sourceLabel || '',
+      r.esepCheck?.membership.sourceLabel || '',
+      r.esepCheck?.school.relatedProfiles
+        ?.map((p) => p.id + ' · ' + p.title + ' · ' + p.profileUrl)
+        .join('\n') || '',
     ]),
   );
   sheet(
@@ -395,6 +434,13 @@ export async function validationPeriodWorkbook(data) {
       'Güncel sonuç',
       'Son yanıt tarihi',
       'Son yanıt',
+      'Kişi profil bağlantısı',
+      'Okul profil bağlantısı',
+      'Güncel ESEP kontrol zamanı (UTC)',
+      'ESEP kişi durumu (kaynak metni)',
+      'ESEP okul durumu (kaynak metni)',
+      'ESEP üyelik durumu (kaynak metni)',
+      'İlişkili ESEP okul profilleri',
     ],
     data.requests.map((r) => [
       r.caseId,
@@ -409,6 +455,15 @@ export async function validationPeriodWorkbook(data) {
       outcomeLabels[r.currentOutcome] || '',
       r.lastReply?.date || '',
       r.lastReply?.note || '',
+      r.profileUrl || '',
+      r.schoolUrl || '',
+      r.esepCheck?.checkedAt || '',
+      r.esepCheck?.person.sourceLabel || '',
+      r.esepCheck?.school.sourceLabel || '',
+      r.esepCheck?.membership.sourceLabel || '',
+      r.esepCheck?.school.relatedProfiles
+        ?.map((p) => p.id + ' · ' + p.title + ' · ' + p.profileUrl)
+        .join('\n') || '',
     ]),
   );
   sheet(

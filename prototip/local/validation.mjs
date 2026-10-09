@@ -261,6 +261,11 @@ export const caseExportHeaders = [
   'Durum',
   'Sonuç',
   'Kural sürümü',
+  'ESEP kontrol zamanı (UTC)',
+  'ESEP kişi durumu (kaynak metni)',
+  'ESEP okul durumu (kaynak metni)',
+  'ESEP üyelik durumu (kaynak metni)',
+  'İlişkili ESEP okul profilleri',
 ];
 export function caseExportRow(row) {
   return [
@@ -290,5 +295,12 @@ export function caseExportRow(row) {
     caseStatuses[row.status],
     row.result || '',
     row.ruleVersion,
+    row.esepCheck?.checkedAt || '',
+    row.esepCheck?.person.sourceLabel || '',
+    row.esepCheck?.school.sourceLabel || '',
+    row.esepCheck?.membership.sourceLabel || '',
+    row.esepCheck?.school.relatedProfiles
+      ?.map((p) => p.id + ' · ' + p.title + ' · ' + p.profileUrl)
+      .join('\n') || '',
   ];
 }

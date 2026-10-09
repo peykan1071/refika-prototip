@@ -1,4 +1,4 @@
-# REFİKA 0.6.0 · Yerel uygulama
+# REFİKA 0.6.4 · Yerel uygulama
 
 Her il kendi bilgisayarında çalışır. Merkez, bağlanan illerin özetini ortak ekranda görür. Bu sürümde yerel iş akışı ve merkez aktarım servisi çalışır; canlı merkez, kurum hesabı ve model hizmeti ayrıca kurulacaktır.
 
@@ -62,6 +62,8 @@ Rapor hazırlama bu sürümde AI kullanmaz. Sonraki AI desteğinin dayanağı ol
 - **Kanıt ve geçmiş:** Dosya ekleri, inceleme anındaki içerik, taslak, gönderilen metin, yanıt ve sonuç geçmişi saklanır. Liste ve yazışma geçmişi Excel olarak indirilebilir. Merkeze yalnız sayılar gider; metin, alıcı ve ekler paylaşılmaz. Merkezde bekleyen gönderimler için ilave sütun vardır; eski merkez servisinin de güncellenmesi gerekir.
 
 ## Yerel veri ve yedek
+
+**Kişi profili / Okul profili** bağlantıları kayıt ve dönem listelerinden açılır; ESEP yetkili oturumu gerekebilir. Görünen hesap ve okul ID’leri profil URL’sindeki ID ile farklı olabilir: bağlantılar tahmin edilmeden ESEP’teki gerçek profilden alınır. **İncele → Güncel ESEP kontrolü → Yeni ESEP kontrolü kaydet** ile kişi, okul ve ilgili okul üyeliğinin durumu, ESEP’te görünen metin ve kaynak sayfası kaydedilir. Kontrol edilmeyen alan “Kontrol edilemedi” bırakılır. Teyit sonrası kontrol zamanı ve önceki gözlemler geçmişte saklanır; bu işlem ESEP üzerinde onay vermez. Eski okul ID’si bulunamayan kayıtların ilişkili güncel profilleri ayrı bağlantılardır, eski kimliği değiştirmez. Güncel ESEP gözlemi geçmiş sonucu, `SON` numarasını ve dönemlik sayıyı değiştirmez; gerçek sonuç ayrıca kendi tarih ve dayanağıyla kaydedilir. ESEP kontrolü ve bağlantılar yedeğe ve Excel çıktılarına dahildir; uygulamada otomatik periyodik ESEP taraması yoktur.
 
 **Kayıt ve Validasyon → Dönemlik kayıt listesi** ve **Raporlar ve Yazışmalar → Validasyon dönem özeti** aynı tarihli kayıtlardan hesaplanır. Takvim yılının dört dönemi (Ocak–Mart, Nisan–Haziran, Temmuz–Eylül, Ekim–Aralık) ve yıllık toplam birlikte görünür. Sonuç tarihi Türkiye saatine göre değerlendirilir; REFİKA’ya kayıt tarihi ayrıca saklanır. Kesin gerçekleşme tarihi bilinmiyorsa kaynakta görülen **sonuç bildirimi tarihi** seçilir ve listede açıkça belirtilir.
 
