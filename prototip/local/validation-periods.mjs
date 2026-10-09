@@ -149,6 +149,7 @@ export function validationPeriodSummary(store, year, quarter = 'all') {
           caseId: raw.case_id,
           date: validationDate(event.happenedAt),
           happenedAt: event.happenedAt,
+          recordedAt: event.at,
           name: snapshot.name,
           title: snapshot.title || current.title,
           accountId: snapshot.accountId,

@@ -21,7 +21,11 @@ import {
 } from '../validation.mjs';
 import { ValidationWorkspace, sourceCase } from './validation-workspace.jsx';
 import { ValidationPeriods } from './validation-periods.jsx';
-import { useTablePage, TablePagination } from './table-pagination.jsx';
+import {
+  useTablePage,
+  TablePagination,
+  TableOrder,
+} from './table-pagination.jsx';
 import './classic-workspace.css';
 
 function CaseDialog({ editor, state, api, fileData, run, busy, close }) {
@@ -99,6 +103,7 @@ export function ClassicValidation({
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState(initialFilter);
   const [group, setGroup] = useState('all');
+  const [order, setOrder] = useState('added');
   const [editor, setEditor] = useState(null);
   const [workspace, setWorkspace] = useState('requests');
   const cases = state.validationCases || [];
@@ -126,6 +131,7 @@ export function ClassicValidation({
   const page = useTablePage(
     rows,
     JSON.stringify([screen, filter, group, query, state.revision]),
+    order,
   );
   const title = {
     records: 'Kayıt ve Validasyon',
@@ -310,6 +316,7 @@ export function ClassicValidation({
               </label>
             </div>
             <div className="classic-list-filter">
+              <TableOrder value={order} onChange={setOrder} />
               <label>
                 Çalışma listesi{' '}
                 <select

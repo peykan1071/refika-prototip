@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Download, Copy, ExternalLink, Plus } from 'lucide-react';
 import { caseKinds, caseStatuses } from '../validation.mjs';
-import { useTablePage, TablePagination } from './table-pagination.jsx';
+import {
+  useTablePage,
+  TablePagination,
+  TableOrder,
+} from './table-pagination.jsx';
 import './validation-periods.css';
 
 const outcomes = {
@@ -218,6 +222,8 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
   const [year, setYear] = useState(now().slice(0, 4));
   const [quarter, setQuarter] = useState('all');
   const [requestStatus, setRequestStatus] = useState('all');
+  const [resultOrder, setResultOrder] = useState('added');
+  const [requestOrder, setRequestOrder] = useState('added');
   const [response, setResponse] = useState(null),
     [copied, setCopied] = useState(false),
     [history, setHistory] = useState(false);
@@ -232,10 +238,11 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
         ? r.currentStatus !== 'completed'
         : r.currentOutcome === requestStatus),
   );
-  const resultPage = useTablePage(data?.results || [], requestKey);
+  const resultPage = useTablePage(data?.results || [], requestKey, resultOrder);
   const requestPage = useTablePage(
     shownRequests,
     requestKey + ':' + requestStatus,
+    requestOrder,
   );
   const error = !validYear
     ? '2000–2099 arasında bir yıl girin.'
@@ -410,6 +417,11 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
           </section>
           <section className="panel">
             <h3>Tarihli sonuç listesi · {data.results.length}</h3>
+            <TableOrder
+              value={resultOrder}
+              onChange={setResultOrder}
+              label="Sonuç sıralaması"
+            />
             <p className="muted">
               Gerçek sonuç / onay bildirimi tarihi ile REFİKA’ya kaydetme tarihi
               ayrı tutulur.
@@ -484,6 +496,11 @@ export function ValidationPeriods({ state, api, run, busy, openCase }) {
           </section>
           <section className="panel">
             <h3>Tarihli gönderim listesi · {shownRequests.length}</h3>
+            <TableOrder
+              value={requestOrder}
+              onChange={setRequestOrder}
+              label="Gönderim sıralaması"
+            />
             <label>
               Gönderim durumu{' '}
               <select

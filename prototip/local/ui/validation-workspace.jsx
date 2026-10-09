@@ -17,7 +17,11 @@ import {
   ruleVersion,
 } from '../validation.mjs';
 import './validation.css';
-import { useTablePage, TablePagination } from './table-pagination.jsx';
+import {
+  useTablePage,
+  TablePagination,
+  TableOrder,
+} from './table-pagination.jsx';
 
 const day = () =>
   new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' });
@@ -99,16 +103,22 @@ function Status({ row }) {
   );
 }
 function SourceList({ state, create, open, busy, query }) {
+  const [order, setOrder] = useState('added');
   const rows = state.records.filter((r) =>
     [r.name, r.school, r.accountId, r.schoolId]
       .join(' ')
       .toLocaleLowerCase('tr')
       .includes(query.toLocaleLowerCase('tr')),
   );
-  const page = useTablePage(rows, JSON.stringify([query, state.revision]));
+  const page = useTablePage(
+    rows,
+    JSON.stringify([query, state.revision]),
+    order,
+  );
   return (
     <section className="panel">
       <h2>Aktarılan ESEP kayıtları</h2>
+      <TableOrder value={order} onChange={setOrder} label="Kaynak sıralaması" />
       <p>
         Bu liste kaynak veriyi ve önceki inceleme notlarını korur. Bir talep
         dosyası açarak yeni kontrol ve yazışma akışına başlayın. Eski
@@ -194,6 +204,7 @@ export function ValidationWorkspace({
   const [group, setGroup] = useState(results ? 'all' : 'review');
   const [filter, setFilter] = useState(results ? 'waiting' : 'all');
   const [query, setQuery] = useState('');
+  const [order, setOrder] = useState('added');
   const [form, setForm] = useState(initialCase || initialForm);
   const [saved, setSaved] = useState(initialCase);
   const [section, setSection] = useState(initialSection);
@@ -222,6 +233,7 @@ export function ValidationWorkspace({
   const page = useTablePage(
     rows,
     JSON.stringify([group, filter, query, state.revision]),
+    order,
   );
   const dirty = form && JSON.stringify(form) !== JSON.stringify(saved);
   const messageDirty = ['recipient', 'subject', 'body'].some(
@@ -1270,6 +1282,9 @@ export function ValidationWorkspace({
         ))}
       </nav>
       <div className="case-filter">
+        {group !== 'sources' && (
+          <TableOrder value={order} onChange={setOrder} />
+        )}
         <button aria-pressed={group === 'all'} onClick={() => setGroup('all')}>
           Tüm dosyalar ({cases.length})
         </button>

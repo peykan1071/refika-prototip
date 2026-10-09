@@ -1,22 +1,36 @@
 import { useState } from 'react';
+import { sortTableRows } from './table-order.mjs';
 import './table-pagination.css';
 
-export function useTablePage(rows, filterKey) {
-  const [position, setPosition] = useState({ key: filterKey, page: 1 });
-  if (position.key !== filterKey) setPosition({ key: filterKey, page: 1 });
+export function useTablePage(rows, filterKey, order = 'added') {
+  const pageKey = JSON.stringify([filterKey, order]);
+  const [position, setPosition] = useState({ key: pageKey, page: 1 });
+  if (position.key !== pageKey) setPosition({ key: pageKey, page: 1 });
   const total = rows.length;
   const pages = Math.max(1, Math.ceil(total / 10));
-  const page = Math.min(position.key === filterKey ? position.page : 1, pages);
+  const page = Math.min(position.key === pageKey ? position.page : 1, pages);
   const offset = (page - 1) * 10;
   return {
-    rows: rows.slice(offset, offset + 10),
+    rows: sortTableRows(rows, order).slice(offset, offset + 10),
     total,
     page,
     pages,
     from: total ? offset + 1 : 0,
     to: Math.min(offset + 10, total),
-    setPage: (next) => setPosition({ key: filterKey, page: next }),
+    setPage: (next) => setPosition({ key: pageKey, page: next }),
   };
+}
+
+export function TableOrder({ value, onChange, label = 'Sıralama' }) {
+  return (
+    <label className="table-order">
+      {label}{' '}
+      <select value={value} onChange={(e) => onChange(e.target.value)}>
+        <option value="alphabetical">Alfabetik (A–Z)</option>
+        <option value="added">Eklenme tarihi (en yeni önce)</option>
+      </select>
+    </label>
+  );
 }
 
 export function TablePagination({ pagination: p, label }) {
