@@ -1,0 +1,124 @@
+.case-groups {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.case-groups button {
+  justify-content: space-between;
+  text-align: left;
+  padding: 18px;
+}
+.case-groups b {
+  font-size: 22px;
+}
+.case-groups [aria-pressed='true'],
+.case-sections [aria-pressed='true'],
+.case-filter [aria-pressed='true'] {
+  border-color: var(--amber);
+  background: #fff6e3;
+  color: var(--navy);
+}
+.case-filter,
+.case-sections,
+.case-files,
+.case-status-line {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.case-filter input {
+  flex: 1;
+  min-width: 200px;
+}
+.case-filter select {
+  width: auto;
+  max-width: 100%;
+}
+.case-fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.case-fields:disabled {
+  opacity: 0.78;
+}
+.case-check {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--border);
+}
+.case-issues,
+.case-source {
+  padding: 15px;
+  background: #f5f6fa;
+  margin: 18px 0;
+  border-radius: 8px;
+  line-height: 1.6;
+  font-size: 14px;
+}
+.case-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.case-timeline > li {
+  border-left: 3px solid var(--amber);
+  padding: 4px 0 18px 20px;
+  margin-bottom: 24px;
+  overflow-wrap: anywhere;
+}
+.case-timeline time,
+.case-timeline > li > small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.case-timeline details {
+  margin: 12px 0;
+}
+.case-timeline summary,
+.case-source summary,
+.case-issues summary {
+  cursor: pointer;
+}
+.case-pre {
+  white-space: pre-wrap;
+}
+.case-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.case-files a {
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.badge.waiting {
+  background: #edf1fb;
+  color: #496c9f;
+}
+@media (max-width: 1100px) {
+  .case-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 650px) {
+  .case-check {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .case-groups {
+    grid-template-columns: 1fr;
+  }
+  .case-filter > * {
+    width: 100%;
+  }
+  .case-sections button {
+    flex: 1;
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "plugins": ["eslint", "react", "jsx-a11y"],
+  "categories": { "correctness": "error" },
+  "env": { "builtin": true, "browser": true, "node": true },
+  "options": { "typeAware": false, "typeCheck": false },
+  "rules": { "react/rules-of-hooks": "error" }
+}

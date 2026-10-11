@@ -1,0 +1,86 @@
+.inventory-reminder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid #edbd4b;
+  border-radius: 10px;
+  background: #fff7e0;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.inventory-reminder p {
+  margin: 0.4rem 0 0;
+}
+.inventory-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 12px;
+  margin: 1rem 0;
+}
+.inventory-metrics > div {
+  padding: 16px;
+  border: 1px solid #ccdce9;
+  border-radius: 8px;
+  background: #f2f9fc;
+}
+.inventory-metrics strong {
+  display: block;
+  font-size: 1.7rem;
+}
+.inventory-metrics span {
+  display: block;
+  margin-top: 6px;
+}
+.inventory-note {
+  background: #f3f8fc;
+  border-left: 4px solid #8dafce;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-wrap: anywhere;
+}
+.inventory-import {
+  border-top: 1px solid #ccdce9;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+.inventory-form,
+.inventory-mapping {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.inventory-form label,
+.inventory-mapping label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.inventory-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1rem 0;
+}
+.inventory-check input {
+  width: auto;
+}
+.inventory-workspace td button {
+  display: block;
+  margin-bottom: 10px;
+}
+.inventory-workspace td small {
+  display: block;
+  margin-top: 8px;
+}
+.inventory-missing {
+  max-height: 240px;
+  overflow: auto;
+}
+@media (max-width: 700px) {
+  .inventory-reminder {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
