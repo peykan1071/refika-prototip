@@ -25,6 +25,7 @@ import { EsepLinks, EsepStatus } from './esep-status.jsx';
 import {
   ValidationBatchesWorkspace,
   ApprovedAccounts,
+  MailWorkflowHelp,
 } from './validation-batches.jsx';
 import {
   useTablePage,
@@ -185,7 +186,7 @@ export function ClassicValidation({
                 ? 'Kontrol edilen taleplerin merkez listesini ve e-posta taslaklarını hazırlayın.'
                 : screen === 'approval'
                   ? 'Alıcıyı, e-posta metnini ve kanıtları gönderimden önce kontrol edin.'
-                  : 'Gönderilen taleplerin yanıtlarını ve gerçek sonuçlarını kaydedin.'}
+                  : 'Gönderilmiş mail kayıtlarını ve eklerini açın; Gmail’deki yanıta göre sonuçları kaydedin.'}
           </p>
         </div>
         <span className="badge pilot-badge">YEREL ÇALIŞMA ALANI</span>
@@ -208,7 +209,7 @@ export function ClassicValidation({
             aria-pressed={['batches', 'import'].includes(workspace)}
             onClick={() => setWorkspace('batches')}
           >
-            Excel listeleri ve onay maili
+            Mail hazırlama ve gönderim takibi
           </button>
           <button
             aria-pressed={workspace === 'accounts'}
@@ -230,7 +231,7 @@ export function ClassicValidation({
             aria-pressed={workspace !== 'single'}
             onClick={() => setWorkspace('batches')}
           >
-            Excel listesi ve toplu e-posta
+            Toplu mail hazırlama
           </button>
           <button
             aria-pressed={workspace === 'single'}
@@ -239,6 +240,11 @@ export function ClassicValidation({
             Tekil talep taslakları
           </button>
         </nav>
+      )}
+      {(['drafts', 'approval'].includes(screen) ||
+        (screen === 'records' &&
+          ['batches', 'import'].includes(workspace))) && (
+        <MailWorkflowHelp onOpenSent={() => go('results')} />
       )}
       {(screen === 'records' && ['batches', 'import'].includes(workspace)) ||
       (['drafts', 'approval'].includes(screen) && workspace !== 'single') ? (
@@ -540,6 +546,16 @@ export function ClassicValidation({
                           {r.result && <small>Sonuç: {r.result}</small>}
                         </td>
                         <td>
+                          {screen === 'results' && (
+                            <button
+                              className="text-button"
+                              disabled={busy}
+                              onClick={() => open(r, 'evidence')}
+                            >
+                              <Mail size={16} />
+                              Maili ve ekleri gör
+                            </button>
+                          )}
                           <button
                             className="text-button"
                             disabled={busy}
@@ -605,8 +621,7 @@ export function ClassicValidation({
             {screen === 'drafts' && (
               <p className="muted">
                 Burada tekil talep taslakları bulunur. Excel’den gelen toplu
-                taslakları “Excel listesi ve toplu e-posta” sekmesinden
-                açabilirsiniz.
+                taslakları “Toplu mail hazırlama” sekmesinden açabilirsiniz.
               </p>
             )}
           </section>

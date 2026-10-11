@@ -2,6 +2,70 @@
 .batch-detail .tabs {
   margin: 16px 0;
 }
+.mail-workflow {
+  border-top: 4px solid #efb31d;
+}
+.mail-workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 0;
+  margin: 20px 0 16px;
+  list-style: none;
+}
+.mail-workflow-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #edf6fb;
+  border-radius: 10px;
+  padding: 16px;
+}
+.mail-step-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0b2b51;
+  color: #fff;
+  font-weight: 700;
+}
+.mail-workflow-steps p,
+.mail-workflow-footer p,
+.mail-empty-state p {
+  margin: 8px 0 0;
+}
+.mail-workflow-note {
+  margin: 0 0 16px;
+}
+.mail-workflow-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid #dbe3ef;
+  padding-top: 16px;
+}
+.mail-workflow-footer button {
+  flex-shrink: 0;
+  white-space: normal;
+}
+.mail-empty-state {
+  background: #f4f8fc;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 20px;
+}
+@media (max-width: 1000px) {
+  .mail-workflow-steps {
+    grid-template-columns: 1fr;
+  }
+  .mail-workflow-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
 .batch-import .actions,
 .batch-detail .actions {
   flex-wrap: wrap;

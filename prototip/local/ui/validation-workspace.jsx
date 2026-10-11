@@ -409,7 +409,7 @@ export function ValidationWorkspace({
         ['draft', 'Taslak', Mail],
         ['approval', 'Gönderim öncesi kontrol', ClipboardCheck],
         ['results', 'Sonuç', ClipboardCheck],
-        ['evidence', 'Kanıt ve geçmiş', History],
+        ['evidence', 'Mail, ekler ve geçmiş', History],
       ].map(([key, label, Icon]) => (
         <button
           key={key}

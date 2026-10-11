@@ -14,6 +14,78 @@ import {
 } from './table-pagination.jsx';
 import './validation-batches.css';
 
+export function MailWorkflowHelp({ onOpenSent }) {
+  return (
+    <section
+      className="panel mail-workflow"
+      aria-labelledby="mail-workflow-title"
+    >
+      <div className="section-head">
+        <h2 id="mail-workflow-title">Mail nasıl gönderilir?</h2>
+        <span className="badge">Gönderim Gmail’de</span>
+      </div>
+      <p>
+        REFİKA mail taslağını ve Excel ekini hazırlar. Maili ortak hesabınızdan
+        siz gönderir, gönderim ve yanıt bilgilerini REFİKA’ya kaydedersiniz.
+      </p>
+      <ol className="mail-workflow-steps">
+        <li>
+          <span className="mail-step-number" aria-hidden="true">
+            1
+          </span>
+          <div>
+            <strong>REFİKA’da hazırlayın</strong>
+            <p>
+              Listeyi yükleyin; alıcıyı, konuyu ve mail metnini kontrol edin.
+              Metni ve Excel ekini indirin.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span className="mail-step-number" aria-hidden="true">
+            2
+          </span>
+          <div>
+            <strong>Gmail’de gönderin</strong>
+            <p>
+              Ortak e-posta hesabınızı seçin. Hazırlanan metni yeni maile
+              yapıştırın, Excel’i ekleyip gönderin.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span className="mail-step-number" aria-hidden="true">
+            3
+          </span>
+          <div>
+            <strong>REFİKA’da takip edin</strong>
+            <p>
+              Gönderim tarihini ve mail bağlantısını kaydedin. Gmail’e gelen
+              yanıtı okuyup ilgili kayıtların sonucunu işleyin.
+            </p>
+          </div>
+        </li>
+      </ol>
+      <p className="muted mail-workflow-note">
+        REFİKA şu anda Gmail’e bağlı değildir; mail göndermez ve gelen yanıtları
+        otomatik okumaz.
+      </p>
+      <div className="mail-workflow-footer">
+        <div>
+          <strong>Daha önce gönderdiğiniz mailleri mi arıyorsunuz?</strong>
+          <p>
+            Kaydedilmiş mail metinleri, bağlantılar ve ekler Sonuç Takibi’nde
+            bulunur.
+          </p>
+        </div>
+        <button onClick={onOpenSent}>
+          Kaydedilmiş mailleri ve eklerini gör
+        </button>
+      </div>
+    </section>
+  );
+}
+
 function downloadFile(name, content) {
   const url = URL.createObjectURL(new Blob([content]));
   const anchor = document.createElement('a');
@@ -121,7 +193,20 @@ function BatchMail({ draft, batchId, api, run, busy, readOnly = false }) {
             Bu mailin Excel ekini indir
           </a>
         )}
+        <a
+          className="button"
+          href="https://mail.google.com/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Gmail’i aç ↗
+        </a>
       </div>
+      <p className="muted">
+        Gmail’de ortak hesabınızı seçin; metni yapıştırıp Excel ekini ekleyin.
+        “Taslağı kaydet” yalnız REFİKA’daki metni saklar. Gerçek gönderimden
+        sonra aşağıdaki “Gönderimi kaydet” adımını kullanın.
+      </p>
     </details>
   );
 }
@@ -621,8 +706,8 @@ function BatchDetail({ batch, api, run, busy, openCase, onClose }) {
       </div>
       <p>
         {action === 'sent'
-          ? 'Excel’i merkeze gönderdikten sonra ilgili satırları seçip gönderim tarihini bir kez kaydet.'
-          : 'Mailin açıkça onayladığı kayıtları seç. Mailde istisna tutulanları seçme; onlar beklemede kalır.'}
+          ? 'Bu adım mail göndermez. Gmail’de gönderimi tamamladıktan sonra ilgili satırları seçip gerçek gönderim tarihini ve mail bağlantısını kaydedin.'
+          : 'Gmail’deki yanıtı okuyup yalnız mailin açıkça kapsadığı kayıtları seçin. Mailde istisna tutulanlar beklemede kalır; sonuç kendiliğinden alınmaz.'}
       </p>
       <div className="actions">
         <button
@@ -882,14 +967,14 @@ export function ValidationBatchesWorkspace({
   return (
     <section className="panel">
       <div className="section-head">
-        <h2>Excel validasyon listeleri</h2>
+        <h2>Toplu mail için Excel listeleri</h2>
         <button className="primary" onClick={() => setImporting(true)}>
           Excel’den yeni kayıt
         </button>
       </div>
       <p>
-        Excel’i yükle, gönderimi bir kez kaydet, gelen mailin kapsadığı
-        kayıtları topluca sonuçlandır.
+        Excel listenizi yüklediğinizde mail taslağı ve gönderilecek Excel eki
+        burada hazırlanır.
       </p>
       <CoordinatorLinks contacts={state.settings.contacts} />
       {error && (
@@ -898,10 +983,14 @@ export function ValidationBatchesWorkspace({
         </p>
       )}
       {!batches.length ? (
-        <p>
-          Henüz Excel listesi eklenmedi. Mevcut kayıtların ve sonuçların kendi
-          listelerinde korunuyor.
-        </p>
+        <div className="mail-empty-state">
+          <strong>Henüz mail hazırlamak için Excel listesi yüklenmedi.</strong>
+          <p>
+            “Excel’den yeni kayıt” ile başlayabilirsiniz. Daha önce gönderilip
+            ayrı ayrı kaydedilen mailler bu listede görünmez; yukarıdaki
+            “Kaydedilmiş mailleri ve eklerini gör” düğmesinden açılır.
+          </p>
+        </div>
       ) : (
         <div className="table-wrap">
           <table>
