@@ -1,0 +1,44 @@
+.esep-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 8px;
+}
+.esep-links a {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.esep-status {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.esep-state {
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 5px;
+  background: #f0f3f7;
+  color: #32465c;
+}
+.esep-validated {
+  color: #16624c;
+  background: #e8f4ef;
+}
+.esep-pending {
+  color: #765315;
+  background: #fff4d9;
+}
+.esep-status details p {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.esep-check-form {
+  margin-top: 16px;
+}
+.esep-check-form fieldset {
+  border: 1px solid #dbe3ef;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
