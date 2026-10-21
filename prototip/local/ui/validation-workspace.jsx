@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AssistantPanel } from './assistant-panel.jsx';
 import {
   Plus,
   Download,
@@ -223,6 +224,7 @@ export function ValidationWorkspace({
     confirmed: false,
   });
   const [file, setFile] = useState(null);
+  const [assistantDirty, setAssistantDirty] = useState(false);
   const cases = state.validationCases || [];
   const rows = cases.filter(
     (r) =>
@@ -243,6 +245,7 @@ export function ValidationWorkspace({
     (key) => (message[key] || '') !== (savedMessage[key] || ''),
   );
   const unsaved = Boolean(
+    assistantDirty ||
     dirty ||
     messageDirty ||
     progress.note ||
@@ -453,6 +456,13 @@ export function ValidationWorkspace({
             {onClose ? 'Kapat' : 'Listeye dön'}
           </button>
         </div>
+        <AssistantPanel
+          key={saved?.id || 'new'}
+          state={state}
+          page="records"
+          source={saved ? { type: 'case', id: saved.id } : undefined}
+          onDirtyChange={setAssistantDirty}
+        />
         {saved && (
           <div className="case-status-line">
             <Status row={saved} />

@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { ChevronDown, ClipboardList, Download, Plus, X } from 'lucide-react';
+import {
+  ChevronDown,
+  ClipboardList,
+  Download,
+  Plus,
+  X,
+  Sparkles,
+} from 'lucide-react';
 import './plan-workspace.css';
 
 const monthLabel = (value) =>
@@ -25,7 +32,15 @@ const itemFields = [
   ['implementationNote', 'Validasyon / uygulama notu'],
 ];
 
-export function PlanWorkspace({ state, run, busy, api, fileData, onActivity }) {
+export function PlanWorkspace({
+  state,
+  run,
+  busy,
+  api,
+  fileData,
+  onActivity,
+  onPrepare,
+}) {
   const plans = state.plans || [];
   const [selected, setSelected] = useState(''),
     [open, setOpen] = useState(''),
@@ -406,6 +421,12 @@ export function PlanWorkspace({ state, run, busy, api, fileData, onActivity }) {
                                 </dd>
                               </dl>
                               <div className="plan-flow">
+                                {onPrepare && (
+                                  <button onClick={() => onPrepare(plan, item)}>
+                                    <Sparkles size={17} />
+                                    REFİKA ile hazırla
+                                  </button>
+                                )}
                                 <button onClick={() => onActivity(plan, item)}>
                                   <ClipboardList size={17} /> Faaliyet kaydı
                                   oluştur

@@ -7,6 +7,7 @@ import { validationWorkItems } from './validation.mjs';
 import { cleanPlan } from './plans.mjs';
 import { ReportStore } from './reports.mjs';
 import { InventoryStore } from './inventory.mjs';
+import { AssistantStore } from './assistant.mjs';
 import { cleanCoordinatorContacts } from './coordinator-contacts.mjs';
 import {
   digest,
@@ -37,6 +38,7 @@ export class Store {
     this.validation = new ValidationStore(this);
     this.reports = new ReportStore(this);
     this.inventory = new InventoryStore(this);
+    this.assistant = new AssistantStore(this);
     if (!this.meta('installationId'))
       this.setMeta('installationId', randomUUID());
   }
@@ -299,7 +301,8 @@ export class Store {
   exportArchive() {
     return {
       format: 'refika-backup',
-      version: 5,
+      version: 6,
+      assistantDrafts: this.assistant.list(),
       inventory: this.inventory.archive(),
       reports: this.reports.archive(),
       plans: this.list('plans'),
@@ -319,7 +322,7 @@ export class Store {
   restoreArchive(data, confirmedProvince) {
     if (
       data?.format !== 'refika-backup' ||
-      ![1, 2, 3, 4, 5].includes(data.version) ||
+      ![1, 2, 3, 4, 5, 6].includes(data.version) ||
       !provinceCode(data.settings?.province) ||
       confirmedProvince !== data.settings.province
     )
@@ -411,6 +414,8 @@ export class Store {
     this.reports.validateArchive(reports, confirmedProvince);
     const inventory = data.version >= 5 ? data.inventory : { imports: [] };
     this.inventory.validateArchive(inventory, confirmedProvince);
+    const assistantDrafts = data.version >= 6 ? data.assistantDrafts : [];
+    this.assistant.validateArchive(assistantDrafts, confirmedProvince);
     const history = data.version >= 2 ? data.history : [];
     if (
       !Array.isArray(history) ||
@@ -439,6 +444,7 @@ export class Store {
     this.transaction(() => {
       this.validation.restore(validation);
       this.inventory.restore(inventory);
+      this.assistant.restore(assistantDrafts);
       this.reports.restore(
         reports,
         new Map(

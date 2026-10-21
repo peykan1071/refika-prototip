@@ -34,6 +34,7 @@ import {
 } from './table-pagination.jsx';
 import './classic-workspace.css';
 import { InventoryWorkspace } from './inventory.jsx';
+import { AssistantPanel } from './assistant-panel.jsx';
 
 function CaseDialog({ editor, state, api, fileData, run, busy, close }) {
   const ref = useRef(null);
@@ -191,6 +192,11 @@ export function ClassicValidation({
         </div>
         <span className="badge pilot-badge">YEREL ÇALIŞMA ALANI</span>
       </div>
+      <AssistantPanel
+        state={state}
+        page={screen}
+        onSettings={() => go('settings')}
+      />
       {screen === 'records' && (
         <nav className="plan-tabs" aria-label="Validasyon çalışma alanları">
           <button

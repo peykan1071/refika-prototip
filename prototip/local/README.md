@@ -84,7 +84,7 @@ Plan maddeleri gerçekleşmiş faaliyet veya katılımcı sayılmaz. Kaynak iler
 - **YEĞİTEK’e aktarım:** Hazır alanları kopyalayın, resmî rapor formunu açın ve ekleri seçerek orada kaydedin. Sonrasında gerçek kayıt tarihi, görüntüleme bağlantısı ve kayıt dayanağını REFİKA’da saklayın. Bu bilgi koordinatör beyanıdır; otomatik gönderim, resmî kabul veya teslimat doğrulaması değildir. Doğrudan API/eşitleme bağlantısı henüz uygulanmamıştır.
 - **Sürüm geçmişi:** Taslak değişiklikleri ve durum geçişleri eski içerikleri korur. **Rapor metnini indir** ve **Rapor verisini indir** kaydedilmiş sürümü dışa verir; kaydedilmemiş düzenlemeler çıktıya girmez. Ek dosyalar ayrı indirilir. Geçmiş kaynak raporu ve kayıt bilgisi eklenmiş rapor doğrudan düzenlenmez.
 
-Rapor hazırlama bu sürümde AI kullanmaz. Sonraki AI desteğinin dayanağı olarak kaynak faaliyet bağlantısı, rapor alanları ve eski sürümler korunur.
+Rapor formu ve sayısal kontroller kurallarla çalışır. Sayfanın REFİKA hazırlık alanında, ayrıca yapılandırılmış bir modelle rapor, web haberi ve Instagram taslağı üretilebilir; bu taslaklar resmî rapora otomatik yazılmaz. Kaynak faaliyet bağlantısı, rapor alanları ve eski sürümler korunur.
 
 ## Aktarım kuralları
 
@@ -149,6 +149,21 @@ npm run desktop:package
 Son komut Windows x64 dağıtım klasörünü `release/REFIKA-win32-x64` altında üretir. Bu klasörün tamamı ZIP olarak dağıtılır. Derleme yalnız yerel uygulamayı paketler; eski Sites/vinext sunucusunu çalıştırmaz. Kod imzalama, otomatik güncelleme ve kurulum sihirbazı henüz yoktur.
 
 ## İsteğe bağlı AI
+
+### Sayfaya özel REFİKA hazırlık alanları
+
+- **Çalışma Masam:** Hesaplanmış dosya sayıları ve ilk 10 planlanan faaliyetten günlük özet.
+- **Faaliyet Planı:** Seçilen plan maddesi veya faaliyetten etkinlik önerisi ve hazırlık adımları. Madde üzerindeki **REFİKA ile hazırla** düğmesi kaynağı seçer.
+- **Kayıt ve Validasyon / Sonuç Takibi / Taslaklar / Onay Merkezi:** Öğretmen sorusuna yanıt, tek dosya özeti ve yazışma taslağı. Dosya ayrıntısındaki alan o dosyaya bağlıdır.
+- **Okul Ziyaretleri:** Ziyaret gündemi ve görüşme notlarını düzenleme.
+- **Eğitim ve Etkinlikler:** Eğitim akışı, değerlendirme soruları ve planlanan faaliyet duyurusu.
+- **Raporlar ve Yazışmalar:** Rapor, web haberi ve Instagram metni. Rapor/haber için tamamlanmış faaliyet veya arşiv raporu gerekir; planlanan faaliyet için Instagram duyurusu kullanılabilir.
+
+Görevi ve kaynağı seçin; soru veya hazırlık bilgilerini yazıp **Kullanılacak bilgileri incele** düğmesine basın. Yalnız gösterilen içerik, açık onaydan sonra model hizmetine gönderilir. Kişi adı, kişisel e-posta ve profil kimliği ayrı alanlar olarak modele verilmez; serbest metinlerdeki kişisel bilgiler önizlemede ayrıca kontrol edilmelidir. Yazışmada önerilen kurumsal alıcı mevcut talep kurallarından alınır. Bu özellik canlı ESEP/Gmail okuması veya resmî kaynak araması yapmaz. Kaynak notları kullanıcı tarafından eklenir. Dayanağı olmayan kural veya onay üretmemesi istenir; çıktı koordinatörce incelenir.
+
+Model yanıtı düzenlenebilir bir taslaktır. Dayanak alıntıları girdide aranır; bu, yanıtın tümünün doğru olduğunu garanti etmez. Eksikler ayrıca gösterilir. **Kopyala** ile metni kullanabilir veya gözden geçirdikten sonra **Taslağı kaydet** ile sayfa ve kaynak kaydına bağlı saklayabilirsiniz. Kaydedilmiş taslaklar aynı alandan yeniden açılır; asıl faaliyet, rapor veya validasyon durumu değişmez. Her kayıtta kaynak anı, özgün AI çıktısı ve düzenlenmiş metin korunur. Daha sonraki kaynak değişiklikleri eski taslağı güncellemez; üretim/kaydetme öncesinde değişen kaynak yeniden inceleme gerektirir.
+
+Model bağlı değilken üretim düğmesi kapalıdır; elle yazılan taslaklar kaydedilebilir. **Yedek sürüm 6**, hazırlık taslaklarını içerir; 1–5 sürümleri geri yüklenebilir. Taslaklar merkez eşitlemesine veya GitHub'a gönderilmez. Bu alanlar mail göndermez, yayın yapmaz ve resmî sonuç kaydetmez.
 
 Bağlantı Ollama `/api/chat` ve yapılandırılmış JSON yanıtını destekler. Model kurulmaz veya otomatik indirilmez. Uygulamayı başlatan ortamda:
 

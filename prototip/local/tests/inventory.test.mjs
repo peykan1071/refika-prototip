@@ -232,7 +232,7 @@ test('Üç aylık hatırlatma tam kaynak tarihinden hesaplanır; eski yedekler v
   );
   assert.equal(store.inventory.reminders()[0].dueOn, '2026-04-30');
   const archive = store.exportArchive();
-  assert.equal(archive.version, 5);
+  assert.equal(archive.version, 6);
   store.restoreArchive(archive, '25');
   assert.equal(store.inventory.view().rows.length, 1);
   const broken = structuredClone(archive);

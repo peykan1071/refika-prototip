@@ -9,6 +9,7 @@ import {
   inventoryWorkbook,
 } from './inventory.mjs';
 import { aiStatus, extractPlan } from './ai.mjs';
+import { assistantContext, generateAssistant } from './assistant.mjs';
 import { fields, provinces, reportFor, digest, text } from './domain.mjs';
 import {
   previewImport,
@@ -57,10 +58,12 @@ export async function startLocal({
   env = process.env,
   googleProtection,
   googleFetch = fetch,
+  aiFetch = fetch,
 } = {}) {
   const store = new Store(resolve(dataDir, 'refika.sqlite')),
     session = randomBytes(32).toString('hex'),
     aiPreviews = new Map();
+  const assistantGenerations = new Map();
   let syncing = false;
   const googleAuth = new GoogleAuth(
     new GoogleVault(dataDir, googleProtection),
@@ -119,6 +122,63 @@ export async function startLocal({
       }
       if (!store.meta('settings'))
         return json(res, 409, { error: 'Önce il çalışma alanını kurun.' });
+      if (path === '/api/assistant/context' && req.method === 'POST')
+        return json(res, 200, assistantContext(store, await body(req)));
+      if (path === '/api/assistant/drafts' && req.method === 'GET')
+        return json(res, 200, store.assistant.list());
+      if (path === '/api/assistant/generate' && req.method === 'POST') {
+        const input = await body(req);
+        const context = assistantContext(store, input);
+        if (input.confirmed !== true)
+          throw new Error(
+            'Görünen içeriğin belirtilen model hizmetine gönderilmesini onaylayın.',
+          );
+        if (input.fingerprint !== context.fingerprint)
+          throw new Error(
+            'Kaynak veya soru değişti. İçeriği yeniden inceleyin.',
+          );
+        const generated = await generateAssistant(context, env, aiFetch);
+        if (assistantContext(store, input).fingerprint !== context.fingerprint)
+          throw new Error(
+            'Üretim sırasında kaynak değişti. Güncel içeriği yeniden inceleyin.',
+          );
+        for (const [key, entry] of assistantGenerations)
+          if (entry.expires < Date.now()) assistantGenerations.delete(key);
+        if (assistantGenerations.size >= 50)
+          assistantGenerations.delete(assistantGenerations.keys().next().value);
+        const token = randomBytes(24).toString('hex');
+        assistantGenerations.set(token, {
+          generated,
+          fingerprint: context.fingerprint,
+          expires: Date.now() + 30 * 60000,
+        });
+        return json(res, 200, { ...generated, token });
+      }
+      if (path === '/api/assistant/drafts' && req.method === 'POST') {
+        const input = await body(req);
+        const context = assistantContext(store, input);
+        if (input.fingerprint !== context.fingerprint)
+          throw new Error(
+            'Kaynak veya soru değişti. İçeriği yeniden inceleyin.',
+          );
+        const generation = input.generationToken
+          ? assistantGenerations.get(input.generationToken)
+          : null;
+        if (
+          input.generationToken &&
+          (!generation ||
+            generation.expires < Date.now() ||
+            generation.fingerprint !== context.fingerprint)
+        )
+          throw new Error(
+            'AI taslağının kaynak teyidi geçersiz veya süresi doldu. Yeniden hazırlayın.',
+          );
+        return json(
+          res,
+          200,
+          store.assistant.save(context, input, generation?.generated),
+        );
+      }
       if (path === '/api/google/status' && req.method === 'GET')
         return json(res, 200, {
           ...googleAuth.status(),

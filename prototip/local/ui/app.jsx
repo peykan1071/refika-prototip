@@ -21,6 +21,7 @@ import { PlanWorkspace } from './plan-workspace.jsx';
 import { ReportWorkspace } from './report-workspace.jsx';
 import { CoordinatorSettings } from './coordinator-contacts.jsx';
 import { GoogleSyncPanel } from './google-sync.jsx';
+import { AssistantPanel, canLeaveAssistant } from './assistant-panel.jsx';
 import {
   DemoShell,
   DemoDashboard,
@@ -562,7 +563,8 @@ const blankActivity = () => ({
 function Activities({ state, run, busy, scope = 'all' }) {
   const [draft, setDraft] = useState(null),
     [query, setQuery] = useState(''),
-    [tab, setTab] = useState('plan');
+    [tab, setTab] = useState('plan'),
+    [assistantSource, setAssistantSource] = useState(null);
   const scopeKinds =
     scope === 'visits'
       ? ['Okul ziyareti']
@@ -612,13 +614,23 @@ function Activities({ state, run, busy, scope = 'all' }) {
         <button
           className="primary"
           onClick={() => {
+            if (!canLeaveAssistant()) return;
             setTab('records');
             setDraft(newActivity());
+            setAssistantSource(null);
           }}
         >
           <Plus size={17} /> Yeni faaliyet
         </button>
       </div>
+      <AssistantPanel
+        key={draft?.id || JSON.stringify(assistantSource) || scope}
+        state={state}
+        page={scope === 'all' ? 'activities' : scope}
+        source={
+          draft?.id ? { type: 'activity', id: draft.id } : assistantSource
+        }
+      />
       {scope === 'all' && (
         <div className="plan-tabs" aria-label="Plan ve faaliyet görünümü">
           <button aria-pressed={tab === 'plan'} onClick={() => setTab('plan')}>
@@ -639,7 +651,15 @@ function Activities({ state, run, busy, scope = 'all' }) {
           busy={busy}
           api={api}
           fileData={fileData}
+          onPrepare={(plan, item) => {
+            if (!canLeaveAssistant()) return;
+            setDraft(null);
+            setAssistantSource({ type: 'plan', id: plan.id, itemId: item.id });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           onActivity={(plan, item, existing) => {
+            if (!canLeaveAssistant()) return;
+            setAssistantSource({ type: 'plan', id: plan.id, itemId: item.id });
             setDraft(
               existing
                 ? { ...existing }
@@ -673,7 +693,9 @@ function Activities({ state, run, busy, scope = 'all' }) {
                 <h2>{draft.id ? 'Faaliyet kaydı' : 'Yeni faaliyet'}</h2>
                 <button
                   aria-label="Faaliyet formunu kapat"
-                  onClick={() => setDraft(null)}
+                  onClick={() => {
+                    if (canLeaveAssistant()) setDraft(null);
+                  }}
                 >
                   <X size={18} />
                 </button>
@@ -695,6 +717,7 @@ function Activities({ state, run, busy, scope = 'all' }) {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
+                  if (!draft.id && !canLeaveAssistant()) return;
                   run(
                     async () => setDraft(await api('/activities', draft)),
                     'Faaliyet kalıcı olarak kaydedildi.',
@@ -890,6 +913,7 @@ function Activities({ state, run, busy, scope = 'all' }) {
                         <td>
                           <button
                             onClick={() => {
+                              if (!canLeaveAssistant()) return;
                               setDraft({ ...a });
                               window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
@@ -906,7 +930,14 @@ function Activities({ state, run, busy, scope = 'all' }) {
               <Empty
                 title="İlk çalışmanızı planlayın"
                 action={
-                  <button onClick={() => setDraft(newActivity())}>
+                  <button
+                    onClick={() => {
+                      if (canLeaveAssistant()) {
+                        setAssistantSource(null);
+                        setDraft(newActivity());
+                      }
+                    }}
+                  >
                     Faaliyet ekle
                   </button>
                 }
@@ -1096,7 +1127,7 @@ function SettingsPanel({ state, run, busy }) {
           <p>
             {state.ai.configured
               ? `${state.ai.label} · ${state.ai.host}`
-              : 'AI modeli bağlandığında Word planındaki faaliyetleri alanlara ayırabilirsiniz. Mevcut şablon ve kayıt işlemleri AI gerektirmez.'}
+              : 'AI modeli bağlandığında sayfalardaki faaliyet, öğretmen yanıtı, haber ve rapor görevlerini kullanabilirsiniz. Mevcut şablon ve kayıt işlemleri AI gerektirmez.'}
           </p>
           <Notice>
             {state.ai.configured
@@ -1264,6 +1295,12 @@ function App() {
     }
   }
   function go(next, options = {}) {
+    if (
+      !window.dispatchEvent(
+        new Event('refika-before-navigate', { cancelable: true }),
+      )
+    )
+      return;
     setView(next);
     setViewOptions(options);
     setError('');

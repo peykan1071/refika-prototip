@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { eventReportFields, eventReportProblems } from '../report-schema.mjs';
 import { ValidationPeriods } from './validation-periods.jsx';
+import { AssistantPanel, canLeaveAssistant } from './assistant-panel.jsx';
 import './report-workspace.css';
 
 const statuses = {
@@ -77,6 +78,7 @@ export function ReportWorkspace({ state, api, run, busy, fileData, summary }) {
       ),
     });
   const load = async (id) => {
+    if (!canLeaveAssistant()) return;
     setReport(await api('/reports/' + id));
     setDirty(false);
     setReviewed(false);
@@ -102,6 +104,12 @@ export function ReportWorkspace({ state, api, run, busy, fileData, summary }) {
           </p>
         </div>
       </div>
+      <AssistantPanel
+        key={report?.id || 'reports'}
+        state={state}
+        page="reports"
+        source={report?.id ? { type: 'report', id: report.id } : undefined}
+      />
       <section className="report-hero">
         <div>
           <span>İŞLEMDEN KURUMSAL HAFIZAYA</span>
@@ -198,6 +206,7 @@ export function ReportWorkspace({ state, api, run, busy, fileData, summary }) {
                 disabled={busy}
                 onClick={() =>
                   run(async () => {
+                    if (!canLeaveAssistant()) return;
                     const draft = await api('/reports/generate', {
                       reportType: 'event',
                       ...periodFor(year, quarter),
@@ -302,6 +311,7 @@ export function ReportWorkspace({ state, api, run, busy, fileData, summary }) {
                 <button
                   aria-label="Raporu kapat"
                   onClick={() => {
+                    if (!canLeaveAssistant()) return;
                     setReport(null);
                     setOldVersion(null);
                   }}
@@ -400,6 +410,7 @@ export function ReportWorkspace({ state, api, run, busy, fileData, summary }) {
                       disabled={busy}
                       onClick={() =>
                         run(async () => {
+                          if (!report.id && !canLeaveAssistant()) return;
                           setReport(await api('/reports', report));
                           setDirty(false);
                           setReviewed(false);

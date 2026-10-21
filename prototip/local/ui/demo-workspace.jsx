@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { validationWorkItems } from '../validation.mjs';
 import { InventoryReminder } from './inventory.jsx';
+import { AssistantPanel } from './assistant-panel.jsx';
 import {
   House,
   CalendarDays,
@@ -312,9 +313,9 @@ export function DemoDashboard({ state, go }) {
     const text = command.toLocaleLowerCase('tr');
     const target = /aktar|dosya|excel|csv/.test(text)
       ? 'import'
-      : /valid|kayıt|hesap/.test(text)
+      : /valid|kayıt|hesap|öğretmen|soru|yanıt|cevap/.test(text)
         ? 'records'
-        : /rapor/.test(text)
+        : /rapor|haber|instagram|paylaşım/.test(text)
           ? 'reports'
           : /ziyaret/.test(text)
             ? 'visits'
@@ -345,6 +346,11 @@ export function DemoDashboard({ state, go }) {
         </div>
         <span className="badge pilot-badge">YEREL ÇALIŞMA ALANI</span>
       </div>
+      <AssistantPanel
+        state={state}
+        page="home"
+        onSettings={() => go('settings')}
+      />
       <InventoryReminder
         reminders={state.inventoryReminders}
         open={() => go('records', { workspace: 'inventory' })}

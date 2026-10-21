@@ -41,7 +41,7 @@ function validFile(name, bytes) {
 
 export function migrateValidation(db) {
   const version = db.prepare('PRAGMA user_version').get().user_version;
-  if (version > 5)
+  if (version > 6)
     throw new Error('Bu veri tabanı daha yeni bir REFİKA sürümüne ait.');
   db.exec(`BEGIN IMMEDIATE;
     CREATE TABLE IF NOT EXISTS validation_cases(id TEXT PRIMARY KEY, body TEXT NOT NULL, version INTEGER NOT NULL);
@@ -52,7 +52,8 @@ export function migrateValidation(db) {
     CREATE TABLE IF NOT EXISTS report_versions(report_id TEXT NOT NULL REFERENCES reports(id), version INTEGER NOT NULL, at TEXT NOT NULL, reason TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY(report_id,version));
     CREATE TABLE IF NOT EXISTS report_files(id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id), name TEXT NOT NULL, body BLOB NOT NULL);
     CREATE TABLE IF NOT EXISTS inventory_imports(id TEXT PRIMARY KEY, body TEXT NOT NULL);
-    PRAGMA user_version=5;
+    CREATE TABLE IF NOT EXISTS assistant_drafts(id TEXT PRIMARY KEY, body TEXT NOT NULL);
+    PRAGMA user_version=6;
     COMMIT;`);
 }
 

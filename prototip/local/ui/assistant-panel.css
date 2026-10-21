@@ -1,0 +1,128 @@
+.assistant-panel {
+  margin: 0 0 24px;
+  padding: 20px 22px;
+  border: 1px solid #ccdbe7;
+  border-left: 4px solid #ffbf24;
+  border-radius: 14px;
+  background: #fff;
+  color: #082c50;
+}
+.assistant-heading,
+.assistant-heading-copy {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.assistant-heading {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.assistant-heading-copy > svg {
+  color: #a16a00;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.assistant-heading h2 {
+  font-size: 19px;
+  margin: 0 0 6px;
+}
+.assistant-heading p {
+  margin: 0;
+  color: #567087;
+  line-height: 1.5;
+}
+.assistant-tasks,
+.assistant-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.assistant-tasks button {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+.assistant-tasks button[aria-pressed='true'] {
+  border-color: #d69b00;
+  background: #fff6de;
+}
+.assistant-editor {
+  border-top: 1px solid #dae4ed;
+  margin-top: 20px;
+  padding-top: 18px;
+}
+.assistant-editor .field {
+  margin: 14px 0;
+}
+.assistant-editor .field select {
+  max-width: 100%;
+  text-overflow: ellipsis;
+}
+.assistant-tone {
+  color: #567087;
+  margin: 8px 0;
+}
+.assistant-context {
+  margin: 16px 0;
+  padding: 16px;
+  background: #edf6fa;
+  border-radius: 10px;
+}
+.assistant-context textarea {
+  font-size: 13px;
+}
+.assistant-basis {
+  padding: 14px;
+  background: #fff8e6;
+  border-radius: 10px;
+  margin: 16px 0;
+}
+.assistant-history {
+  margin-top: 16px;
+}
+.assistant-history > button {
+  font-size: 13px;
+  padding: 8px 12px;
+}
+.assistant-history ul {
+  list-style: none;
+  padding: 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.assistant-history li {
+  margin: 6px 0;
+}
+.assistant-history li button {
+  width: 100%;
+  text-align: left;
+  font-weight: 400;
+}
+.assistant-saved {
+  background: #f5f8fa;
+  padding: 16px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+.assistant-saved pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+.assistant-panel .notice button {
+  margin-left: 10px;
+}
+.assistant-panel button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+@media (max-width: 700px) {
+  .assistant-panel {
+    padding: 16px;
+  }
+  .assistant-tasks button {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
